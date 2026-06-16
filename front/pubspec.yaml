@@ -49,6 +49,36 @@ dev_dependencies:
 
   drift_dev: ^2.20.0
   build_runner: ^2.4.9
+  package_rename: ^1.10.1
+
+
+package_rename_config:
+  android:
+    app_name: Flux
+    package_name: online.pipipopi.flux
+
+  ios:
+    app_name: Flux
+    bundle_name: Flux
+    bundle_identifier: online.pipipopi.flux
+
+  macos:
+    app_name: Flux
+    bundle_name: Flux
+    bundle_identifier: online.pipipopi.flux
+
+  web:
+    app_name: Flux
+    description: Flux
+
+  linux:
+    app_name: Flux
+    package_name: flux
+
+  windows:
+    app_name: Flux
+    organization_name: Misha_dev
+    copyright_notice: Misha_dev
 
 flutter:
   uses-material-design: true
