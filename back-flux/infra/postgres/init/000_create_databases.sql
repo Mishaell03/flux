@@ -1,0 +1,1 @@
+CREATE DATABASE flux_db;
