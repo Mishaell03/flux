@@ -10,6 +10,7 @@ load_dotenv()
 
 
 class Settings:
+    secret: str = os.getenv("SECRET")
 
     # DATABASE
     db_host: str = os.getenv("DB_HOST")
@@ -37,6 +38,9 @@ class Settings:
 
     yandex_client_id: str = os.getenv("YANDEX_CLIENT_ID")
     yandex_client_secret: str = os.getenv("YANDEX_CLIENT_SECRET")
+    yandex_redirect_url: str = os.getenv("YANDEX_REDIRECT_URI")
+    yandex_redirect_web: str = os.getenv("YANDEX_REDIRECT_WEB")
+    yandex_redirect_mobile: str = os.getenv("YANDEX_REDIRECT_MOBILE")
 
     # DATABASE URL
     @property

@@ -3,10 +3,8 @@ CREATE TABLE notes (
     user_id BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     title TEXT,
     content TEXT,
-    version INT NOT NULL DEFAULT 0,
     deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMPTZ,
-    last_session_id BIGINT REFERENCES registration_sessions(id),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
