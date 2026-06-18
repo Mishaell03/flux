@@ -22,7 +22,7 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/yandex/login", response_model=YandexLoginResponse)
-def login(
+async def login(
         request: Request,
         request_data: YandexLoginRequest,
         db: Session = Depends(get_db),
@@ -112,7 +112,7 @@ def login(
 
 
 @router.post("/yandex/callback", response_model=YandexCallbackResponse)
-def callback(
+async def callback(
         request: Request,
         request_data: YandexCallbackRequest,
         db: Session = Depends(get_db),
@@ -197,10 +197,19 @@ def callback(
         provider="ya",
         session_token=session_token,
         is_verified=True,
-        expires_at=now + timedelta(days=30),
+        expires_at=now + timedelta(days=210),
     )
 
     db.add(registration_session)
     db.commit()
+
+    user_event_logs(
+        db=db,
+        request=request,
+        status_code=200,
+        event="YANDEX_SUCCESS_LOGIN",
+        device_id=request_data.device_id,
+        platform=request_data.platform,
+    )
 
     return YandexCallbackResponse(token=session_token)

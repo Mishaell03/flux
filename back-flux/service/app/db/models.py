@@ -67,7 +67,6 @@ class RegistrationSession(Base):
         BigInteger, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False, index=True
     )
     session_token: Mapped[str | None] = mapped_column(String(255), unique=True, index=True)
-    refresh_token: Mapped[str | None] = mapped_column(String(255), unique=True)
     language: Mapped[str | None] = mapped_column(String(3))
     provider: Mapped[str | None] = mapped_column(
         String(20), ForeignKey("providers.code", ondelete="CASCADE"), index=True
@@ -76,7 +75,6 @@ class RegistrationSession(Base):
     device_name: Mapped[str | None] = mapped_column(String(32))
     platform: Mapped[str | None] = mapped_column(String(10))
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
-    revoked: Mapped[bool] = mapped_column(Boolean, default=False)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
