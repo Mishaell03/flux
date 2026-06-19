@@ -197,7 +197,7 @@ async def callback(
         provider="ya",
         session_token=session_token,
         is_verified=True,
-        expires_at=now + timedelta(days=210),
+        expires_at=now + timedelta(days=180),
     )
 
     db.add(registration_session)

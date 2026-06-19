@@ -6,3 +6,8 @@ class SessionResponse(BaseModel):
         ...,
         examples=[True],
     )
+
+class SessionRefreshResponse(BaseModel):
+    token: str = Field(
+        examples=['24lsPl3AouvV8OkYtWpOpo']
+    )

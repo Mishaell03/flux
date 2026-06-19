@@ -140,18 +140,35 @@ class NoteLink(Base):
 
     link_id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     from_note_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("notes.note_id", ondelete="CASCADE"), nullable=False, index=True
+        ForeignKey("notes.note_id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     to_note_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("notes.note_id", ondelete="CASCADE"), nullable=False, index=True
+        ForeignKey("notes.note_id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-
-    from_note: Mapped["Note"] = relationship(back_populates="from_links", foreign_keys=[from_note_id])
-    to_note: Mapped["Note"] = relationship(back_populates="to_links", foreign_keys=[to_note_id])
+    weight: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+    from_note: Mapped["Note"] = relationship(
+        back_populates="from_links",
+        foreign_keys=[from_note_id]
+    )
+    to_note: Mapped["Note"] = relationship(
+        back_populates="to_links",
+        foreign_keys=[to_note_id]
+    )
 
     __table_args__ = (
-        UniqueConstraint("from_note_id", "to_note_id", name="uq_note_links_pair"),
+        UniqueConstraint(
+            "from_note_id",
+            "to_note_id",
+            name="uq_note_links_pair"
+        ),
     )
 
 

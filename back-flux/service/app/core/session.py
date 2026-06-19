@@ -8,17 +8,14 @@ from app.core.errors import raise_backend_error
 from app.db import get_db
 from app.db.models import RegistrationSession
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 def get_current_session(
     request: Request,
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> RegistrationSession:
-
-    session_token = credentials.credentials.strip()
-
-    if not session_token:
+    if credentials is None or not credentials.credentials.strip():
         raise_backend_error(
             db=db,
             request=request,
@@ -26,6 +23,7 @@ def get_current_session(
             language="en",
         )
 
+    session_token = credentials.credentials.strip()
     now = datetime.now(timezone.utc)
 
     session = (
