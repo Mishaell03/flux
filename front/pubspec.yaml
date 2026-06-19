@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   # routing
   go_router: ^17.2.1
 
@@ -50,7 +53,7 @@ dev_dependencies:
   drift_dev: ^2.20.0
   build_runner: ^2.4.9
   package_rename: ^1.10.1
-
+  icons_launcher: ^3.1.0
 
 package_rename_config:
   android:
@@ -80,7 +83,24 @@ package_rename_config:
     organization_name: Misha_dev
     copyright_notice: Misha_dev
 
+icons_launcher:
+  image_path: "assets/img/logo.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+    macos:
+      enable: true
+    windows:
+      enable: true
+    linux:
+      enable: true
+    web:
+      enable: true
+
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:
