@@ -8,11 +8,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = const WindowOptions(
+  const windowOptions = WindowOptions(
     size: Size(500, 800),
     minimumSize: Size(360, 500),
     center: true,
-    title: "Flux",
+    title: 'Flux',
   );
 
   windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -32,9 +32,18 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
 
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+
       themeMode: ThemeMode.system,
+
+      theme: ThemeData(
+        brightness: Brightness.light,
+        useMaterial3: true,
+      ),
+
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: true,
+      ),
 
       localizationsDelegates: const [
         AppLocalizations.delegate,

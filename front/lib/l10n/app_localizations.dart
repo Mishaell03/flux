@@ -103,6 +103,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Flux'**
   String get appTitle;
+
+  /// No description provided for @loginWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back! Please sign in to continue'**
+  String get loginWelcome;
+
+  /// No description provided for @loginCreateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create or log in to an account'**
+  String get loginCreateAccount;
+
+  /// No description provided for @loginChooseService.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred login service'**
+  String get loginChooseService;
+
+  /// No description provided for @loginContinueYou.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our\n'**
+  String get loginContinueYou;
+
+  /// No description provided for @loginTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'terms of service'**
+  String get loginTermsOfService;
+
+  /// No description provided for @loginAnd.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get loginAnd;
+
+  /// No description provided for @loginPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'privacy policy'**
+  String get loginPrivacyPolicy;
+
+  /// No description provided for @loginWithYandex.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Yandex'**
+  String get loginWithYandex;
+
+  /// No description provided for @loginWithVk.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with VK'**
+  String get loginWithVk;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @errorCouldNotOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link'**
+  String get errorCouldNotOpenLink;
 }
 
 class _AppLocalizationsDelegate

@@ -1,3 +1,17 @@
 {
-  "appTitle": "Flux"
+  "appTitle": "Flux",
+
+  "loginWelcome": "Welcome back! Please sign in to continue",
+  "loginCreateAccount": "Create or log in to an account",
+  "loginChooseService": "Choose your preferred login service",
+  "loginContinueYou": "By continuing, you agree to our\n",
+  "loginTermsOfService": "terms of service",
+  "loginAnd": " and ",
+  "loginPrivacyPolicy": "privacy policy",
+  "loginWithYandex": "Continue with Yandex",
+  "loginWithVk": "Continue with VK",
+
+  "success": "Success",
+  "error": "Error",
+  "errorCouldNotOpenLink": "Couldn't open the link"
 }

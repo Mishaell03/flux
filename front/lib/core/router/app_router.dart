@@ -8,7 +8,7 @@ final GoRouter router = GoRouter(
           path: '/login',
           name: 'Login',
         builder: (context, state) {
-            return HomePage();
+            return const LoginPage();
         }
       )
     ]

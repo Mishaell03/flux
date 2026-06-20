@@ -1,52 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:front/core/components/theme.dart';
 
-enum AppThemeMode {
-  system,
-  light,
-  dark,
-}
-
 class AppTheme {
-  static AppThemeMode _mode = AppThemeMode.system;
+  const AppTheme._();
 
-  static void setMode(AppThemeMode mode) {
-    _mode = mode;
+  static AppColorsAccessor of(BuildContext context) {
+    return AppColorsAccessor(context);
   }
 
-  static AppThemeMode get mode => _mode;
-
-  static bool get isDark {
-    switch (_mode) {
-      case AppThemeMode.dark:
-        return true;
-      case AppThemeMode.light:
-        return false;
-      case AppThemeMode.system:
-        final brightness =
-            WidgetsBinding.instance.platformDispatcher.platformBrightness;
-        return brightness == Brightness.dark;
-    }
+  static bool isDark(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
   }
-
-  static AppColorsAccessor get colors => AppColorsAccessor();
 }
 
 class AppColorsAccessor {
+  final BuildContext context;
+
+  const AppColorsAccessor(this.context);
+
+  bool get isDark => Theme.of(context).brightness == Brightness.dark;
+
   // ===== BACKGROUND =====
-  Color get bg => AppTheme.isDark ? AppDarkColors.bg : AppLightColors.bg;
-  Color get border => AppTheme.isDark ? AppDarkColors.border : AppLightColors.lightBorder;
+  Color get bg => isDark ? AppDarkColors.bg : AppLightColors.bg;
+
+  Color get border =>
+      isDark ? AppDarkColors.border : AppLightColors.border;
 
   // ===== TEXT =====
-  Color get text => AppTheme.isDark ? AppDarkColors.text : AppLightColors.lightText;
-  Color get gray => AppTheme.isDark ? AppDarkColors.gray : AppLightColors.gray;
+  Color get text => isDark ? AppDarkColors.text : AppLightColors.text;
 
-  // ===== BRAND =====
-  Color get primarySoft => AppTheme.isDark ? AppDarkColors.primarySecond : AppLightColors.primarySecond;
+  Color get gray => isDark ? AppDarkColors.gray : AppLightColors.gray;
 
   // ===== STATUS =====
   Color get primary => AppColors.primary;
   Color get success => AppColors.success;
   Color get warning => AppColors.warning;
   Color get error => AppColors.error;
+  Color get vk => AppColors.vk;
+  Color get yandex => AppColors.yandex;
+  Color get transparent => AppColors.transparent;
+}
+
+extension AppThemeExtension on BuildContext {
+  AppColorsAccessor get colors => AppTheme.of(this);
+
+  bool get isDark => AppTheme.isDark(this);
 }

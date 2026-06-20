@@ -5,8 +5,8 @@ from app.core.config import settings
 
 
 app = FastAPI(
-    title="Life Ops Users Service",
-    description="Users API base URL: /api",
+    title="Flux",
+    description="Flux API base URL: /api/v1",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
