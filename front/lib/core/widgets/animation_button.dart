@@ -78,12 +78,11 @@ class _AppAnimationButtonState extends State<AppAnimationButton> {
     final Color bgColor = _isPressed
         ? widget.colorPressed ?? widget.color.withValues(alpha: 0.4)
         : _isHovered
-        ? widget.colorHover ?? widget.color.withValues(alpha: 0.2)
-        : widget.colorBg ?? widget.color.withValues(alpha: 0.07);
+            ? widget.colorHover ?? widget.color.withValues(alpha: 0.2)
+            : widget.colorBg ?? widget.color.withValues(alpha: 0.07);
 
-    final double currentBorderSide = _isHovered || _isPressed
-        ? widget.borderSideActive
-        : widget.borderSide;
+    final double currentBorderSide =
+        _isHovered || _isPressed ? widget.borderSideActive : widget.borderSide;
 
     return MouseRegion(
       cursor: widget.onPressed == null
@@ -93,23 +92,22 @@ class _AppAnimationButtonState extends State<AppAnimationButton> {
       onExit: (_) => _setHovered(false),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-
         onTap: _handleTap,
         onTapDown: (_) => _setPressed(true),
         onTapUp: (_) => _resetPressed(),
         onTapCancel: _resetPressed,
-
         child: AnimatedScale(
           scale: _isPressed
               ? 0.999
               : _isHovered
-              ? 1.009
-              : 1,
+                  ? 1.009
+                  : 1,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCubic,
+            clipBehavior: Clip.antiAlias,
             padding: EdgeInsets.symmetric(
               vertical: widget.vertical,
               horizontal: widget.horizontal,

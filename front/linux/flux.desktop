@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Flux
+Comment=Flux application
+Exec=front %u
+Icon=flux
+Terminal=false
+Type=Application
+Categories=Utility;
+MimeType=x-scheme-handler/flux;

@@ -158,6 +158,60 @@ abstract class AppLocalizations {
   /// **'Continue with VK'**
   String get loginWithVk;
 
+  /// No description provided for @authCallbackWaitingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for confirmation'**
+  String get authCallbackWaitingTitle;
+
+  /// No description provided for @authCallbackSendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Completing sign in'**
+  String get authCallbackSendingTitle;
+
+  /// No description provided for @authCallbackSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get authCallbackSuccessTitle;
+
+  /// No description provided for @authCallbackErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not sign in'**
+  String get authCallbackErrorTitle;
+
+  /// No description provided for @authCallbackWaitingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete authorization in the browser. After returning to the app, sign in will continue automatically.'**
+  String get authCallbackWaitingDescription;
+
+  /// No description provided for @authCallbackSendingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking authorization data. Please wait.'**
+  String get authCallbackSendingDescription;
+
+  /// No description provided for @authCallbackSuccessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in successfully.'**
+  String get authCallbackSuccessDescription;
+
+  /// No description provided for @authCallbackBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get authCallbackBack;
+
+  /// No description provided for @authCallbackRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Open authorization again'**
+  String get authCallbackRetry;
+
   /// No description provided for @success.
   ///
   /// In en, this message translates to:
@@ -175,6 +229,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t open the link'**
   String get errorCouldNotOpenLink;
+
+  /// No description provided for @errorServerUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Server is unavailable'**
+  String get errorServerUnavailable;
+
+  /// No description provided for @errorNetworkUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get errorNetworkUnavailable;
+
+  /// No description provided for @errorAuthFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t complete sign in'**
+  String get errorAuthFailed;
 }
 
 class _AppLocalizationsDelegate

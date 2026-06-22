@@ -37,6 +37,12 @@ class PostJsonService {
       throw const AppException(code: AppErrorCode.timeout);
     } on SocketException {
       throw const AppException(code: AppErrorCode.networkError);
+    } on http.ClientException catch (error, stackTrace) {
+      throw AppException(
+        code: AppErrorCode.networkError,
+        originalError: error,
+        stackTrace: stackTrace,
+      );
     } catch (error, stackTrace) {
       throw AppException(
         code: AppErrorCode.unknown,
@@ -98,6 +104,12 @@ class PostFormDataService {
       throw const AppException(code: AppErrorCode.timeout);
     } on SocketException {
       throw const AppException(code: AppErrorCode.networkError);
+    } on http.ClientException catch (error, stackTrace) {
+      throw AppException(
+        code: AppErrorCode.networkError,
+        originalError: error,
+        stackTrace: stackTrace,
+      );
     } catch (error, stackTrace) {
       throw AppException(
         code: AppErrorCode.unknown,

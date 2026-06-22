@@ -39,6 +39,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginWithVk => 'Continue with VK';
 
   @override
+  String get authCallbackWaitingTitle => 'Waiting for confirmation';
+
+  @override
+  String get authCallbackSendingTitle => 'Completing sign in';
+
+  @override
+  String get authCallbackSuccessTitle => 'Done';
+
+  @override
+  String get authCallbackErrorTitle => 'Could not sign in';
+
+  @override
+  String get authCallbackWaitingDescription =>
+      'Complete authorization in the browser. After returning to the app, sign in will continue automatically.';
+
+  @override
+  String get authCallbackSendingDescription =>
+      'Checking authorization data. Please wait.';
+
+  @override
+  String get authCallbackSuccessDescription => 'Signed in successfully.';
+
+  @override
+  String get authCallbackBack => 'Go back';
+
+  @override
+  String get authCallbackRetry => 'Open authorization again';
+
+  @override
   String get success => 'Success';
 
   @override
@@ -46,4 +75,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCouldNotOpenLink => 'Couldn\'t open the link';
+
+  @override
+  String get errorServerUnavailable => 'Server is unavailable';
+
+  @override
+  String get errorNetworkUnavailable => 'No internet connection';
+
+  @override
+  String get errorAuthFailed => 'Couldn\'t complete sign in';
 }

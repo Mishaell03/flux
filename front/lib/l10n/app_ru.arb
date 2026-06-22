@@ -11,7 +11,20 @@
   "loginWithYandex": "Продолжить с Яндекс",
   "loginWithVk": "Продолжить с ВКонтакте",
 
+  "authCallbackWaitingTitle": "Ожидаем подтверждение",
+  "authCallbackSendingTitle": "Завершаем вход",
+  "authCallbackSuccessTitle": "Готово",
+  "authCallbackErrorTitle": "Не удалось войти",
+  "authCallbackWaitingDescription": "Завершите авторизацию в браузере. После возврата в приложение вход продолжится автоматически.",
+  "authCallbackSendingDescription": "Проверяем данные авторизации. Пожалуйста, подождите.",
+  "authCallbackSuccessDescription": "Вход успешно выполнен.",
+  "authCallbackBack": "Вернуться назад",
+  "authCallbackRetry": "Открыть авторизацию снова",
+
   "error": "Ошибка",
   "success": "Успешно",
-  "errorCouldNotOpenLink": "Не удалось открыть ссылку"
+  "errorCouldNotOpenLink": "Не удалось открыть ссылку",
+  "errorServerUnavailable": "Сервер недоступен",
+  "errorNetworkUnavailable": "Нет подключения к интернету",
+  "errorAuthFailed": "Не удалось завершить вход"
 }

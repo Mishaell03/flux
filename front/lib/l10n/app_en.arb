@@ -11,7 +11,20 @@
   "loginWithYandex": "Continue with Yandex",
   "loginWithVk": "Continue with VK",
 
+  "authCallbackWaitingTitle": "Waiting for confirmation",
+  "authCallbackSendingTitle": "Completing sign in",
+  "authCallbackSuccessTitle": "Done",
+  "authCallbackErrorTitle": "Could not sign in",
+  "authCallbackWaitingDescription": "Complete authorization in the browser. After returning to the app, sign in will continue automatically.",
+  "authCallbackSendingDescription": "Checking authorization data. Please wait.",
+  "authCallbackSuccessDescription": "Signed in successfully.",
+  "authCallbackBack": "Go back",
+  "authCallbackRetry": "Open authorization again",
+
   "success": "Success",
   "error": "Error",
-  "errorCouldNotOpenLink": "Couldn't open the link"
+  "errorCouldNotOpenLink": "Couldn't open the link",
+  "errorServerUnavailable": "Server is unavailable",
+  "errorNetworkUnavailable": "No internet connection",
+  "errorAuthFailed": "Couldn't complete sign in"
 }

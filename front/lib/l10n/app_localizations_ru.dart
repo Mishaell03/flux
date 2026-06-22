@@ -41,6 +41,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginWithVk => 'Продолжить с ВКонтакте';
 
   @override
+  String get authCallbackWaitingTitle => 'Ожидаем подтверждение';
+
+  @override
+  String get authCallbackSendingTitle => 'Завершаем вход';
+
+  @override
+  String get authCallbackSuccessTitle => 'Готово';
+
+  @override
+  String get authCallbackErrorTitle => 'Не удалось войти';
+
+  @override
+  String get authCallbackWaitingDescription =>
+      'Завершите авторизацию в браузере. После возврата в приложение вход продолжится автоматически.';
+
+  @override
+  String get authCallbackSendingDescription =>
+      'Проверяем данные авторизации. Пожалуйста, подождите.';
+
+  @override
+  String get authCallbackSuccessDescription => 'Вход успешно выполнен.';
+
+  @override
+  String get authCallbackBack => 'Вернуться назад';
+
+  @override
+  String get authCallbackRetry => 'Открыть авторизацию снова';
+
+  @override
   String get success => 'Успешно';
 
   @override
@@ -48,4 +77,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorCouldNotOpenLink => 'Не удалось открыть ссылку';
+
+  @override
+  String get errorServerUnavailable => 'Сервер недоступен';
+
+  @override
+  String get errorNetworkUnavailable => 'Нет подключения к интернету';
+
+  @override
+  String get errorAuthFailed => 'Не удалось завершить вход';
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:front/core/router/app_router.dart';
+import 'package:front/futures/login/services/auth_deeplink.dart';
+import 'package:front/futures/login/widgets/auth_deep_link_listener.dart';
 import 'package:front/l10n/app_localizations.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -30,6 +32,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
+      builder: (context, child) {
+        return AuthDeepLinkListener(
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
 
       debugShowCheckedModeBanner: false,
 

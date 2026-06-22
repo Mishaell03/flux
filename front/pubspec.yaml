@@ -47,6 +47,7 @@ dependencies:
 
   # device / desktop
   window_manager: ^0.5.1
+  app_links: ^7.1.2
 
 dev_dependencies:
   flutter_test:

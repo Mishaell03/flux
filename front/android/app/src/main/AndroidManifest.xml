@@ -24,7 +24,10 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="flux" />
+                <data
+                    android:scheme="flux"
+                    android:host="login"
+                    android:pathPrefix="/profile" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
