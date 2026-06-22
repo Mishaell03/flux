@@ -128,12 +128,25 @@ async def callback(
         )
 
     session_id = data.get("session_id")
+    device_id = data.get("device_id")
+    platform = data.get("platform")
+
+    if not session_id or not device_id or not platform:
+        raise_backend_error(
+            db=db,
+            request=request,
+            code="SESSION_NOT_FOUND",
+            language="en",
+        )
+
+    now = datetime.now(timezone.utc)
 
     yandex_session = (
         db.query(YandexLoginSession)
         .filter(
             YandexLoginSession.id == session_id,
             YandexLoginSession.used_at.is_(None),
+            YandexLoginSession.expires_at > now,
         )
         .first()
     )
@@ -146,8 +159,16 @@ async def callback(
             language="en",
         )
 
-    now = datetime.now(timezone.utc)
-    yandex_session.used_at = now
+    if (
+            yandex_session.device_id != device_id
+            or yandex_session.platform != platform
+    ):
+        raise_backend_error(
+            db=db,
+            request=request,
+            code="SESSION_NOT_FOUND",
+            language="en",
+        )
 
     access_token = get_token(request_data.code)
     profile = get_profile(access_token)
@@ -158,7 +179,7 @@ async def callback(
             db=db,
             request=request,
             code="YANDEX_NO_EMAIL",
-            language="en",
+            language=yandex_session.language or "en",
         )
 
     phone = profile.get("default_phone", {}).get("number")
@@ -177,17 +198,15 @@ async def callback(
             phone=phone,
             name=name,
             img=avatar,
-            img_provider='ya'
+            img_provider="ya",
         )
         db.add(user)
         db.flush()
     else:
-        # sync
         user.phone = phone or user.phone
         user.img = avatar or user.img
         user.name = name or user.name
 
-    # session
     session_token = secrets.token_urlsafe(32)
 
     registration_session = RegistrationSession(
@@ -200,6 +219,8 @@ async def callback(
         expires_at=now + timedelta(days=180),
     )
 
+    yandex_session.used_at = now
+
     db.add(registration_session)
     db.commit()
 
@@ -208,8 +229,8 @@ async def callback(
         request=request,
         status_code=200,
         event="YANDEX_SUCCESS_LOGIN",
-        device_id=request_data.device_id,
-        platform=request_data.platform,
+        device_id=yandex_session.device_id,
+        platform=yandex_session.platform,
     )
 
     return YandexCallbackResponse(token=session_token)
