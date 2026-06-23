@@ -68,10 +68,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authCallbackRetry => 'Open authorization again';
 
   @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileNamePlaceholder => 'Username';
+
+  @override
+  String get profileEmailPlaceholder => 'email@example.com';
+
+  @override
+  String get profileYandexConnected => 'Yandex account connected';
+
+  @override
+  String get profileSyncStatus => 'Sync status';
+
+  @override
+  String get profileSyncUpToDate => 'All changes are up to date';
+
+  @override
+  String get profileSyncLocal => 'Local';
+
+  @override
+  String get profileSyncCloud => 'Cloud';
+
+  @override
+  String get profileSyncLastSync => 'Last sync';
+
+  @override
+  String get profileSyncSynced => 'Synced';
+
+  @override
+  String get profileSyncLastSyncValue => 'Today';
+
+  @override
+  String get profileStatNotes => 'Notes';
+
+  @override
+  String get profileStatReminders => 'Reminders';
+
+  @override
+  String get profileStatLinked => 'Linked notes';
+
+  @override
+  String get profileSettingsTheme => 'Theme';
+
+  @override
+  String get profileSettingsThemeValue => 'Light';
+
+  @override
+  String get profileSettingsNotifications => 'Notifications';
+
+  @override
+  String get profileSettingsNotificationsValue => 'On';
+
+  @override
+  String get profileSettingsDevices => 'Devices';
+
+  @override
+  String get profileSettingsDevicesValue => '3 connected';
+
+  @override
+  String get profileSettingsAbout => 'About NexNote';
+
+  @override
+  String get profileSettingsAboutValue => 'Version 1.0.0';
+
+  @override
   String get success => 'Success';
 
   @override
   String get error => 'Error';
+
+  @override
+  String get sectionDevelopment =>
+      'This section is currently under development';
+
+  @override
+  String get weApologize => 'We apologize';
 
   @override
   String get errorCouldNotOpenLink => 'Couldn\'t open the link';

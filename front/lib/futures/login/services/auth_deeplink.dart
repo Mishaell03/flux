@@ -1,9 +1,16 @@
 import 'dart:async';
+
+import 'package:app_links/app_links.dart';
+import 'package:flutter/widgets.dart';
+import 'package:front/core/components/auth_token_storage.dart';
+import 'package:front/core/errors/api_exception.dart';
+import 'package:front/core/errors/notyce.dart';
+import 'package:front/core/errors/app_exception.dart';
 import 'package:front/core/router/url_launcher.dart';
 import 'package:front/futures/login/models/auth_deeplink.dart';
-import 'package:front/core/components/auth_token_storage.dart';
-import 'package:front/core/errors/app_exception.dart';
 import 'package:front/futures/login/services/auth_callback.dart';
+import 'package:front/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthDeepLinkService {
   final AuthDeepLinkParser parser;
@@ -14,10 +21,7 @@ class AuthDeepLinkService {
     final data = parser.parse(uri);
 
     if (data == null) {
-      throw AppException(
-        code: AppErrorCode.unknown,
-        message: 'Invalid deep link',
-      );
+      throw const AppException(code: AppErrorCode.unknown);
     }
 
     final response = await LoginCallbackService.send(
@@ -44,11 +48,7 @@ class AuthDeepLinkParser {
       return null;
     }
 
-    return AuthDeepLinkData(
-      uri: uri,
-      state: state,
-      code: code,
-    );
+    return AuthDeepLinkData(uri: uri, state: state, code: code);
   }
 
   bool _isLoginProfileLink(Uri uri) {
@@ -64,7 +64,7 @@ class AuthDeepLinkEventBus {
   static final AuthDeepLinkEventBus instance = AuthDeepLinkEventBus._();
 
   final StreamController<AuthDeepLinkData> _controller =
-  StreamController<AuthDeepLinkData>.broadcast();
+      StreamController<AuthDeepLinkData>.broadcast();
 
   String? _lastEmittedLink;
   AuthDeepLinkData? _pendingData;
@@ -92,5 +92,70 @@ class AuthExternalAuthService {
 
   Future<bool> open(String authUrl) {
     return UrlLauncher.openExternalUrl(authUrl);
+  }
+}
+
+// Листенер живёт на уровне роутера — context недоступен напрямую,
+// поэтому передаём navigatorKey чтобы показывать AppNotice
+class AuthDeepLinkListener {
+  final GoRouter router;
+  final AuthCallbackCompleteService callbackService;
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  final AppLinks _appLinks = AppLinks();
+  StreamSubscription<Uri>? _sub;
+
+  AuthDeepLinkListener({
+    required this.router,
+    required this.callbackService,
+    required this.navigatorKey,
+  });
+
+  Future<void> init() async {
+    try {
+      final initialUri = await _appLinks.getInitialLink();
+      if (initialUri != null) handle(initialUri);
+    } catch (_) {}
+
+    _sub = _appLinks.uriLinkStream.listen(handle);
+  }
+
+  void handle(Uri uri) async {
+    final state = uri.queryParameters['state'];
+    final code = uri.queryParameters['code'];
+
+    if (state == null || code == null) return;
+
+    final context = navigatorKey.currentContext;
+
+    try {
+      final data = AuthDeepLinkData(state: state, code: code, uri: uri);
+
+      await callbackService.complete(data);
+
+      router.go('/profile');
+    } on ApiException catch (e) {
+      if (context != null && context.mounted) {
+        AppNotice.error(context, message: e.message);
+      }
+      router.go('/login');
+    } on AppException catch (e) {
+      if (context != null && context.mounted) {
+        final t = AppLocalizations.of(context)!;
+        final mapper = const AuthCallbackErrorMapper();
+        AppNotice.error(context, message: mapper.fromAppException(e, t));
+      }
+      router.go('/login');
+    } catch (_) {
+      if (context != null && context.mounted) {
+        final t = AppLocalizations.of(context)!;
+        AppNotice.error(context, message: t.errorAuthFailed);
+      }
+      router.go('/login');
+    }
+  }
+
+  void dispose() {
+    _sub?.cancel();
   }
 }

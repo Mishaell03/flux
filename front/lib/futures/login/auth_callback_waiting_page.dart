@@ -84,8 +84,6 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
   }
 
   Future<void> _openAuthUrl() async {
-    final t = AppLocalizations.of(context)!;
-
     setState(() {
       _state = const AuthCallbackWaitingState.waiting();
     });
@@ -93,13 +91,12 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
     final isOpened = await _externalAuthService.open(widget.authUrl);
 
     if (!isOpened && mounted) {
-      _setError(message: t.errorCouldNotOpenLink);
+      _setError();
     }
   }
 
   Future<void> _handleDeepLinkData(AuthDeepLinkData data) async {
     if (!mounted) return;
-
     if (_lastHandledLink == data.key) return;
     _lastHandledLink = data.key;
 
@@ -124,32 +121,28 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
       Navigator.of(context).pop(true);
     } on ApiException catch (error) {
       if (!mounted) return;
-
-      _setError(message: error.message);
+      // Сообщение с бэка — показываем как есть
+      AppNotice.error(context, message: error.message);
+      _setError();
     } on AppException catch (error) {
       if (!mounted) return;
-
       final t = AppLocalizations.of(context)!;
-
-      _setError(
-        message: _errorMapper.fromAppException(error, t),
-      );
+      AppNotice.error(context, message: _errorMapper.fromAppException(error, t));
+      _setError();
     } catch (_) {
       if (!mounted) return;
-
-      _setError(
+      AppNotice.error(
+        context,
         message: AppLocalizations.of(context)!.errorAuthFailed,
       );
+      _setError();
     }
   }
 
-  void _setError({String? message}) {
+  void _setError() {
     if (!mounted) return;
-
     setState(() {
-      _state = AuthCallbackWaitingState.error(
-        message ?? AppLocalizations.of(context)!.errorAuthFailed,
-      );
+      _state = const AuthCallbackWaitingState.error();
     });
   }
 

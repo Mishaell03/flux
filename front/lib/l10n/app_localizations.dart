@@ -212,6 +212,138 @@ abstract class AppLocalizations {
   /// **'Open authorization again'**
   String get authCallbackRetry;
 
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileNamePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get profileNamePlaceholder;
+
+  /// No description provided for @profileEmailPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'email@example.com'**
+  String get profileEmailPlaceholder;
+
+  /// No description provided for @profileYandexConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Yandex account connected'**
+  String get profileYandexConnected;
+
+  /// No description provided for @profileSyncStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync status'**
+  String get profileSyncStatus;
+
+  /// No description provided for @profileSyncUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'All changes are up to date'**
+  String get profileSyncUpToDate;
+
+  /// No description provided for @profileSyncLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local'**
+  String get profileSyncLocal;
+
+  /// No description provided for @profileSyncCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get profileSyncCloud;
+
+  /// No description provided for @profileSyncLastSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync'**
+  String get profileSyncLastSync;
+
+  /// No description provided for @profileSyncSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced'**
+  String get profileSyncSynced;
+
+  /// No description provided for @profileSyncLastSyncValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get profileSyncLastSyncValue;
+
+  /// No description provided for @profileStatNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get profileStatNotes;
+
+  /// No description provided for @profileStatReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get profileStatReminders;
+
+  /// No description provided for @profileStatLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked notes'**
+  String get profileStatLinked;
+
+  /// No description provided for @profileSettingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get profileSettingsTheme;
+
+  /// No description provided for @profileSettingsThemeValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get profileSettingsThemeValue;
+
+  /// No description provided for @profileSettingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get profileSettingsNotifications;
+
+  /// No description provided for @profileSettingsNotificationsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get profileSettingsNotificationsValue;
+
+  /// No description provided for @profileSettingsDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get profileSettingsDevices;
+
+  /// No description provided for @profileSettingsDevicesValue.
+  ///
+  /// In en, this message translates to:
+  /// **'3 connected'**
+  String get profileSettingsDevicesValue;
+
+  /// No description provided for @profileSettingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About NexNote'**
+  String get profileSettingsAbout;
+
+  /// No description provided for @profileSettingsAboutValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get profileSettingsAboutValue;
+
   /// No description provided for @success.
   ///
   /// In en, this message translates to:
@@ -223,6 +355,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
+
+  /// No description provided for @sectionDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'This section is currently under development'**
+  String get sectionDevelopment;
+
+  /// No description provided for @weApologize.
+  ///
+  /// In en, this message translates to:
+  /// **'We apologize'**
+  String get weApologize;
 
   /// No description provided for @errorCouldNotOpenLink.
   ///

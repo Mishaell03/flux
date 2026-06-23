@@ -17,6 +17,7 @@ from app.core.user_event_logs import user_event_logs
 from app.core.jwt import create_state, decode_state
 from app.utilits.yandex_oauth import get_token, get_profile
 from app.core.errors import raise_backend_error
+from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -124,6 +125,13 @@ async def callback(
             db=db,
             request=request,
             code="STATE_EXPIRED",
+            language="en",
+        )
+    except (DecodeError, InvalidTokenError):
+        raise_backend_error(
+            db=db,
+            request=request,
+            code="SESSION_NOT_FOUND",
             language="en",
         )
 

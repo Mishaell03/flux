@@ -70,10 +70,82 @@ class AppLocalizationsRu extends AppLocalizations {
   String get authCallbackRetry => 'Открыть авторизацию снова';
 
   @override
+  String get profileTitle => 'Профиль';
+
+  @override
+  String get profileNamePlaceholder => 'Имя пользователя';
+
+  @override
+  String get profileEmailPlaceholder => 'email@example.com';
+
+  @override
+  String get profileYandexConnected => 'Яндекс аккаунт подключён';
+
+  @override
+  String get profileSyncStatus => 'Статус синхронизации';
+
+  @override
+  String get profileSyncUpToDate => 'Все изменения актуальны';
+
+  @override
+  String get profileSyncLocal => 'Локально';
+
+  @override
+  String get profileSyncCloud => 'Облако';
+
+  @override
+  String get profileSyncLastSync => 'Последняя синх.';
+
+  @override
+  String get profileSyncSynced => 'Синхр.';
+
+  @override
+  String get profileSyncLastSyncValue => 'Сегодня';
+
+  @override
+  String get profileStatNotes => 'Заметки';
+
+  @override
+  String get profileStatReminders => 'Напоминания';
+
+  @override
+  String get profileStatLinked => 'Связанные';
+
+  @override
+  String get profileSettingsTheme => 'Тема';
+
+  @override
+  String get profileSettingsThemeValue => 'Светлая';
+
+  @override
+  String get profileSettingsNotifications => 'Уведомления';
+
+  @override
+  String get profileSettingsNotificationsValue => 'Вкл';
+
+  @override
+  String get profileSettingsDevices => 'Устройства';
+
+  @override
+  String get profileSettingsDevicesValue => '3 подключено';
+
+  @override
+  String get profileSettingsAbout => 'О приложении';
+
+  @override
+  String get profileSettingsAboutValue => 'Версия 1.0.0';
+
+  @override
   String get success => 'Успешно';
 
   @override
   String get error => 'Ошибка';
+
+  @override
+  String get sectionDevelopment => 'Данный раздел находится в разработке';
+
+  @override
+  String get weApologize => 'Приносим свои извинения';
 
   @override
   String get errorCouldNotOpenLink => 'Не удалось открыть ссылку';

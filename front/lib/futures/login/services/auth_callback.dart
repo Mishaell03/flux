@@ -13,10 +13,7 @@ class LoginCallbackService {
     required String state,
     required String code,
   }) async {
-    final request = LoginCallbackRequest(
-      state: state,
-      code: code,
-    );
+    final request = LoginCallbackRequest(state: state, code: code);
 
     final response = await PostJsonService.request(
       url: ApiConfig.yandexCallbackUrl,
@@ -27,7 +24,6 @@ class LoginCallbackService {
   }
 }
 
-
 class AuthCallbackCompleteService {
   const AuthCallbackCompleteService();
 
@@ -37,6 +33,11 @@ class AuthCallbackCompleteService {
       code: data.code,
     );
 
+    if (response.token.isEmpty) {
+      // Бэк вернул пустой токен — это его косяк, кидаем AppException
+      throw const AppException(code: AppErrorCode.unknown);
+    }
+
     await AuthTokenStorage.save(response.token);
   }
 }
@@ -44,10 +45,7 @@ class AuthCallbackCompleteService {
 class AuthCallbackErrorMapper {
   const AuthCallbackErrorMapper();
 
-  String fromAppException(
-      AppException error,
-      AppLocalizations t,
-      ) {
+  String fromAppException(AppException error, AppLocalizations t) {
     return switch (error.code) {
       AppErrorCode.timeout => t.errorServerUnavailable,
       AppErrorCode.networkError => t.errorNetworkUnavailable,

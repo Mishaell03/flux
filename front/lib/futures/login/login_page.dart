@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/core/api/api_config.dart';
 import 'package:front/core/components/app_theme.dart';
+import 'package:front/core/components/auth_token_storage.dart';
 import 'package:front/core/components/scroll.dart';
 import 'package:front/core/components/theme.dart';
 import 'package:front/core/errors/api_exception.dart';
@@ -12,6 +14,7 @@ import 'package:front/core/widgets/animation_button.dart';
 import 'package:front/futures/login/auth_callback_waiting_page.dart';
 import 'package:front/futures/login/services/get_link.dart';
 import 'package:front/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:universal_io/io.dart';
 
 class LoginPage extends StatelessWidget {
@@ -127,9 +130,9 @@ class _SignInCardState extends State<_SignInCard> {
   bool get _isLoading => _loadingProvider != null;
 
   Future<void> _runWithLoading(
-      _AuthProvider provider,
-      Future<void> Function() action,
-      ) async {
+    _AuthProvider provider,
+    Future<void> Function() action,
+  ) async {
     if (_isLoading) return;
 
     setState(() {
@@ -138,6 +141,8 @@ class _SignInCardState extends State<_SignInCard> {
 
     try {
       await action();
+    } catch (e) {
+      debugPrint('caught: $e');
     } finally {
       if (!mounted) return;
 
@@ -148,9 +153,9 @@ class _SignInCardState extends State<_SignInCard> {
   }
 
   Future<void> _getLink(
-      BuildContext context, {
-        required String url,
-      }) async {
+    BuildContext context, {
+    required String url,
+  }) async {
     final t = AppLocalizations.of(context)!;
 
     try {
@@ -171,10 +176,7 @@ class _SignInCardState extends State<_SignInCard> {
       );
 
       if (isCompleted == true && context.mounted) {
-        // TODO: переход на главную страницу после успешной авторизации.
-        //
-        // Navigator.of(context).pushNamedAndRemoveUntil('/home', (_) => false);
-        // или context.go('/home');
+        context.goNamed('profile');
       }
     } on ApiException catch (error) {
       if (!context.mounted) return;
@@ -184,21 +186,21 @@ class _SignInCardState extends State<_SignInCard> {
       if (!context.mounted) return;
 
       AppNotice.error(context, message: _appExceptionMessage(error, t));
-    } catch (_) {
+    } catch (e) {
       if (!context.mounted) return;
-
+      debugPrint(e.toString());
       AppNotice.error(context, message: t.errorAuthFailed);
     }
   }
 
   String get _platform {
+    if (kIsWeb) return 'web';
     if (Platform.isAndroid) return 'android';
     if (Platform.isIOS) return 'ios';
     if (Platform.isWindows) return 'windows';
-    if (Platform.isLinux) return 'linux';
     if (Platform.isMacOS) return 'macos';
 
-    return 'web';
+    return 'linux';
   }
 
   String _appExceptionMessage(AppException error, AppLocalizations t) {
@@ -279,37 +281,37 @@ class _SignInCardState extends State<_SignInCard> {
                     switchOutCurve: Curves.easeIn,
                     child: _loadingProvider == _AuthProvider.yandex
                         ? const Center(
-                      key: ValueKey('yandex_loader'),
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                        ),
-                      ),
-                    )
+                            key: ValueKey('yandex_loader'),
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.4,
+                              ),
+                            ),
+                          )
                         : Row(
-                      key: const ValueKey('yandex_content'),
-                      children: [
-                        Image.asset(
-                          'assets/img/yandex.png',
-                          width: isCompactHeight ? 38 : 42,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            t.loginWithYandex,
-                            style: AppText.medium_14a,
+                            key: const ValueKey('yandex_content'),
+                            children: [
+                              Image.asset(
+                                'assets/img/yandex.png',
+                                width: isCompactHeight ? 38 : 42,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  t.loginWithYandex,
+                                  style: AppText.medium_14a,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 onPressed: () {
                   _runWithLoading(
                     _AuthProvider.yandex,
-                        () => _getLink(
+                    () => _getLink(
                       context,
                       url: ApiConfig.yandexLoginUrl,
                     ),
@@ -332,42 +334,44 @@ class _SignInCardState extends State<_SignInCard> {
                     switchOutCurve: Curves.easeIn,
                     child: _loadingProvider == _AuthProvider.vk
                         ? const Center(
-                      key: ValueKey('vk_loader'),
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.4,
-                        ),
-                      ),
-                    )
+                            key: ValueKey('vk_loader'),
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.4,
+                              ),
+                            ),
+                          )
                         : Row(
-                      key: const ValueKey('vk_content'),
-                      children: [
-                        Image.asset(
-                          'assets/img/vk.png',
-                          width: isCompactHeight ? 38 : 42,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            t.loginWithVk,
-                            style: AppText.medium_14a,
+                            key: const ValueKey('vk_content'),
+                            children: [
+                              Image.asset(
+                                'assets/img/vk.png',
+                                width: isCompactHeight ? 38 : 42,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  t.loginWithVk,
+                                  style: AppText.medium_14a,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
                 onPressed: () {
-                  _runWithLoading(
-                    _AuthProvider.vk,
-                        () => _getLink(
-                      context,
-                      // TODO: исправить на VK ссылку
-                      url: ApiConfig.yandexLoginUrl,
-                    ),
-                  );
+                  // _runWithLoading(
+                  //   _AuthProvider.vk,
+                  //       () => _getLink(
+                  //     context,
+                  //     // TODO: исправить на VK ссылку
+                  //     url: ApiConfig.yandexLoginUrl,
+                  //   ),
+                  // );
+                  AppNotice.success(context,
+                      message: t.sectionDevelopment, title: t.weApologize);
                 },
               ),
             ],

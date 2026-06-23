@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:front/core/components/app_theme.dart';
 import 'package:front/core/components/theme.dart';
 import 'package:front/l10n/app_localizations.dart';
+import 'package:universal_io/io.dart';
 
 enum AppNoticeType { success, error }
 
@@ -130,10 +131,12 @@ class _NoticeWidget extends StatelessWidget {
         ? Icons.error_outline_outlined
         : Icons.check_circle_outline_outlined;
 
+    final isMobile = Platform.isAndroid || Platform.isIOS;
+
     return Positioned(
       left: 16,
       right: 16,
-      top: 16 + topPadding,
+      top: 16 + topPadding + (isMobile ? 50 : 0),
       child: Align(
         alignment: Alignment.bottomCenter,
         child: ConstrainedBox(

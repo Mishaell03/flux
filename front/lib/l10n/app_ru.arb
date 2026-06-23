@@ -21,8 +21,37 @@
   "authCallbackBack": "Вернуться назад",
   "authCallbackRetry": "Открыть авторизацию снова",
 
+  "profileTitle": "Профиль",
+  "profileNamePlaceholder": "Имя пользователя",
+  "profileEmailPlaceholder": "email@example.com",
+  "profileYandexConnected": "Яндекс аккаунт подключён",
+
+  "profileSyncStatus": "Статус синхронизации",
+  "profileSyncUpToDate": "Все изменения актуальны",
+  "profileSyncLocal": "Локально",
+  "profileSyncCloud": "Облако",
+  "profileSyncLastSync": "Последняя синх.",
+  "profileSyncSynced": "Синхр.",
+  "profileSyncLastSyncValue": "Сегодня",
+
+  "profileStatNotes": "Заметки",
+  "profileStatReminders": "Напоминания",
+  "profileStatLinked": "Связанные",
+
+  "profileSettingsTheme": "Тема",
+  "profileSettingsThemeValue": "Светлая",
+  "profileSettingsNotifications": "Уведомления",
+  "profileSettingsNotificationsValue": "Вкл",
+  "profileSettingsDevices": "Устройства",
+  "profileSettingsDevicesValue": "3 подключено",
+  "profileSettingsAbout": "О приложении",
+  "profileSettingsAboutValue": "Версия 1.0.0",
+
+
   "error": "Ошибка",
   "success": "Успешно",
+  "sectionDevelopment": "Данный раздел находится в разработке",
+  "weApologize": "Приносим свои извинения",
   "errorCouldNotOpenLink": "Не удалось открыть ссылку",
   "errorServerUnavailable": "Сервер недоступен",
   "errorNetworkUnavailable": "Нет подключения к интернету",
