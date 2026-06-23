@@ -48,6 +48,12 @@ async def login(
         redirect_uri = settings.yandex_redirect_mobile
 
     if session:
+        session.app_version = request_data.app_version
+        session.device_name = request_data.device_name
+        session.expires_at = now + timedelta(minutes=20)
+
+        db.commit()
+
         state = create_state(
             device_id=session.device_id,
             platform=session.platform,
@@ -65,6 +71,7 @@ async def login(
         user_event_logs(
             db=db,
             request=request,
+            status_code=200,
             event="YANDEX_LOGIN_REUSED",
             device_id=request_data.device_id,
             platform=request_data.platform,
@@ -79,6 +86,8 @@ async def login(
         device_id=request_data.device_id,
         platform=request_data.platform,
         language=request_data.language,
+        app_version=request_data.app_version,
+        device_name=request_data.device_name,
         expires_at=now + timedelta(minutes=20),
         used_at=None,
     )
@@ -178,8 +187,78 @@ async def callback(
             language="en",
         )
 
-    access_token = get_token(request_data.code)
-    profile = get_profile(access_token)
+    try:
+        access_token = get_token(request_data.code)
+        profile = get_profile(access_token)
+
+    except httpx.TimeoutException:
+        user_event_logs(
+            db=db,
+            request=request,
+            status_code=504,
+            event="YANDEX_TIMEOUT",
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
+
+        raise_backend_error(
+            db=db,
+            request=request,
+            code="YANDEX_TIMEOUT",
+            language=yandex_session.language or "en",
+            user_id=yandex_session.user_id,
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
+
+    except httpx.HTTPStatusError as error:
+        yandex_status_code = error.response.status_code
+
+        if yandex_status_code in {400, 401, 403}:
+            error_code = "YANDEX_AUTH_FAILED"
+            status_code = 400
+        else:
+            error_code = "YANDEX_UNAVAILABLE"
+            status_code = 503
+
+        user_event_logs(
+            db=db,
+            request=request,
+            status_code=status_code,
+            event="YANDEX_HTTP_ERROR",
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
+
+        raise_backend_error(
+            db=db,
+            request=request,
+            code=error_code,
+            language=yandex_session.language or "en",
+            user_id=yandex_session.user_id,
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
+
+    except (httpx.RequestError, YandexOAuthBadResponse, ValueError):
+        user_event_logs(
+            db=db,
+            request=request,
+            status_code=503,
+            event="YANDEX_REQUEST_ERROR",
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
+
+        raise_backend_error(
+            db=db,
+            request=request,
+            code="YANDEX_UNAVAILABLE",
+            language=yandex_session.language or "en",
+            user_id=yandex_session.user_id,
+            device_id=yandex_session.device_id,
+            platform=yandex_session.platform,
+        )
 
     email = profile.get("default_email")
     if not email:
@@ -221,6 +300,9 @@ async def callback(
         user_id=user.user_id,
         device_id=yandex_session.device_id,
         platform=yandex_session.platform,
+        language=yandex_session.language or "en",
+        app_version=yandex_session.app_version,
+        device_name=yandex_session.device_name,
         provider="ya",
         session_token=session_token,
         is_verified=True,

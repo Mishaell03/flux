@@ -24,6 +24,8 @@ class Settings:
 
     api_port: int = int(os.getenv("API_PORT", "8000"))
 
+    image_base_endpoint: str = os.getenv("IMAGE_BASE_ENDPOINT")
+
     api_reload: bool = (
         os.getenv("API_RELOAD", "false")
         .strip()

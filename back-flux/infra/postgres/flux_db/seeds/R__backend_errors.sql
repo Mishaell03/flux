@@ -4,7 +4,10 @@ INSERT INTO backend_errors (code, http_status) VALUES
     ('SESSION_NOT_FOUND', 404),
     ('YANDEX_NO_EMAIL', 400),
     ('INVALID_SESSION', 401),
-    ('RECENT_SESSION', 429)
+    ('RECENT_SESSION', 429),
+    ('YANDEX_TIMEOUT', 504),
+    ('YANDEX_UNAVAILABLE', 503),
+    ('YANDEX_AUTH_FAILED', 400)
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO backend_errors_localization (code, language, message) VALUES
@@ -24,5 +27,14 @@ INSERT INTO backend_errors_localization (code, language, message) VALUES
     ('INVALID_SESSION', 'ru', 'Недействительная сессия'),
 
     ('RECENT_SESSION', 'en', 'Session was created recently. Please try again later'),
-    ('RECENT_SESSION', 'ru', 'Сессия была создана недавно. Попробуйте позже')
+    ('RECENT_SESSION', 'ru', 'Сессия была создана недавно. Попробуйте позже'),
+
+     ('YANDEX_TIMEOUT', 'ru', 'Яндекс не ответил вовремя. Попробуйте ещё раз.'),
+    ('YANDEX_TIMEOUT', 'en', 'Yandex did not respond in time. Please try again.'),
+
+    ('YANDEX_UNAVAILABLE', 'ru', 'Сервис Яндекса временно недоступен. Попробуйте позже.'),
+    ('YANDEX_UNAVAILABLE', 'en', 'Yandex service is temporarily unavailable. Please try again later.'),
+
+    ('YANDEX_AUTH_FAILED', 'ru', 'Не удалось авторизоваться через Яндекс. Попробуйте войти ещё раз.'),
+    ('YANDEX_AUTH_FAILED', 'en', 'Failed to authenticate with Yandex. Please try signing in again.')
 ON CONFLICT (code, language) DO NOTHING;

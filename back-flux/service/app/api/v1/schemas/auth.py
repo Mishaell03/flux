@@ -17,6 +17,18 @@ class YandexLoginRequest(BaseModel):
         max_length=3,
         examples=["ru"],
     )
+    app_version: str = Field(
+        ...,
+        min_length=5,
+        max_length=32,
+        examples=["1.0.0"],
+        pattern=r"^[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)*$",
+    )
+    device_name: str = Field(
+        ...,
+        max_length=32,
+        examples=['CANDY']
+    )
 
 class YandexLoginResponse(BaseModel):
     url: str = Field(

@@ -9,7 +9,6 @@ CREATE TABLE registration_sessions (
     device_name VARCHAR(32),
     platform VARCHAR(10),
     is_verified BOOLEAN DEFAULT FALSE,
-    revoked BOOLEAN DEFAULT FALSE,
     expires_at TIMESTAMPTZ NOT NULL,
     revoked_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT NOW()
