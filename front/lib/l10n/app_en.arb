@@ -46,6 +46,17 @@
   "profileSettingsAbout": "About NexNote",
   "profileSettingsAboutValue": "Version",
 
+  "homeSearch": "Search notes or reminders",
+  "homeUpcomingReminders": "Upcoming reminders",
+  "homeNoReminders": "No reminders for this day",
+  "homeToday": "Today",
+  "homeNoNotes": "Пока никаких заметок",
+  "homeRecentNotes": "Recent notes",
+  "homeSeeAll": "See all",
+  "homeMap": "Flux map",
+  "homeOpenGraph": "Open graph",
+  "homeLinkedNotes": "inked notes",
+
   "success": "Success",
   "error": "Error",
   "sectionDevelopment": "This section is currently under development",

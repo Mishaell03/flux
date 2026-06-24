@@ -52,6 +52,12 @@ class $NotesTableTable extends NotesTable
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("dirty" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _updatedAtMeta =
       const VerificationMeta('updatedAt');
   @override
@@ -65,8 +71,17 @@ class $NotesTableTable extends NotesTable
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, title, content, deleted, version, dirty, updatedAt, createdAt];
+  List<GeneratedColumn> get $columns => [
+        id,
+        title,
+        content,
+        deleted,
+        version,
+        dirty,
+        deletedAt,
+        updatedAt,
+        createdAt
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -102,6 +117,10 @@ class $NotesTableTable extends NotesTable
       context.handle(
           _dirtyMeta, dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta));
     }
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+    }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
@@ -135,6 +154,8 @@ class $NotesTableTable extends NotesTable
           .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
       dirty: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}dirty'])!,
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       createdAt: attachedDatabase.typeMapping
@@ -155,6 +176,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
   final bool deleted;
   final int version;
   final bool dirty;
+  final DateTime? deletedAt;
   final DateTime updatedAt;
   final DateTime createdAt;
   const NotesTableData(
@@ -164,6 +186,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       required this.deleted,
       required this.version,
       required this.dirty,
+      this.deletedAt,
       required this.updatedAt,
       required this.createdAt});
   @override
@@ -179,6 +202,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
     map['deleted'] = Variable<bool>(deleted);
     map['version'] = Variable<int>(version);
     map['dirty'] = Variable<bool>(dirty);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -195,6 +221,9 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       deleted: Value(deleted),
       version: Value(version),
       dirty: Value(dirty),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       updatedAt: Value(updatedAt),
       createdAt: Value(createdAt),
     );
@@ -210,6 +239,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       deleted: serializer.fromJson<bool>(json['deleted']),
       version: serializer.fromJson<int>(json['version']),
       dirty: serializer.fromJson<bool>(json['dirty']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -224,6 +254,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       'deleted': serializer.toJson<bool>(deleted),
       'version': serializer.toJson<int>(version),
       'dirty': serializer.toJson<bool>(dirty),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -236,6 +267,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           bool? deleted,
           int? version,
           bool? dirty,
+          Value<DateTime?> deletedAt = const Value.absent(),
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       NotesTableData(
@@ -245,6 +277,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
         deleted: deleted ?? this.deleted,
         version: version ?? this.version,
         dirty: dirty ?? this.dirty,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -256,6 +289,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       version: data.version.present ? data.version.value : this.version,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -270,6 +304,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ..write('deleted: $deleted, ')
           ..write('version: $version, ')
           ..write('dirty: $dirty, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -277,8 +312,8 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, title, content, deleted, version, dirty, updatedAt, createdAt);
+  int get hashCode => Object.hash(id, title, content, deleted, version, dirty,
+      deletedAt, updatedAt, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -289,6 +324,7 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           other.deleted == this.deleted &&
           other.version == this.version &&
           other.dirty == this.dirty &&
+          other.deletedAt == this.deletedAt &&
           other.updatedAt == this.updatedAt &&
           other.createdAt == this.createdAt);
 }
@@ -300,6 +336,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
   final Value<bool> deleted;
   final Value<int> version;
   final Value<bool> dirty;
+  final Value<DateTime?> deletedAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
@@ -310,6 +347,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     this.deleted = const Value.absent(),
     this.version = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -321,6 +359,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     this.deleted = const Value.absent(),
     this.version = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     required DateTime updatedAt,
     required DateTime createdAt,
     this.rowid = const Value.absent(),
@@ -334,6 +373,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     Expression<bool>? deleted,
     Expression<int>? version,
     Expression<bool>? dirty,
+    Expression<DateTime>? deletedAt,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
@@ -345,6 +385,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       if (deleted != null) 'deleted': deleted,
       if (version != null) 'version': version,
       if (dirty != null) 'dirty': dirty,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
@@ -358,6 +399,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       Value<bool>? deleted,
       Value<int>? version,
       Value<bool>? dirty,
+      Value<DateTime?>? deletedAt,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
       Value<int>? rowid}) {
@@ -368,6 +410,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       deleted: deleted ?? this.deleted,
       version: version ?? this.version,
       dirty: dirty ?? this.dirty,
+      deletedAt: deletedAt ?? this.deletedAt,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
@@ -395,6 +438,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -416,6 +462,7 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
           ..write('deleted: $deleted, ')
           ..write('version: $version, ')
           ..write('dirty: $dirty, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
@@ -482,6 +529,12 @@ class $RemindersTableTable extends RemindersTable
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("dirty" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _repeatRuleMeta =
+      const VerificationMeta('repeatRule');
+  @override
+  late final GeneratedColumn<String> repeatRule = GeneratedColumn<String>(
+      'repeat_rule', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _updatedAtMeta =
       const VerificationMeta('updatedAt');
   @override
@@ -503,6 +556,7 @@ class $RemindersTableTable extends RemindersTable
         deleted,
         version,
         dirty,
+        repeatRule,
         updatedAt,
         createdAt
       ];
@@ -547,6 +601,12 @@ class $RemindersTableTable extends RemindersTable
       context.handle(
           _dirtyMeta, dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta));
     }
+    if (data.containsKey('repeat_rule')) {
+      context.handle(
+          _repeatRuleMeta,
+          repeatRule.isAcceptableOrUnknown(
+              data['repeat_rule']!, _repeatRuleMeta));
+    }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
@@ -582,6 +642,8 @@ class $RemindersTableTable extends RemindersTable
           .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
       dirty: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}dirty'])!,
+      repeatRule: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}repeat_rule']),
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       createdAt: attachedDatabase.typeMapping
@@ -604,6 +666,7 @@ class RemindersTableData extends DataClass
   final bool deleted;
   final int version;
   final bool dirty;
+  final String? repeatRule;
   final DateTime updatedAt;
   final DateTime createdAt;
   const RemindersTableData(
@@ -614,6 +677,7 @@ class RemindersTableData extends DataClass
       required this.deleted,
       required this.version,
       required this.dirty,
+      this.repeatRule,
       required this.updatedAt,
       required this.createdAt});
   @override
@@ -628,6 +692,9 @@ class RemindersTableData extends DataClass
     map['deleted'] = Variable<bool>(deleted);
     map['version'] = Variable<int>(version);
     map['dirty'] = Variable<bool>(dirty);
+    if (!nullToAbsent || repeatRule != null) {
+      map['repeat_rule'] = Variable<String>(repeatRule);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -643,6 +710,9 @@ class RemindersTableData extends DataClass
       deleted: Value(deleted),
       version: Value(version),
       dirty: Value(dirty),
+      repeatRule: repeatRule == null && nullToAbsent
+          ? const Value.absent()
+          : Value(repeatRule),
       updatedAt: Value(updatedAt),
       createdAt: Value(createdAt),
     );
@@ -659,6 +729,7 @@ class RemindersTableData extends DataClass
       deleted: serializer.fromJson<bool>(json['deleted']),
       version: serializer.fromJson<int>(json['version']),
       dirty: serializer.fromJson<bool>(json['dirty']),
+      repeatRule: serializer.fromJson<String?>(json['repeatRule']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
@@ -674,6 +745,7 @@ class RemindersTableData extends DataClass
       'deleted': serializer.toJson<bool>(deleted),
       'version': serializer.toJson<int>(version),
       'dirty': serializer.toJson<bool>(dirty),
+      'repeatRule': serializer.toJson<String?>(repeatRule),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
@@ -687,6 +759,7 @@ class RemindersTableData extends DataClass
           bool? deleted,
           int? version,
           bool? dirty,
+          Value<String?> repeatRule = const Value.absent(),
           DateTime? updatedAt,
           DateTime? createdAt}) =>
       RemindersTableData(
@@ -697,6 +770,7 @@ class RemindersTableData extends DataClass
         deleted: deleted ?? this.deleted,
         version: version ?? this.version,
         dirty: dirty ?? this.dirty,
+        repeatRule: repeatRule.present ? repeatRule.value : this.repeatRule,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
       );
@@ -709,6 +783,8 @@ class RemindersTableData extends DataClass
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       version: data.version.present ? data.version.value : this.version,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      repeatRule:
+          data.repeatRule.present ? data.repeatRule.value : this.repeatRule,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -724,6 +800,7 @@ class RemindersTableData extends DataClass
           ..write('deleted: $deleted, ')
           ..write('version: $version, ')
           ..write('dirty: $dirty, ')
+          ..write('repeatRule: $repeatRule, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -732,7 +809,7 @@ class RemindersTableData extends DataClass
 
   @override
   int get hashCode => Object.hash(id, noteId, remindAt, isDone, deleted,
-      version, dirty, updatedAt, createdAt);
+      version, dirty, repeatRule, updatedAt, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -744,6 +821,7 @@ class RemindersTableData extends DataClass
           other.deleted == this.deleted &&
           other.version == this.version &&
           other.dirty == this.dirty &&
+          other.repeatRule == this.repeatRule &&
           other.updatedAt == this.updatedAt &&
           other.createdAt == this.createdAt);
 }
@@ -756,6 +834,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
   final Value<bool> deleted;
   final Value<int> version;
   final Value<bool> dirty;
+  final Value<String?> repeatRule;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
@@ -767,6 +846,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     this.deleted = const Value.absent(),
     this.version = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.repeatRule = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -779,6 +859,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     this.deleted = const Value.absent(),
     this.version = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.repeatRule = const Value.absent(),
     required DateTime updatedAt,
     required DateTime createdAt,
     this.rowid = const Value.absent(),
@@ -794,6 +875,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     Expression<bool>? deleted,
     Expression<int>? version,
     Expression<bool>? dirty,
+    Expression<String>? repeatRule,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
@@ -806,6 +888,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       if (deleted != null) 'deleted': deleted,
       if (version != null) 'version': version,
       if (dirty != null) 'dirty': dirty,
+      if (repeatRule != null) 'repeat_rule': repeatRule,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
@@ -820,6 +903,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       Value<bool>? deleted,
       Value<int>? version,
       Value<bool>? dirty,
+      Value<String?>? repeatRule,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
       Value<int>? rowid}) {
@@ -831,6 +915,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       deleted: deleted ?? this.deleted,
       version: version ?? this.version,
       dirty: dirty ?? this.dirty,
+      repeatRule: repeatRule ?? this.repeatRule,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
@@ -861,6 +946,9 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
+    if (repeatRule.present) {
+      map['repeat_rule'] = Variable<String>(repeatRule.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -883,6 +971,7 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
           ..write('deleted: $deleted, ')
           ..write('version: $version, ')
           ..write('dirty: $dirty, ')
+          ..write('repeatRule: $repeatRule, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
@@ -1220,6 +1309,7 @@ typedef $$NotesTableTableCreateCompanionBuilder = NotesTableCompanion Function({
   Value<bool> deleted,
   Value<int> version,
   Value<bool> dirty,
+  Value<DateTime?> deletedAt,
   required DateTime updatedAt,
   required DateTime createdAt,
   Value<int> rowid,
@@ -1231,6 +1321,7 @@ typedef $$NotesTableTableUpdateCompanionBuilder = NotesTableCompanion Function({
   Value<bool> deleted,
   Value<int> version,
   Value<bool> dirty,
+  Value<DateTime?> deletedAt,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -1262,6 +1353,9 @@ class $$NotesTableTableFilterComposer
 
   ColumnFilters<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
@@ -1297,6 +1391,9 @@ class $$NotesTableTableOrderingComposer
   ColumnOrderings<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
@@ -1330,6 +1427,9 @@ class $$NotesTableTableAnnotationComposer
 
   GeneratedColumn<bool> get dirty =>
       $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -1370,6 +1470,7 @@ class $$NotesTableTableTableManager extends RootTableManager<
             Value<bool> deleted = const Value.absent(),
             Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -1381,6 +1482,7 @@ class $$NotesTableTableTableManager extends RootTableManager<
             deleted: deleted,
             version: version,
             dirty: dirty,
+            deletedAt: deletedAt,
             updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,
@@ -1392,6 +1494,7 @@ class $$NotesTableTableTableManager extends RootTableManager<
             Value<bool> deleted = const Value.absent(),
             Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             required DateTime updatedAt,
             required DateTime createdAt,
             Value<int> rowid = const Value.absent(),
@@ -1403,6 +1506,7 @@ class $$NotesTableTableTableManager extends RootTableManager<
             deleted: deleted,
             version: version,
             dirty: dirty,
+            deletedAt: deletedAt,
             updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,
@@ -1438,6 +1542,7 @@ typedef $$RemindersTableTableCreateCompanionBuilder = RemindersTableCompanion
   Value<bool> deleted,
   Value<int> version,
   Value<bool> dirty,
+  Value<String?> repeatRule,
   required DateTime updatedAt,
   required DateTime createdAt,
   Value<int> rowid,
@@ -1451,6 +1556,7 @@ typedef $$RemindersTableTableUpdateCompanionBuilder = RemindersTableCompanion
   Value<bool> deleted,
   Value<int> version,
   Value<bool> dirty,
+  Value<String?> repeatRule,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
@@ -1485,6 +1591,9 @@ class $$RemindersTableTableFilterComposer
 
   ColumnFilters<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get repeatRule => $composableBuilder(
+      column: $table.repeatRule, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
@@ -1523,6 +1632,9 @@ class $$RemindersTableTableOrderingComposer
   ColumnOrderings<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get repeatRule => $composableBuilder(
+      column: $table.repeatRule, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
@@ -1559,6 +1671,9 @@ class $$RemindersTableTableAnnotationComposer
 
   GeneratedColumn<bool> get dirty =>
       $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<String> get repeatRule => $composableBuilder(
+      column: $table.repeatRule, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -1601,6 +1716,7 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             Value<bool> deleted = const Value.absent(),
             Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<String?> repeatRule = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -1613,6 +1729,7 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             deleted: deleted,
             version: version,
             dirty: dirty,
+            repeatRule: repeatRule,
             updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,
@@ -1625,6 +1742,7 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             Value<bool> deleted = const Value.absent(),
             Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<String?> repeatRule = const Value.absent(),
             required DateTime updatedAt,
             required DateTime createdAt,
             Value<int> rowid = const Value.absent(),
@@ -1637,6 +1755,7 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             deleted: deleted,
             version: version,
             dirty: dirty,
+            repeatRule: repeatRule,
             updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,

@@ -133,6 +133,36 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSettingsAboutValue => 'Версия';
 
   @override
+  String get homeSearch => 'Поиск заметок или напоминаний';
+
+  @override
+  String get homeUpcomingReminders => 'Предстоящие напоминания';
+
+  @override
+  String get homeNoReminders => 'Никаких напоминаний об этом дне';
+
+  @override
+  String get homeToday => 'Сегодня';
+
+  @override
+  String get homeNoNotes => 'Пока никаких заметок';
+
+  @override
+  String get homeRecentNotes => 'Последние заметки';
+
+  @override
+  String get homeSeeAll => 'Посмотреть всё';
+
+  @override
+  String get homeMap => 'Flux map';
+
+  @override
+  String get homeOpenGraph => 'Открыть граф';
+
+  @override
+  String get homeLinkedNotes => 'связей в заметках';
+
+  @override
   String get success => 'Успешно';
 
   @override

@@ -18,10 +18,10 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePage();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePage extends State<ProfilePage> {
   late Future<ProfileResponse> _future;
   bool _errorShown = false;
 

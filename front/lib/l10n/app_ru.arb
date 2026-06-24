@@ -46,6 +46,16 @@
   "profileSettingsAbout": "О приложении",
   "profileSettingsAboutValue": "Версия",
 
+  "homeSearch": "Поиск заметок или напоминаний",
+  "homeUpcomingReminders": "Предстоящие напоминания",
+  "homeNoReminders": "Никаких напоминаний об этом дне",
+  "homeToday": "Сегодня",
+  "homeNoNotes": "Пока никаких заметок",
+  "homeRecentNotes": "Последние заметки",
+  "homeSeeAll": "Посмотреть всё",
+  "homeMap": "Flux map",
+  "homeOpenGraph": "Открыть граф",
+  "homeLinkedNotes": "связей в заметках",
 
   "error": "Ошибка",
   "success": "Успешно",

@@ -7,6 +7,13 @@ class ApiConfig {
 
   static const String userProfile = '$_baseUrl/user/me';
 
+  static const String syncPush = '$_baseUrl/sync/push';
+  static const String syncStatus = '$_baseUrl/sync/status';
+  static const String syncPull = '$_baseUrl/sync/pull';
+
+  static const String noteLinks = '$_baseUrl/note-links';
+  static const String noteLinksPush = '$_baseUrl/note-links/push';
+
   static const timeout = Duration(seconds: 30);
   static const timeoutConnect = Duration(seconds: 10);
   static const uploadTimeout = Duration(minutes: 2);

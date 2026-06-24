@@ -131,6 +131,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSettingsAboutValue => 'Version';
 
   @override
+  String get homeSearch => 'Search notes or reminders';
+
+  @override
+  String get homeUpcomingReminders => 'Upcoming reminders';
+
+  @override
+  String get homeNoReminders => 'No reminders for this day';
+
+  @override
+  String get homeToday => 'Today';
+
+  @override
+  String get homeNoNotes => 'Пока никаких заметок';
+
+  @override
+  String get homeRecentNotes => 'Recent notes';
+
+  @override
+  String get homeSeeAll => 'See all';
+
+  @override
+  String get homeMap => 'Flux map';
+
+  @override
+  String get homeOpenGraph => 'Open graph';
+
+  @override
+  String get homeLinkedNotes => 'inked notes';
+
+  @override
   String get success => 'Success';
 
   @override

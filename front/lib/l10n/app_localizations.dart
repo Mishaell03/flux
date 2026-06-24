@@ -338,6 +338,66 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get profileSettingsAboutValue;
 
+  /// No description provided for @homeSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search notes or reminders'**
+  String get homeSearch;
+
+  /// No description provided for @homeUpcomingReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming reminders'**
+  String get homeUpcomingReminders;
+
+  /// No description provided for @homeNoReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders for this day'**
+  String get homeNoReminders;
+
+  /// No description provided for @homeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get homeToday;
+
+  /// No description provided for @homeNoNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Пока никаких заметок'**
+  String get homeNoNotes;
+
+  /// No description provided for @homeRecentNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent notes'**
+  String get homeRecentNotes;
+
+  /// No description provided for @homeSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get homeSeeAll;
+
+  /// No description provided for @homeMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Flux map'**
+  String get homeMap;
+
+  /// No description provided for @homeOpenGraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Open graph'**
+  String get homeOpenGraph;
+
+  /// No description provided for @homeLinkedNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'inked notes'**
+  String get homeLinkedNotes;
+
   /// No description provided for @success.
   ///
   /// In en, this message translates to:

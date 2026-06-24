@@ -13,6 +13,8 @@ class NotesTable extends Table {
 
   BoolColumn get dirty => boolean().withDefault(const Constant(false))();
 
+  DateTimeColumn get deletedAt => dateTime().nullable()();
+
   DateTimeColumn get updatedAt => dateTime()();
 
   DateTimeColumn get createdAt => dateTime()();
