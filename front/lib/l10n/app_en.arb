@@ -92,6 +92,9 @@
   "errorNetworkUnavailable": "No internet connection",
   "errorAuthFailed": "Couldn't complete sign in",
   "errorProfileFailed": "Account data could not be retrieved",
+  "errorInvalidLink": "Invalid link",
+  "errorOpenLink": "Link could not be opened",
+  "errorNavigation": "Navigation error",
 
   "errorNetwork": "No internet connection",
   "errorTimeout": "Request timed out",

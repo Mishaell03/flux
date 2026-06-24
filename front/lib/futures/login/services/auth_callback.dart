@@ -3,7 +3,7 @@ import 'package:front/core/api/request/post.dart';
 import 'package:front/core/errors/app_exception.dart';
 import 'package:front/futures/login/models/auth_deeplink.dart';
 import 'package:front/futures/login/models/yandex_callback.dart';
-import 'package:front/core/components/auth_token_storage.dart';
+import 'package:front/core/components/secure/auth_token_storage.dart';
 
 class LoginCallbackService {
   const LoginCallbackService._();

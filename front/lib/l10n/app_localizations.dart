@@ -596,6 +596,24 @@ abstract class AppLocalizations {
   /// **'Account data could not be retrieved'**
   String get errorProfileFailed;
 
+  /// No description provided for @errorInvalidLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid link'**
+  String get errorInvalidLink;
+
+  /// No description provided for @errorOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Link could not be opened'**
+  String get errorOpenLink;
+
+  /// No description provided for @errorNavigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation error'**
+  String get errorNavigation;
+
   /// No description provided for @errorNetwork.
   ///
   /// In en, this message translates to:

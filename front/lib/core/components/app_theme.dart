@@ -26,6 +26,9 @@ class AppColorsAccessor {
   Color get border =>
       isDark ? AppDarkColors.border : AppLightColors.border;
 
+  Color get primarySecond =>
+      isDark ? AppDarkColors.primarySecond : AppLightColors.primarySecond;
+
   // ===== TEXT =====
   Color get text => isDark ? AppDarkColors.text : AppLightColors.text;
 

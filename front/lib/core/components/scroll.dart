@@ -17,7 +17,7 @@ class AppVerticalScroll extends StatelessWidget {
     this.controller,
     this.scrollbar = true,
     this.overscroll = true,
-    this.isCenter = true,
+    this.isCenter = true
   });
 
   @override
@@ -32,18 +32,17 @@ class AppVerticalScroll extends StatelessWidget {
           builder: (context, constrains) {
             return SingleChildScrollView(
               controller: controller,
-              padding: EdgeInsets.symmetric(
-                  horizontal: paddingH, vertical: paddingV),
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: EdgeInsets.symmetric(horizontal: paddingH, vertical: paddingV),
+              keyboardDismissBehavior:
+              ScrollViewKeyboardDismissBehavior.onDrag,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: constrains.maxHeight - 48,
                 ),
-                child: isCenter
-                    ? Center(
-                        child: child,
-                      )
-                    : child,
+                child: Align(
+                  alignment: isCenter ? Alignment.center : Alignment.topCenter,
+                  child: child,
+                ),
               ),
             );
           },

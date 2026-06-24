@@ -1,4 +1,4 @@
-import 'package:front/core/components/auth_token_storage.dart';
+import 'package:front/core/components/secure/auth_token_storage.dart';
 import 'package:front/core/errors/app_exception.dart';
 import 'package:front/core/sync/services/note_links_api_service.dart';
 import 'package:front/core/sync/services/sync_api_service.dart';

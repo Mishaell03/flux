@@ -17,7 +17,7 @@ class AppLightColors {
   static const Color text = Color(0xFF1C1F2A);
   static const Color gray = Color(0xFF8A8FA3);
 
-  static const Color primarySecond = Color(0xFFE9E6FF);
+  static const Color primarySecond = Color(0xFFA59BF4);
 }
 
 class AppDarkColors {
@@ -58,7 +58,7 @@ class AppText {
   // reg
   static const regular_18 = TextStyle(
     fontSize: 18,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w400,
     fontFamily: "Montserrat",
   );
 

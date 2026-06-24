@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/l10n/app_localizations.dart';
 
-/// --------------------
-/// ERROR CODES
-/// --------------------
 enum AppErrorCode {
   timeout,
   networkError,
@@ -11,9 +8,6 @@ enum AppErrorCode {
   errorProfileFailed,
 }
 
-/// --------------------
-/// EXCEPTION
-/// --------------------
 class AppException implements Exception {
   final AppErrorCode code;
   final String? message;

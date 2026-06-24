@@ -265,6 +265,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorProfileFailed => 'Account data could not be retrieved';
 
   @override
+  String get errorInvalidLink => 'Invalid link';
+
+  @override
+  String get errorOpenLink => 'Link could not be opened';
+
+  @override
+  String get errorNavigation => 'Navigation error';
+
+  @override
   String get errorNetwork => 'No internet connection';
 
   @override

@@ -1,7 +1,7 @@
 import 'package:front/core/api/request/post.dart';
-import 'package:front/core/components/app_version_service.dart';
-import 'package:front/core/components/device_id.dart';
-import 'package:front/core/components/device_name_service.dart';
+import 'package:front/core/components/secure/app_version_service.dart';
+import 'package:front/core/components/secure/device_id.dart';
+import 'package:front/core/components/secure/device_name_service.dart';
 import 'package:front/futures/login/models/get_link.dart';
 
 class GetLinkService {

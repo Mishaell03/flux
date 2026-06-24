@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/core/components/app_theme.dart';
-import 'package:front/core/components/app_version_service.dart';
+import 'package:front/core/components/secure/app_version_service.dart';
 import 'package:front/core/components/theme.dart';
 import 'package:front/futures/profile/models/get_info.dart';
 import 'package:front/futures/profile/widgets/card.dart';

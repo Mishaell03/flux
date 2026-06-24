@@ -266,6 +266,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get errorProfileFailed => 'Не удалось получить данные аккаунта';
 
   @override
+  String get errorInvalidLink => 'Некорректная ссылка';
+
+  @override
+  String get errorOpenLink => 'Не удалось открыть ссылку';
+
+  @override
+  String get errorNavigation => 'Ошибка перехода';
+
+  @override
   String get errorNetwork => 'Нет подключения к интернету';
 
   @override

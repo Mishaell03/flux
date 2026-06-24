@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/core/api/api_config.dart';
-import 'package:front/core/components/auth_token_storage.dart';
+import 'package:front/core/components/secure/auth_token_storage.dart';
 import 'package:front/core/components/scroll.dart';
 import 'package:front/core/errors/app_exception.dart';
 import 'package:front/core/errors/notyce.dart';

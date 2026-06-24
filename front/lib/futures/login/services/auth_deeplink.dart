@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/widgets.dart';
-import 'package:front/core/components/auth_token_storage.dart';
+import 'package:front/core/components/secure/auth_token_storage.dart';
 import 'package:front/core/errors/api_exception.dart';
 import 'package:front/core/errors/notyce.dart';
 import 'package:front/core/errors/app_exception.dart';

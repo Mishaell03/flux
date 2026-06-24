@@ -92,6 +92,9 @@
   "errorNetworkUnavailable": "Нет подключения к интернету",
   "errorAuthFailed": "Не удалось завершить вход",
   "errorProfileFailed": "Не удалось получить данные аккаунта",
+  "errorInvalidLink": "Некорректная ссылка",
+  "errorOpenLink": "Не удалось открыть ссылку",
+  "errorNavigation": "Ошибка перехода",
 
   "errorNetwork": "Нет подключения к интернету",
   "errorTimeout": "Превышено время ожидания запроса",
