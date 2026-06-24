@@ -11,6 +11,10 @@ from app.api.v1.schemas.sync import (
     SyncPushRequest,
     SyncPushResponse,
     SyncPushResultItem,
+    SyncPullRequest,
+    SyncPullResponse,
+    SyncPullNote,
+    SyncPullReminder,
 )
 
 from app.core.session import get_current_session
@@ -408,4 +412,77 @@ async def push_sync_data(
     return SyncPushResponse(
         notes=notes_result,
         reminders=reminders_result,
+    )
+
+@router.post("/pull", response_model=SyncPullResponse)
+async def pull_sync_data(
+        request: Request,
+        request_data: SyncPullRequest,
+        session: RegistrationSession = Depends(get_current_session),
+        db: Session = Depends(get_db),
+):
+    notes_response: list[SyncPullNote] = []
+    reminders_response: list[SyncPullReminder] = []
+
+    if request_data.notes:
+        notes_rows = (
+            db.query(Note)
+            .filter(
+                Note.user_id == session.user_id,
+                Note.note_id.in_(request_data.notes),
+            )
+            .all()
+        )
+
+        notes_response = [
+            SyncPullNote(
+                id=note.note_id,
+                title=note.title,
+                content=note.content,
+                deleted=note.deleted,
+                deleted_at=note.deleted_at,
+                created_at=note.created_at,
+                updated_at=note.updated_at,
+            )
+            for note in notes_rows
+        ]
+
+    if request_data.reminders:
+        reminders_rows = (
+            db.query(Reminder)
+            .filter(
+                Reminder.user_id == session.user_id,
+                Reminder.reminder_id.in_(request_data.reminders),
+            )
+            .all()
+        )
+
+        reminders_response = [
+            SyncPullReminder(
+                id=reminder.reminder_id,
+                note_id=reminder.note_id,
+                remind_at=reminder.remind_at,
+                repeat_rule=reminder.repeat_rule,
+                is_done=reminder.is_done,
+                deleted=reminder.deleted,
+                created_at=reminder.created_at,
+                updated_at=reminder.updated_at,
+            )
+            for reminder in reminders_rows
+        ]
+
+    user_event_logs(
+        db=db,
+        request=request,
+        status_code=200,
+        event="SYNC_PULL",
+        user_id=session.user_id,
+        session_id=session.id,
+        device_id=session.device_id,
+        platform=session.platform,
+    )
+
+    return SyncPullResponse(
+        notes=notes_response,
+        reminders=reminders_response,
     )

@@ -61,3 +61,30 @@ class SyncPushResultItem(BaseModel):
 class SyncPushResponse(BaseModel):
     notes: list[SyncPushResultItem]
     reminders: list[SyncPushResultItem]
+
+class SyncPullRequest(BaseModel):
+    notes: list[UUID] = Field(default_factory=list)
+    reminders: list[UUID] = Field(default_factory=list)
+
+class SyncPullNote(BaseModel):
+    id: UUID
+    title: str | None = None
+    content: str | None = None
+    deleted: bool = False
+    deleted_at: datetime | None = None
+    created_at: datetime
+    updated_at: datetime
+
+class SyncPullReminder(BaseModel):
+    id: UUID
+    note_id: UUID | None = None
+    remind_at: datetime
+    repeat_rule: str | None = None
+    is_done: bool = False
+    deleted: bool = False
+    created_at: datetime
+    updated_at: datetime
+
+class SyncPullResponse(BaseModel):
+    notes: list[SyncPullNote]
+    reminders: list[SyncPullReminder]
