@@ -21,10 +21,10 @@
   "authCallbackBack": "Go back",
   "authCallbackRetry": "Open authorization again",
 
-  "profileTitle": "Profile",
   "profileNamePlaceholder": "Username",
   "profileEmailPlaceholder": "email@example.com",
   "profileYandexConnected": "Yandex account connected",
+  "profileVkConnected": "VK account connected",
 
   "profileSyncStatus": "Sync status",
   "profileSyncUpToDate": "All changes are up to date",
@@ -43,9 +43,8 @@
   "profileSettingsNotifications": "Notifications",
   "profileSettingsNotificationsValue": "On",
   "profileSettingsDevices": "Devices",
-  "profileSettingsDevicesValue": "3 connected",
   "profileSettingsAbout": "About NexNote",
-  "profileSettingsAboutValue": "Version 1.0.0",
+  "profileSettingsAboutValue": "Version",
 
   "success": "Success",
   "error": "Error",
@@ -54,5 +53,15 @@
   "errorCouldNotOpenLink": "Couldn't open the link",
   "errorServerUnavailable": "Server is unavailable",
   "errorNetworkUnavailable": "No internet connection",
-  "errorAuthFailed": "Couldn't complete sign in"
+  "errorAuthFailed": "Couldn't complete sign in",
+  "errorProfileFailed": "Account data could not be retrieved",
+
+  "errorNetwork": "No internet connection",
+  "errorTimeout": "Request timed out",
+  "errorNotFound": "Resource not found",
+  "errorValidation": "Invalid input data",
+  "errorUnauthorized": "Authorization required",
+  "errorServer": "Server error. Please try again later.",
+  "errorInvalidResponse": "Invalid server response",
+  "errorUnknown": "Unknown error"
 }

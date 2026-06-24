@@ -8,7 +8,7 @@ GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
   navigatorKey: rootNavigatorKey,
-  initialLocation: '/login',
+  initialLocation: '/profile',
   routes: [
     GoRoute(
       path: '/login',

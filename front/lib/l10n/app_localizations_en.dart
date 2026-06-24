@@ -68,9 +68,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authCallbackRetry => 'Open authorization again';
 
   @override
-  String get profileTitle => 'Profile';
-
-  @override
   String get profileNamePlaceholder => 'Username';
 
   @override
@@ -78,6 +75,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileYandexConnected => 'Yandex account connected';
+
+  @override
+  String get profileVkConnected => 'VK account connected';
 
   @override
   String get profileSyncStatus => 'Sync status';
@@ -125,13 +125,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSettingsDevices => 'Devices';
 
   @override
-  String get profileSettingsDevicesValue => '3 connected';
-
-  @override
   String get profileSettingsAbout => 'About NexNote';
 
   @override
-  String get profileSettingsAboutValue => 'Version 1.0.0';
+  String get profileSettingsAboutValue => 'Version';
 
   @override
   String get success => 'Success';
@@ -157,4 +154,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorAuthFailed => 'Couldn\'t complete sign in';
+
+  @override
+  String get errorProfileFailed => 'Account data could not be retrieved';
+
+  @override
+  String get errorNetwork => 'No internet connection';
+
+  @override
+  String get errorTimeout => 'Request timed out';
+
+  @override
+  String get errorNotFound => 'Resource not found';
+
+  @override
+  String get errorValidation => 'Invalid input data';
+
+  @override
+  String get errorUnauthorized => 'Authorization required';
+
+  @override
+  String get errorServer => 'Server error. Please try again later.';
+
+  @override
+  String get errorInvalidResponse => 'Invalid server response';
+
+  @override
+  String get errorUnknown => 'Unknown error';
 }

@@ -70,9 +70,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get authCallbackRetry => 'Открыть авторизацию снова';
 
   @override
-  String get profileTitle => 'Профиль';
-
-  @override
   String get profileNamePlaceholder => 'Имя пользователя';
 
   @override
@@ -80,6 +77,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileYandexConnected => 'Яндекс аккаунт подключён';
+
+  @override
+  String get profileVkConnected => 'Вконтакте аккаунт подключён';
 
   @override
   String get profileSyncStatus => 'Статус синхронизации';
@@ -127,13 +127,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSettingsDevices => 'Устройства';
 
   @override
-  String get profileSettingsDevicesValue => '3 подключено';
-
-  @override
   String get profileSettingsAbout => 'О приложении';
 
   @override
-  String get profileSettingsAboutValue => 'Версия 1.0.0';
+  String get profileSettingsAboutValue => 'Версия';
 
   @override
   String get success => 'Успешно';
@@ -158,4 +155,31 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorAuthFailed => 'Не удалось завершить вход';
+
+  @override
+  String get errorProfileFailed => 'Не удалось получить данные аккаунта';
+
+  @override
+  String get errorNetwork => 'Нет подключения к интернету';
+
+  @override
+  String get errorTimeout => 'Превышено время ожидания запроса';
+
+  @override
+  String get errorNotFound => 'Ресурс не найден';
+
+  @override
+  String get errorValidation => 'Неверные данные';
+
+  @override
+  String get errorUnauthorized => 'Требуется авторизация';
+
+  @override
+  String get errorServer => 'Ошибка сервера, попробуйте позже';
+
+  @override
+  String get errorInvalidResponse => 'Некорректный ответ сервера';
+
+  @override
+  String get errorUnknown => 'Неизвестная ошибка';
 }

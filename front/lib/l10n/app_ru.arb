@@ -21,10 +21,10 @@
   "authCallbackBack": "Вернуться назад",
   "authCallbackRetry": "Открыть авторизацию снова",
 
-  "profileTitle": "Профиль",
   "profileNamePlaceholder": "Имя пользователя",
   "profileEmailPlaceholder": "email@example.com",
   "profileYandexConnected": "Яндекс аккаунт подключён",
+  "profileVkConnected": "Вконтакте аккаунт подключён",
 
   "profileSyncStatus": "Статус синхронизации",
   "profileSyncUpToDate": "Все изменения актуальны",
@@ -43,9 +43,8 @@
   "profileSettingsNotifications": "Уведомления",
   "profileSettingsNotificationsValue": "Вкл",
   "profileSettingsDevices": "Устройства",
-  "profileSettingsDevicesValue": "3 подключено",
   "profileSettingsAbout": "О приложении",
-  "profileSettingsAboutValue": "Версия 1.0.0",
+  "profileSettingsAboutValue": "Версия",
 
 
   "error": "Ошибка",
@@ -55,5 +54,15 @@
   "errorCouldNotOpenLink": "Не удалось открыть ссылку",
   "errorServerUnavailable": "Сервер недоступен",
   "errorNetworkUnavailable": "Нет подключения к интернету",
-  "errorAuthFailed": "Не удалось завершить вход"
+  "errorAuthFailed": "Не удалось завершить вход",
+  "errorProfileFailed": "Не удалось получить данные аккаунта",
+
+  "errorNetwork": "Нет подключения к интернету",
+  "errorTimeout": "Превышено время ожидания запроса",
+  "errorNotFound": "Ресурс не найден",
+  "errorValidation": "Неверные данные",
+  "errorUnauthorized": "Требуется авторизация",
+  "errorServer": "Ошибка сервера, попробуйте позже",
+  "errorInvalidResponse": "Некорректный ответ сервера",
+  "errorUnknown": "Неизвестная ошибка"
 }

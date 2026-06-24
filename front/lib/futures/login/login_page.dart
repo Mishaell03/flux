@@ -3,10 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:front/core/api/api_config.dart';
 import 'package:front/core/components/app_theme.dart';
-import 'package:front/core/components/auth_token_storage.dart';
 import 'package:front/core/components/scroll.dart';
 import 'package:front/core/components/theme.dart';
-import 'package:front/core/errors/api_exception.dart';
 import 'package:front/core/errors/app_exception.dart';
 import 'package:front/core/errors/notyce.dart';
 import 'package:front/core/router/url_launcher.dart';
@@ -153,9 +151,9 @@ class _SignInCardState extends State<_SignInCard> {
   }
 
   Future<void> _getLink(
-    BuildContext context, {
-    required String url,
-  }) async {
+      BuildContext context, {
+        required String url,
+      }) async {
     final t = AppLocalizations.of(context)!;
 
     try {
@@ -178,18 +176,20 @@ class _SignInCardState extends State<_SignInCard> {
       if (isCompleted == true && context.mounted) {
         context.goNamed('profile');
       }
-    } on ApiException catch (error) {
-      if (!context.mounted) return;
-
-      AppNotice.error(context, message: error.message);
     } on AppException catch (error) {
       if (!context.mounted) return;
 
-      AppNotice.error(context, message: _appExceptionMessage(error, t));
-    } catch (e) {
+      AppNotice.error(
+        context,
+        message: error.code.localizedMessage(context),
+      );
+    } catch (_) {
       if (!context.mounted) return;
-      debugPrint(e.toString());
-      AppNotice.error(context, message: t.errorAuthFailed);
+
+      AppNotice.error(
+        context,
+        message: t.errorAuthFailed,
+      );
     }
   }
 
@@ -201,14 +201,6 @@ class _SignInCardState extends State<_SignInCard> {
     if (Platform.isMacOS) return 'macos';
 
     return 'linux';
-  }
-
-  String _appExceptionMessage(AppException error, AppLocalizations t) {
-    return switch (error.code) {
-      AppErrorCode.timeout => t.errorServerUnavailable,
-      AppErrorCode.networkError => t.errorNetworkUnavailable,
-      AppErrorCode.unknown => error.message ?? t.errorAuthFailed,
-    };
   }
 
   @override
@@ -313,7 +305,7 @@ class _SignInCardState extends State<_SignInCard> {
                     _AuthProvider.yandex,
                     () => _getLink(
                       context,
-                      url: ApiConfig.yandexLoginUrl,
+                      url: ApiConfig.yandexLogin,
                     ),
                   );
                 },

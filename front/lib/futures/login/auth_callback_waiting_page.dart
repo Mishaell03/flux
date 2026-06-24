@@ -18,7 +18,6 @@ class AuthCallbackWaitingPage extends StatefulWidget {
   final AuthDeepLinkEventBus? eventBus;
   final AuthExternalAuthService? externalAuthService;
   final AuthCallbackCompleteService? callbackCompleteService;
-  final AuthCallbackErrorMapper? errorMapper;
 
   const AuthCallbackWaitingPage({
     super.key,
@@ -26,7 +25,6 @@ class AuthCallbackWaitingPage extends StatefulWidget {
     this.eventBus,
     this.externalAuthService,
     this.callbackCompleteService,
-    this.errorMapper,
   });
 
   @override
@@ -38,7 +36,6 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
   late final AuthDeepLinkEventBus _eventBus;
   late final AuthExternalAuthService _externalAuthService;
   late final AuthCallbackCompleteService _callbackCompleteService;
-  late final AuthCallbackErrorMapper _errorMapper;
 
   StreamSubscription<AuthDeepLinkData>? _subscription;
 
@@ -56,7 +53,6 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
         widget.externalAuthService ?? const AuthExternalAuthService();
     _callbackCompleteService =
         widget.callbackCompleteService ?? const AuthCallbackCompleteService();
-    _errorMapper = widget.errorMapper ?? const AuthCallbackErrorMapper();
 
     _subscription = _eventBus.stream.listen(
       _handleDeepLinkData,
@@ -124,10 +120,14 @@ class _AuthCallbackWaitingPageState extends State<AuthCallbackWaitingPage> {
       // Сообщение с бэка — показываем как есть
       AppNotice.error(context, message: error.message);
       _setError();
-    } on AppException catch (error) {
+    } on AppException catch (e) {
       if (!mounted) return;
-      final t = AppLocalizations.of(context)!;
-      AppNotice.error(context, message: _errorMapper.fromAppException(error, t));
+
+      AppNotice.error(
+        context,
+        message: e.code.localizedMessage(context),
+      );
+
       _setError();
     } catch (_) {
       if (!mounted) return;

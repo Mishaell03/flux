@@ -1,9 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:front/l10n/app_localizations.dart';
+
+/// --------------------
+/// ERROR CODES
+/// --------------------
 enum AppErrorCode {
   timeout,
   networkError,
   unknown,
+  errorProfileFailed,
 }
 
+/// --------------------
+/// EXCEPTION
+/// --------------------
 class AppException implements Exception {
   final AppErrorCode code;
   final String? message;
@@ -20,5 +30,25 @@ class AppException implements Exception {
   @override
   String toString() {
     return 'AppException(code: $code, message: $message)';
+  }
+}
+
+extension AppErrorCodeX on AppErrorCode {
+  String localizedMessage(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
+    switch (this) {
+      case AppErrorCode.timeout:
+        return t.errorTimeout;
+
+      case AppErrorCode.networkError:
+        return t.errorNetwork;
+
+      case AppErrorCode.unknown:
+        return t.errorUnknown;
+
+      case AppErrorCode.errorProfileFailed:
+        return t.errorProfileFailed;
+    }
   }
 }

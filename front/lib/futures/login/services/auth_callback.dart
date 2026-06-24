@@ -4,7 +4,6 @@ import 'package:front/core/errors/app_exception.dart';
 import 'package:front/futures/login/models/auth_deeplink.dart';
 import 'package:front/futures/login/models/yandex_callback.dart';
 import 'package:front/core/components/auth_token_storage.dart';
-import 'package:front/l10n/app_localizations.dart';
 
 class LoginCallbackService {
   const LoginCallbackService._();
@@ -16,7 +15,7 @@ class LoginCallbackService {
     final request = LoginCallbackRequest(state: state, code: code);
 
     final response = await PostJsonService.request(
-      url: ApiConfig.yandexCallbackUrl,
+      url: ApiConfig.yandexCallback,
       data: request.toJson(),
     );
 
@@ -39,17 +38,5 @@ class AuthCallbackCompleteService {
     }
 
     await AuthTokenStorage.save(response.token);
-  }
-}
-
-class AuthCallbackErrorMapper {
-  const AuthCallbackErrorMapper();
-
-  String fromAppException(AppException error, AppLocalizations t) {
-    return switch (error.code) {
-      AppErrorCode.timeout => t.errorServerUnavailable,
-      AppErrorCode.networkError => t.errorNetworkUnavailable,
-      AppErrorCode.unknown => error.message ?? t.errorAuthFailed,
-    };
   }
 }

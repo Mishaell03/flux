@@ -212,12 +212,6 @@ abstract class AppLocalizations {
   /// **'Open authorization again'**
   String get authCallbackRetry;
 
-  /// No description provided for @profileTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get profileTitle;
-
   /// No description provided for @profileNamePlaceholder.
   ///
   /// In en, this message translates to:
@@ -235,6 +229,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yandex account connected'**
   String get profileYandexConnected;
+
+  /// No description provided for @profileVkConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'VK account connected'**
+  String get profileVkConnected;
 
   /// No description provided for @profileSyncStatus.
   ///
@@ -326,12 +326,6 @@ abstract class AppLocalizations {
   /// **'Devices'**
   String get profileSettingsDevices;
 
-  /// No description provided for @profileSettingsDevicesValue.
-  ///
-  /// In en, this message translates to:
-  /// **'3 connected'**
-  String get profileSettingsDevicesValue;
-
   /// No description provided for @profileSettingsAbout.
   ///
   /// In en, this message translates to:
@@ -341,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileSettingsAboutValue.
   ///
   /// In en, this message translates to:
-  /// **'Version 1.0.0'**
+  /// **'Version'**
   String get profileSettingsAboutValue;
 
   /// No description provided for @success.
@@ -391,6 +385,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t complete sign in'**
   String get errorAuthFailed;
+
+  /// No description provided for @errorProfileFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Account data could not be retrieved'**
+  String get errorProfileFailed;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get errorNetwork;
+
+  /// No description provided for @errorTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out'**
+  String get errorTimeout;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource not found'**
+  String get errorNotFound;
+
+  /// No description provided for @errorValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid input data'**
+  String get errorValidation;
+
+  /// No description provided for @errorUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Authorization required'**
+  String get errorUnauthorized;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error. Please try again later.'**
+  String get errorServer;
+
+  /// No description provided for @errorInvalidResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid server response'**
+  String get errorInvalidResponse;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error'**
+  String get errorUnknown;
 }
 
 class _AppLocalizationsDelegate

@@ -141,10 +141,12 @@ class AuthDeepLinkListener {
       router.go('/login');
     } on AppException catch (e) {
       if (context != null && context.mounted) {
-        final t = AppLocalizations.of(context)!;
-        final mapper = const AuthCallbackErrorMapper();
-        AppNotice.error(context, message: mapper.fromAppException(e, t));
+        AppNotice.error(
+          context,
+          message: e.code.localizedMessage(context),
+        );
       }
+
       router.go('/login');
     } catch (_) {
       if (context != null && context.mounted) {
