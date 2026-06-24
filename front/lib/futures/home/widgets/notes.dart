@@ -55,7 +55,7 @@ class _NoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.goNamed('/notes'),
+      onTap: () => context.goNamed('notes'),
       child: Container(
         height: 154,
         padding: const EdgeInsets.all(14),

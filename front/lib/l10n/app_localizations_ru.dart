@@ -163,6 +163,82 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeLinkedNotes => 'связей в заметках';
 
   @override
+  String get notesPageTitle => 'Заметки';
+
+  @override
+  String get notesCreateNew => 'Создать';
+
+  @override
+  String get notesTabNotes => 'Заметки';
+
+  @override
+  String get notesTabReminders => 'Напоминания';
+
+  @override
+  String get notesEmptyTitle => 'Заметок пока нет';
+
+  @override
+  String get notesEmptySubtitle =>
+      'Создай первую заметку, чтобы начать собирать знания.';
+
+  @override
+  String get remindersEmptyTitle => 'Напоминаний пока нет';
+
+  @override
+  String get remindersEmptySubtitle =>
+      'Создай напоминание, и оно появится здесь.';
+
+  @override
+  String get notesUntitled => 'Без названия';
+
+  @override
+  String get notesNoContent => 'Пока нет текста';
+
+  @override
+  String get notesOpenPlaceholder => 'Открытие заметки пока не реализовано';
+
+  @override
+  String get reminderOpenPlaceholder =>
+      'Открытие напоминания пока не реализовано';
+
+  @override
+  String get createNotePlaceholder => 'Создание заметки пока не реализовано';
+
+  @override
+  String get createReminderPlaceholder =>
+      'Создание напоминания пока не реализовано';
+
+  @override
+  String get createNote => 'Создать заметку';
+
+  @override
+  String get createReminder => 'Создать напоминание';
+
+  @override
+  String get noteCreateTitle => 'Новая заметка';
+
+  @override
+  String get noteTitleLabel => 'Название';
+
+  @override
+  String get noteContentLabel => 'Текст';
+
+  @override
+  String get noteTitleHint => 'Напиши название';
+
+  @override
+  String get noteContentHint => 'Напиши что-нибудь...';
+
+  @override
+  String get noteSave => 'Сохранить';
+
+  @override
+  String get noteCancel => 'Отмена';
+
+  @override
+  String get noteCreated => 'Заметка создана';
+
+  @override
   String get success => 'Успешно';
 
   @override

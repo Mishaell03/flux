@@ -17,7 +17,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/login',
       name: 'login',
-      builder: (_, __) => LoginPage(),
+      builder: (context, state) => const LoginPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

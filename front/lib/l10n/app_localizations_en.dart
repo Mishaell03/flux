@@ -161,6 +161,82 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLinkedNotes => 'inked notes';
 
   @override
+  String get notesPageTitle => 'Notes';
+
+  @override
+  String get notesCreateNew => 'Create new';
+
+  @override
+  String get notesTabNotes => 'Notes';
+
+  @override
+  String get notesTabReminders => 'Reminders';
+
+  @override
+  String get notesEmptyTitle => 'No notes yet';
+
+  @override
+  String get notesEmptySubtitle =>
+      'Create your first note to start building your knowledge base.';
+
+  @override
+  String get remindersEmptyTitle => 'No reminders yet';
+
+  @override
+  String get remindersEmptySubtitle =>
+      'Create a reminder and it will appear here.';
+
+  @override
+  String get notesUntitled => 'Untitled';
+
+  @override
+  String get notesNoContent => 'No content yet';
+
+  @override
+  String get notesOpenPlaceholder => 'Opening note is not implemented yet';
+
+  @override
+  String get reminderOpenPlaceholder =>
+      'Opening reminder is not implemented yet';
+
+  @override
+  String get createNotePlaceholder => 'Creating note is not implemented yet';
+
+  @override
+  String get createReminderPlaceholder =>
+      'Creating reminder is not implemented yet';
+
+  @override
+  String get createNote => 'Create note';
+
+  @override
+  String get createReminder => 'Create reminder';
+
+  @override
+  String get noteCreateTitle => 'New note';
+
+  @override
+  String get noteTitleLabel => 'Title';
+
+  @override
+  String get noteContentLabel => 'Content';
+
+  @override
+  String get noteTitleHint => 'Write a title';
+
+  @override
+  String get noteContentHint => 'Write something...';
+
+  @override
+  String get noteSave => 'Save';
+
+  @override
+  String get noteCancel => 'Cancel';
+
+  @override
+  String get noteCreated => 'Note created';
+
+  @override
   String get success => 'Success';
 
   @override

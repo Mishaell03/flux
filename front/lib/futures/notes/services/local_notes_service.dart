@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:front/core/db/database.dart';
 import 'package:front/core/db/database_provider.dart';
+import 'package:front/futures/notes/models/notes_list_data.dart';
 import 'package:uuid/uuid.dart';
 
 class LocalNotesService {
@@ -10,34 +11,36 @@ class LocalNotesService {
     AppDatabase? db,
   }) : db = db ?? DatabaseProvider.instance;
 
-  Stream<List<NotesTableData>> watchNotes() {
-    return (db.select(db.notesTable)
-      ..where((tbl) => tbl.deleted.equals(false))
-      ..orderBy([
-            (tbl) => OrderingTerm(
-          expression: tbl.updatedAt,
-          mode: OrderingMode.desc,
-        ),
-      ]))
-        .watch();
+  Future<NoteListItem?> getNoteById(String id) async {
+    final note = await (db.select(db.notesTable)
+      ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+      )
+      ..limit(1))
+        .getSingleOrNull();
+
+    if (note == null) return null;
+
+    return NoteListItem(
+      id: note.id,
+      title: note.title ?? 'Untitled',
+      content: note.content ?? '',
+      updatedAt: note.updatedAt,
+    );
   }
 
-  Future<List<NotesTableData>> getDirtyNotes() {
-    return (db.select(db.notesTable)..where((tbl) => tbl.dirty.equals(true)))
-        .get();
-  }
-
-  Future<void> createNote({
-    String? title,
-    String? content,
+  Future<String> createNote({
+    required String title,
+    required String content,
   }) async {
+    final id = const Uuid().v4();
     final now = DateTime.now().toUtc();
 
     await db.into(db.notesTable).insert(
       NotesTableCompanion.insert(
-        id: const Uuid().v4(),
-        title: Value(title),
-        content: Value(content),
+        id: id,
+        title: Value(_nullableText(title)),
+        content: Value(_nullableText(content)),
         deleted: const Value(false),
         version: const Value(1),
         dirty: const Value(true),
@@ -45,58 +48,79 @@ class LocalNotesService {
         updatedAt: now,
       ),
     );
+
+    return id;
   }
 
   Future<void> updateNote({
     required String id,
-    String? title,
-    String? content,
+    required String title,
+    required String content,
   }) async {
-    final note = await (db.select(db.notesTable)
-      ..where((tbl) => tbl.id.equals(id)))
+    final current = await (db.select(db.notesTable)
+      ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+      )
+      ..limit(1))
         .getSingleOrNull();
 
-    if (note == null) return;
+    if (current == null) {
+      throw StateError('Note not found: $id');
+    }
 
     final now = DateTime.now().toUtc();
 
-    await (db.update(db.notesTable)..where((tbl) => tbl.id.equals(id))).write(
+    await (db.update(db.notesTable)
+      ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+      ))
+        .write(
       NotesTableCompanion(
-        title: Value(title),
-        content: Value(content),
-        version: Value(note.version + 1),
+        title: Value(_nullableText(title)),
+        content: Value(_nullableText(content)),
         dirty: const Value(true),
+        version: Value(current.version + 1),
         updatedAt: Value(now),
       ),
     );
   }
 
-  Future<void> deleteNote(String id) async {
-    final note = await (db.select(db.notesTable)
-      ..where((tbl) => tbl.id.equals(id)))
+  Future<void> destroyNote({
+    required String id,
+  }) async {
+    final current = await (db.select(db.notesTable)
+      ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+      )
+      ..limit(1))
         .getSingleOrNull();
 
-    if (note == null) return;
+    if (current == null) {
+      throw StateError('Note not found: $id');
+    }
 
     final now = DateTime.now().toUtc();
 
-    await (db.update(db.notesTable)..where((tbl) => tbl.id.equals(id))).write(
+    await (db.update(db.notesTable)
+      ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+      ))
+        .write(
       NotesTableCompanion(
         deleted: const Value(true),
-        version: Value(note.version + 1),
+        deletedAt: Value(now),
         dirty: const Value(true),
+        version: Value(current.version + 1),
         updatedAt: Value(now),
       ),
     );
   }
 
-  Future<void> markNotesSynced(List<String> ids) async {
-    if (ids.isEmpty) return;
+  String? _nullableText(String value) {
+    final text = value.trim();
 
-    await (db.update(db.notesTable)..where((tbl) => tbl.id.isIn(ids))).write(
-      const NotesTableCompanion(
-        dirty: Value(false),
-      ),
-    );
+    if (text.isEmpty) return null;
+
+    return text;
   }
 }

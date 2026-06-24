@@ -398,6 +398,150 @@ abstract class AppLocalizations {
   /// **'inked notes'**
   String get homeLinkedNotes;
 
+  /// No description provided for @notesPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesPageTitle;
+
+  /// No description provided for @notesCreateNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new'**
+  String get notesCreateNew;
+
+  /// No description provided for @notesTabNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesTabNotes;
+
+  /// No description provided for @notesTabReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get notesTabReminders;
+
+  /// No description provided for @notesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet'**
+  String get notesEmptyTitle;
+
+  /// No description provided for @notesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first note to start building your knowledge base.'**
+  String get notesEmptySubtitle;
+
+  /// No description provided for @remindersEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders yet'**
+  String get remindersEmptyTitle;
+
+  /// No description provided for @remindersEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a reminder and it will appear here.'**
+  String get remindersEmptySubtitle;
+
+  /// No description provided for @notesUntitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get notesUntitled;
+
+  /// No description provided for @notesNoContent.
+  ///
+  /// In en, this message translates to:
+  /// **'No content yet'**
+  String get notesNoContent;
+
+  /// No description provided for @notesOpenPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening note is not implemented yet'**
+  String get notesOpenPlaceholder;
+
+  /// No description provided for @reminderOpenPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening reminder is not implemented yet'**
+  String get reminderOpenPlaceholder;
+
+  /// No description provided for @createNotePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating note is not implemented yet'**
+  String get createNotePlaceholder;
+
+  /// No description provided for @createReminderPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating reminder is not implemented yet'**
+  String get createReminderPlaceholder;
+
+  /// No description provided for @createNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Create note'**
+  String get createNote;
+
+  /// No description provided for @createReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Create reminder'**
+  String get createReminder;
+
+  /// No description provided for @noteCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New note'**
+  String get noteCreateTitle;
+
+  /// No description provided for @noteTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get noteTitleLabel;
+
+  /// No description provided for @noteContentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get noteContentLabel;
+
+  /// No description provided for @noteTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a title'**
+  String get noteTitleHint;
+
+  /// No description provided for @noteContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write something...'**
+  String get noteContentHint;
+
+  /// No description provided for @noteSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get noteSave;
+
+  /// No description provided for @noteCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get noteCancel;
+
+  /// No description provided for @noteCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Note created'**
+  String get noteCreated;
+
   /// No description provided for @success.
   ///
   /// In en, this message translates to:
