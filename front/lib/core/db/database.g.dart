@@ -35,14 +35,6 @@ class $NotesTableTable extends NotesTable
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'),
       defaultValue: const Constant(false));
-  static const VerificationMeta _versionMeta =
-      const VerificationMeta('version');
-  @override
-  late final GeneratedColumn<int> version = GeneratedColumn<int>(
-      'version', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
   static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
   @override
   late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
@@ -70,17 +62,23 @@ class $NotesTableTable extends NotesTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _serverUpdatedAtMeta =
+      const VerificationMeta('serverUpdatedAt');
+  @override
+  late final GeneratedColumn<DateTime> serverUpdatedAt =
+      GeneratedColumn<DateTime>('server_updated_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
         title,
         content,
         deleted,
-        version,
         dirty,
         deletedAt,
         updatedAt,
-        createdAt
+        createdAt,
+        serverUpdatedAt
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -109,10 +107,6 @@ class $NotesTableTable extends NotesTable
       context.handle(_deletedMeta,
           deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
     }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
-    }
     if (data.containsKey('dirty')) {
       context.handle(
           _dirtyMeta, dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta));
@@ -133,6 +127,12 @@ class $NotesTableTable extends NotesTable
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('server_updated_at')) {
+      context.handle(
+          _serverUpdatedAtMeta,
+          serverUpdatedAt.isAcceptableOrUnknown(
+              data['server_updated_at']!, _serverUpdatedAtMeta));
+    }
     return context;
   }
 
@@ -150,8 +150,6 @@ class $NotesTableTable extends NotesTable
           .read(DriftSqlType.string, data['${effectivePrefix}content']),
       deleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
-      version: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
       dirty: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}dirty'])!,
       deletedAt: attachedDatabase.typeMapping
@@ -160,6 +158,8 @@ class $NotesTableTable extends NotesTable
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      serverUpdatedAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}server_updated_at']),
     );
   }
 
@@ -174,21 +174,21 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
   final String? title;
   final String? content;
   final bool deleted;
-  final int version;
   final bool dirty;
   final DateTime? deletedAt;
   final DateTime updatedAt;
   final DateTime createdAt;
+  final DateTime? serverUpdatedAt;
   const NotesTableData(
       {required this.id,
       this.title,
       this.content,
       required this.deleted,
-      required this.version,
       required this.dirty,
       this.deletedAt,
       required this.updatedAt,
-      required this.createdAt});
+      required this.createdAt,
+      this.serverUpdatedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -200,13 +200,15 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       map['content'] = Variable<String>(content);
     }
     map['deleted'] = Variable<bool>(deleted);
-    map['version'] = Variable<int>(version);
     map['dirty'] = Variable<bool>(dirty);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || serverUpdatedAt != null) {
+      map['server_updated_at'] = Variable<DateTime>(serverUpdatedAt);
+    }
     return map;
   }
 
@@ -219,13 +221,15 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ? const Value.absent()
           : Value(content),
       deleted: Value(deleted),
-      version: Value(version),
       dirty: Value(dirty),
       deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(deletedAt),
       updatedAt: Value(updatedAt),
       createdAt: Value(createdAt),
+      serverUpdatedAt: serverUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverUpdatedAt),
     );
   }
 
@@ -237,11 +241,11 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       title: serializer.fromJson<String?>(json['title']),
       content: serializer.fromJson<String?>(json['content']),
       deleted: serializer.fromJson<bool>(json['deleted']),
-      version: serializer.fromJson<int>(json['version']),
       dirty: serializer.fromJson<bool>(json['dirty']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      serverUpdatedAt: serializer.fromJson<DateTime?>(json['serverUpdatedAt']),
     );
   }
   @override
@@ -252,11 +256,11 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       'title': serializer.toJson<String?>(title),
       'content': serializer.toJson<String?>(content),
       'deleted': serializer.toJson<bool>(deleted),
-      'version': serializer.toJson<int>(version),
       'dirty': serializer.toJson<bool>(dirty),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'serverUpdatedAt': serializer.toJson<DateTime?>(serverUpdatedAt),
     };
   }
 
@@ -265,21 +269,23 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           Value<String?> title = const Value.absent(),
           Value<String?> content = const Value.absent(),
           bool? deleted,
-          int? version,
           bool? dirty,
           Value<DateTime?> deletedAt = const Value.absent(),
           DateTime? updatedAt,
-          DateTime? createdAt}) =>
+          DateTime? createdAt,
+          Value<DateTime?> serverUpdatedAt = const Value.absent()}) =>
       NotesTableData(
         id: id ?? this.id,
         title: title.present ? title.value : this.title,
         content: content.present ? content.value : this.content,
         deleted: deleted ?? this.deleted,
-        version: version ?? this.version,
         dirty: dirty ?? this.dirty,
         deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
+        serverUpdatedAt: serverUpdatedAt.present
+            ? serverUpdatedAt.value
+            : this.serverUpdatedAt,
       );
   NotesTableData copyWithCompanion(NotesTableCompanion data) {
     return NotesTableData(
@@ -287,11 +293,13 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
       title: data.title.present ? data.title.value : this.title,
       content: data.content.present ? data.content.value : this.content,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
-      version: data.version.present ? data.version.value : this.version,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      serverUpdatedAt: data.serverUpdatedAt.present
+          ? data.serverUpdatedAt.value
+          : this.serverUpdatedAt,
     );
   }
 
@@ -302,18 +310,18 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('deleted: $deleted, ')
-          ..write('version: $version, ')
           ..write('dirty: $dirty, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('serverUpdatedAt: $serverUpdatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, content, deleted, version, dirty,
-      deletedAt, updatedAt, createdAt);
+  int get hashCode => Object.hash(id, title, content, deleted, dirty, deletedAt,
+      updatedAt, createdAt, serverUpdatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -322,11 +330,11 @@ class NotesTableData extends DataClass implements Insertable<NotesTableData> {
           other.title == this.title &&
           other.content == this.content &&
           other.deleted == this.deleted &&
-          other.version == this.version &&
           other.dirty == this.dirty &&
           other.deletedAt == this.deletedAt &&
           other.updatedAt == this.updatedAt &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.serverUpdatedAt == this.serverUpdatedAt);
 }
 
 class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
@@ -334,22 +342,22 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
   final Value<String?> title;
   final Value<String?> content;
   final Value<bool> deleted;
-  final Value<int> version;
   final Value<bool> dirty;
   final Value<DateTime?> deletedAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
+  final Value<DateTime?> serverUpdatedAt;
   final Value<int> rowid;
   const NotesTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.deleted = const Value.absent(),
-    this.version = const Value.absent(),
     this.dirty = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.serverUpdatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   NotesTableCompanion.insert({
@@ -357,11 +365,11 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.deleted = const Value.absent(),
-    this.version = const Value.absent(),
     this.dirty = const Value.absent(),
     this.deletedAt = const Value.absent(),
     required DateTime updatedAt,
     required DateTime createdAt,
+    this.serverUpdatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         updatedAt = Value(updatedAt),
@@ -371,11 +379,11 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     Expression<String>? title,
     Expression<String>? content,
     Expression<bool>? deleted,
-    Expression<int>? version,
     Expression<bool>? dirty,
     Expression<DateTime>? deletedAt,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? serverUpdatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -383,11 +391,11 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       if (deleted != null) 'deleted': deleted,
-      if (version != null) 'version': version,
       if (dirty != null) 'dirty': dirty,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
+      if (serverUpdatedAt != null) 'server_updated_at': serverUpdatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -397,22 +405,22 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
       Value<String?>? title,
       Value<String?>? content,
       Value<bool>? deleted,
-      Value<int>? version,
       Value<bool>? dirty,
       Value<DateTime?>? deletedAt,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
+      Value<DateTime?>? serverUpdatedAt,
       Value<int>? rowid}) {
     return NotesTableCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       deleted: deleted ?? this.deleted,
-      version: version ?? this.version,
       dirty: dirty ?? this.dirty,
       deletedAt: deletedAt ?? this.deletedAt,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
+      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -432,9 +440,6 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     if (deleted.present) {
       map['deleted'] = Variable<bool>(deleted.value);
     }
-    if (version.present) {
-      map['version'] = Variable<int>(version.value);
-    }
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
@@ -446,6 +451,9 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (serverUpdatedAt.present) {
+      map['server_updated_at'] = Variable<DateTime>(serverUpdatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -460,11 +468,11 @@ class NotesTableCompanion extends UpdateCompanion<NotesTableData> {
           ..write('title: $title, ')
           ..write('content: $content, ')
           ..write('deleted: $deleted, ')
-          ..write('version: $version, ')
           ..write('dirty: $dirty, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
+          ..write('serverUpdatedAt: $serverUpdatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -512,14 +520,6 @@ class $RemindersTableTable extends RemindersTable
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'),
       defaultValue: const Constant(false));
-  static const VerificationMeta _versionMeta =
-      const VerificationMeta('version');
-  @override
-  late final GeneratedColumn<int> version = GeneratedColumn<int>(
-      'version', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
   static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
   @override
   late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
@@ -547,6 +547,12 @@ class $RemindersTableTable extends RemindersTable
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _serverUpdatedAtMeta =
+      const VerificationMeta('serverUpdatedAt');
+  @override
+  late final GeneratedColumn<DateTime> serverUpdatedAt =
+      GeneratedColumn<DateTime>('server_updated_at', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -554,11 +560,11 @@ class $RemindersTableTable extends RemindersTable
         remindAt,
         isDone,
         deleted,
-        version,
         dirty,
         repeatRule,
         updatedAt,
-        createdAt
+        createdAt,
+        serverUpdatedAt
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -593,10 +599,6 @@ class $RemindersTableTable extends RemindersTable
       context.handle(_deletedMeta,
           deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
     }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
-    }
     if (data.containsKey('dirty')) {
       context.handle(
           _dirtyMeta, dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta));
@@ -619,6 +621,12 @@ class $RemindersTableTable extends RemindersTable
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('server_updated_at')) {
+      context.handle(
+          _serverUpdatedAtMeta,
+          serverUpdatedAt.isAcceptableOrUnknown(
+              data['server_updated_at']!, _serverUpdatedAtMeta));
+    }
     return context;
   }
 
@@ -638,8 +646,6 @@ class $RemindersTableTable extends RemindersTable
           .read(DriftSqlType.bool, data['${effectivePrefix}is_done'])!,
       deleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
-      version: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
       dirty: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}dirty'])!,
       repeatRule: attachedDatabase.typeMapping
@@ -648,6 +654,8 @@ class $RemindersTableTable extends RemindersTable
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      serverUpdatedAt: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}server_updated_at']),
     );
   }
 
@@ -664,22 +672,22 @@ class RemindersTableData extends DataClass
   final DateTime remindAt;
   final bool isDone;
   final bool deleted;
-  final int version;
   final bool dirty;
   final String? repeatRule;
   final DateTime updatedAt;
   final DateTime createdAt;
+  final DateTime? serverUpdatedAt;
   const RemindersTableData(
       {required this.id,
       this.noteId,
       required this.remindAt,
       required this.isDone,
       required this.deleted,
-      required this.version,
       required this.dirty,
       this.repeatRule,
       required this.updatedAt,
-      required this.createdAt});
+      required this.createdAt,
+      this.serverUpdatedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -690,13 +698,15 @@ class RemindersTableData extends DataClass
     map['remind_at'] = Variable<DateTime>(remindAt);
     map['is_done'] = Variable<bool>(isDone);
     map['deleted'] = Variable<bool>(deleted);
-    map['version'] = Variable<int>(version);
     map['dirty'] = Variable<bool>(dirty);
     if (!nullToAbsent || repeatRule != null) {
       map['repeat_rule'] = Variable<String>(repeatRule);
     }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || serverUpdatedAt != null) {
+      map['server_updated_at'] = Variable<DateTime>(serverUpdatedAt);
+    }
     return map;
   }
 
@@ -708,13 +718,15 @@ class RemindersTableData extends DataClass
       remindAt: Value(remindAt),
       isDone: Value(isDone),
       deleted: Value(deleted),
-      version: Value(version),
       dirty: Value(dirty),
       repeatRule: repeatRule == null && nullToAbsent
           ? const Value.absent()
           : Value(repeatRule),
       updatedAt: Value(updatedAt),
       createdAt: Value(createdAt),
+      serverUpdatedAt: serverUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverUpdatedAt),
     );
   }
 
@@ -727,11 +739,11 @@ class RemindersTableData extends DataClass
       remindAt: serializer.fromJson<DateTime>(json['remindAt']),
       isDone: serializer.fromJson<bool>(json['isDone']),
       deleted: serializer.fromJson<bool>(json['deleted']),
-      version: serializer.fromJson<int>(json['version']),
       dirty: serializer.fromJson<bool>(json['dirty']),
       repeatRule: serializer.fromJson<String?>(json['repeatRule']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      serverUpdatedAt: serializer.fromJson<DateTime?>(json['serverUpdatedAt']),
     );
   }
   @override
@@ -743,11 +755,11 @@ class RemindersTableData extends DataClass
       'remindAt': serializer.toJson<DateTime>(remindAt),
       'isDone': serializer.toJson<bool>(isDone),
       'deleted': serializer.toJson<bool>(deleted),
-      'version': serializer.toJson<int>(version),
       'dirty': serializer.toJson<bool>(dirty),
       'repeatRule': serializer.toJson<String?>(repeatRule),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'serverUpdatedAt': serializer.toJson<DateTime?>(serverUpdatedAt),
     };
   }
 
@@ -757,22 +769,24 @@ class RemindersTableData extends DataClass
           DateTime? remindAt,
           bool? isDone,
           bool? deleted,
-          int? version,
           bool? dirty,
           Value<String?> repeatRule = const Value.absent(),
           DateTime? updatedAt,
-          DateTime? createdAt}) =>
+          DateTime? createdAt,
+          Value<DateTime?> serverUpdatedAt = const Value.absent()}) =>
       RemindersTableData(
         id: id ?? this.id,
         noteId: noteId.present ? noteId.value : this.noteId,
         remindAt: remindAt ?? this.remindAt,
         isDone: isDone ?? this.isDone,
         deleted: deleted ?? this.deleted,
-        version: version ?? this.version,
         dirty: dirty ?? this.dirty,
         repeatRule: repeatRule.present ? repeatRule.value : this.repeatRule,
         updatedAt: updatedAt ?? this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
+        serverUpdatedAt: serverUpdatedAt.present
+            ? serverUpdatedAt.value
+            : this.serverUpdatedAt,
       );
   RemindersTableData copyWithCompanion(RemindersTableCompanion data) {
     return RemindersTableData(
@@ -781,12 +795,14 @@ class RemindersTableData extends DataClass
       remindAt: data.remindAt.present ? data.remindAt.value : this.remindAt,
       isDone: data.isDone.present ? data.isDone.value : this.isDone,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
-      version: data.version.present ? data.version.value : this.version,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
       repeatRule:
           data.repeatRule.present ? data.repeatRule.value : this.repeatRule,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      serverUpdatedAt: data.serverUpdatedAt.present
+          ? data.serverUpdatedAt.value
+          : this.serverUpdatedAt,
     );
   }
 
@@ -798,18 +814,18 @@ class RemindersTableData extends DataClass
           ..write('remindAt: $remindAt, ')
           ..write('isDone: $isDone, ')
           ..write('deleted: $deleted, ')
-          ..write('version: $version, ')
           ..write('dirty: $dirty, ')
           ..write('repeatRule: $repeatRule, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('serverUpdatedAt: $serverUpdatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, noteId, remindAt, isDone, deleted,
-      version, dirty, repeatRule, updatedAt, createdAt);
+  int get hashCode => Object.hash(id, noteId, remindAt, isDone, deleted, dirty,
+      repeatRule, updatedAt, createdAt, serverUpdatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -819,11 +835,11 @@ class RemindersTableData extends DataClass
           other.remindAt == this.remindAt &&
           other.isDone == this.isDone &&
           other.deleted == this.deleted &&
-          other.version == this.version &&
           other.dirty == this.dirty &&
           other.repeatRule == this.repeatRule &&
           other.updatedAt == this.updatedAt &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.serverUpdatedAt == this.serverUpdatedAt);
 }
 
 class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
@@ -832,11 +848,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
   final Value<DateTime> remindAt;
   final Value<bool> isDone;
   final Value<bool> deleted;
-  final Value<int> version;
   final Value<bool> dirty;
   final Value<String?> repeatRule;
   final Value<DateTime> updatedAt;
   final Value<DateTime> createdAt;
+  final Value<DateTime?> serverUpdatedAt;
   final Value<int> rowid;
   const RemindersTableCompanion({
     this.id = const Value.absent(),
@@ -844,11 +860,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     this.remindAt = const Value.absent(),
     this.isDone = const Value.absent(),
     this.deleted = const Value.absent(),
-    this.version = const Value.absent(),
     this.dirty = const Value.absent(),
     this.repeatRule = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.serverUpdatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RemindersTableCompanion.insert({
@@ -857,11 +873,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     required DateTime remindAt,
     this.isDone = const Value.absent(),
     this.deleted = const Value.absent(),
-    this.version = const Value.absent(),
     this.dirty = const Value.absent(),
     this.repeatRule = const Value.absent(),
     required DateTime updatedAt,
     required DateTime createdAt,
+    this.serverUpdatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         remindAt = Value(remindAt),
@@ -873,11 +889,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     Expression<DateTime>? remindAt,
     Expression<bool>? isDone,
     Expression<bool>? deleted,
-    Expression<int>? version,
     Expression<bool>? dirty,
     Expression<String>? repeatRule,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? createdAt,
+    Expression<DateTime>? serverUpdatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -886,11 +902,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       if (remindAt != null) 'remind_at': remindAt,
       if (isDone != null) 'is_done': isDone,
       if (deleted != null) 'deleted': deleted,
-      if (version != null) 'version': version,
       if (dirty != null) 'dirty': dirty,
       if (repeatRule != null) 'repeat_rule': repeatRule,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
+      if (serverUpdatedAt != null) 'server_updated_at': serverUpdatedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -901,11 +917,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       Value<DateTime>? remindAt,
       Value<bool>? isDone,
       Value<bool>? deleted,
-      Value<int>? version,
       Value<bool>? dirty,
       Value<String?>? repeatRule,
       Value<DateTime>? updatedAt,
       Value<DateTime>? createdAt,
+      Value<DateTime?>? serverUpdatedAt,
       Value<int>? rowid}) {
     return RemindersTableCompanion(
       id: id ?? this.id,
@@ -913,11 +929,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
       remindAt: remindAt ?? this.remindAt,
       isDone: isDone ?? this.isDone,
       deleted: deleted ?? this.deleted,
-      version: version ?? this.version,
       dirty: dirty ?? this.dirty,
       repeatRule: repeatRule ?? this.repeatRule,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
+      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -940,9 +956,6 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     if (deleted.present) {
       map['deleted'] = Variable<bool>(deleted.value);
     }
-    if (version.present) {
-      map['version'] = Variable<int>(version.value);
-    }
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
@@ -954,6 +967,9 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (serverUpdatedAt.present) {
+      map['server_updated_at'] = Variable<DateTime>(serverUpdatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -969,11 +985,11 @@ class RemindersTableCompanion extends UpdateCompanion<RemindersTableData> {
           ..write('remindAt: $remindAt, ')
           ..write('isDone: $isDone, ')
           ..write('deleted: $deleted, ')
-          ..write('version: $version, ')
           ..write('dirty: $dirty, ')
           ..write('repeatRule: $repeatRule, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
+          ..write('serverUpdatedAt: $serverUpdatedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1012,6 +1028,12 @@ class $NoteLinksTableTable extends NoteLinksTable
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("dirty" IN (0, 1))'),
       defaultValue: const Constant(false));
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -1020,7 +1042,7 @@ class $NoteLinksTableTable extends NoteLinksTable
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [fromId, toId, weight, dirty, createdAt];
+      [fromId, toId, weight, dirty, updatedAt, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1051,6 +1073,10 @@ class $NoteLinksTableTable extends NoteLinksTable
       context.handle(
           _dirtyMeta, dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta));
     }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -1074,6 +1100,8 @@ class $NoteLinksTableTable extends NoteLinksTable
           .read(DriftSqlType.int, data['${effectivePrefix}weight'])!,
       dirty: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}dirty'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -1091,12 +1119,14 @@ class NoteLinksTableData extends DataClass
   final String toId;
   final int weight;
   final bool dirty;
+  final DateTime? updatedAt;
   final DateTime createdAt;
   const NoteLinksTableData(
       {required this.fromId,
       required this.toId,
       required this.weight,
       required this.dirty,
+      this.updatedAt,
       required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1105,6 +1135,9 @@ class NoteLinksTableData extends DataClass
     map['to_id'] = Variable<String>(toId);
     map['weight'] = Variable<int>(weight);
     map['dirty'] = Variable<bool>(dirty);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -1115,6 +1148,9 @@ class NoteLinksTableData extends DataClass
       toId: Value(toId),
       weight: Value(weight),
       dirty: Value(dirty),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
       createdAt: Value(createdAt),
     );
   }
@@ -1127,6 +1163,7 @@ class NoteLinksTableData extends DataClass
       toId: serializer.fromJson<String>(json['toId']),
       weight: serializer.fromJson<int>(json['weight']),
       dirty: serializer.fromJson<bool>(json['dirty']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1138,6 +1175,7 @@ class NoteLinksTableData extends DataClass
       'toId': serializer.toJson<String>(toId),
       'weight': serializer.toJson<int>(weight),
       'dirty': serializer.toJson<bool>(dirty),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1147,12 +1185,14 @@ class NoteLinksTableData extends DataClass
           String? toId,
           int? weight,
           bool? dirty,
+          Value<DateTime?> updatedAt = const Value.absent(),
           DateTime? createdAt}) =>
       NoteLinksTableData(
         fromId: fromId ?? this.fromId,
         toId: toId ?? this.toId,
         weight: weight ?? this.weight,
         dirty: dirty ?? this.dirty,
+        updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
         createdAt: createdAt ?? this.createdAt,
       );
   NoteLinksTableData copyWithCompanion(NoteLinksTableCompanion data) {
@@ -1161,6 +1201,7 @@ class NoteLinksTableData extends DataClass
       toId: data.toId.present ? data.toId.value : this.toId,
       weight: data.weight.present ? data.weight.value : this.weight,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1172,13 +1213,15 @@ class NoteLinksTableData extends DataClass
           ..write('toId: $toId, ')
           ..write('weight: $weight, ')
           ..write('dirty: $dirty, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(fromId, toId, weight, dirty, createdAt);
+  int get hashCode =>
+      Object.hash(fromId, toId, weight, dirty, updatedAt, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1187,6 +1230,7 @@ class NoteLinksTableData extends DataClass
           other.toId == this.toId &&
           other.weight == this.weight &&
           other.dirty == this.dirty &&
+          other.updatedAt == this.updatedAt &&
           other.createdAt == this.createdAt);
 }
 
@@ -1195,6 +1239,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
   final Value<String> toId;
   final Value<int> weight;
   final Value<bool> dirty;
+  final Value<DateTime?> updatedAt;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const NoteLinksTableCompanion({
@@ -1202,6 +1247,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
     this.toId = const Value.absent(),
     this.weight = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1210,6 +1256,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
     required String toId,
     this.weight = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.updatedAt = const Value.absent(),
     required DateTime createdAt,
     this.rowid = const Value.absent(),
   })  : fromId = Value(fromId),
@@ -1220,6 +1267,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
     Expression<String>? toId,
     Expression<int>? weight,
     Expression<bool>? dirty,
+    Expression<DateTime>? updatedAt,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -1228,6 +1276,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
       if (toId != null) 'to_id': toId,
       if (weight != null) 'weight': weight,
       if (dirty != null) 'dirty': dirty,
+      if (updatedAt != null) 'updated_at': updatedAt,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1238,6 +1287,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
       Value<String>? toId,
       Value<int>? weight,
       Value<bool>? dirty,
+      Value<DateTime?>? updatedAt,
       Value<DateTime>? createdAt,
       Value<int>? rowid}) {
     return NoteLinksTableCompanion(
@@ -1245,6 +1295,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
       toId: toId ?? this.toId,
       weight: weight ?? this.weight,
       dirty: dirty ?? this.dirty,
+      updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -1265,6 +1316,9 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1281,6 +1335,7 @@ class NoteLinksTableCompanion extends UpdateCompanion<NoteLinksTableData> {
           ..write('toId: $toId, ')
           ..write('weight: $weight, ')
           ..write('dirty: $dirty, ')
+          ..write('updatedAt: $updatedAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1307,11 +1362,11 @@ typedef $$NotesTableTableCreateCompanionBuilder = NotesTableCompanion Function({
   Value<String?> title,
   Value<String?> content,
   Value<bool> deleted,
-  Value<int> version,
   Value<bool> dirty,
   Value<DateTime?> deletedAt,
   required DateTime updatedAt,
   required DateTime createdAt,
+  Value<DateTime?> serverUpdatedAt,
   Value<int> rowid,
 });
 typedef $$NotesTableTableUpdateCompanionBuilder = NotesTableCompanion Function({
@@ -1319,11 +1374,11 @@ typedef $$NotesTableTableUpdateCompanionBuilder = NotesTableCompanion Function({
   Value<String?> title,
   Value<String?> content,
   Value<bool> deleted,
-  Value<int> version,
   Value<bool> dirty,
   Value<DateTime?> deletedAt,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
+  Value<DateTime?> serverUpdatedAt,
   Value<int> rowid,
 });
 
@@ -1348,9 +1403,6 @@ class $$NotesTableTableFilterComposer
   ColumnFilters<bool> get deleted => $composableBuilder(
       column: $table.deleted, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnFilters(column));
 
@@ -1362,6 +1414,10 @@ class $$NotesTableTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$NotesTableTableOrderingComposer
@@ -1385,9 +1441,6 @@ class $$NotesTableTableOrderingComposer
   ColumnOrderings<bool> get deleted => $composableBuilder(
       column: $table.deleted, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 
@@ -1399,6 +1452,10 @@ class $$NotesTableTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$NotesTableTableAnnotationComposer
@@ -1422,9 +1479,6 @@ class $$NotesTableTableAnnotationComposer
   GeneratedColumn<bool> get deleted =>
       $composableBuilder(column: $table.deleted, builder: (column) => column);
 
-  GeneratedColumn<int> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
   GeneratedColumn<bool> get dirty =>
       $composableBuilder(column: $table.dirty, builder: (column) => column);
 
@@ -1436,6 +1490,9 @@ class $$NotesTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt, builder: (column) => column);
 }
 
 class $$NotesTableTableTableManager extends RootTableManager<
@@ -1468,11 +1525,11 @@ class $$NotesTableTableTableManager extends RootTableManager<
             Value<String?> title = const Value.absent(),
             Value<String?> content = const Value.absent(),
             Value<bool> deleted = const Value.absent(),
-            Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
             Value<DateTime?> deletedAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> serverUpdatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               NotesTableCompanion(
@@ -1480,11 +1537,11 @@ class $$NotesTableTableTableManager extends RootTableManager<
             title: title,
             content: content,
             deleted: deleted,
-            version: version,
             dirty: dirty,
             deletedAt: deletedAt,
             updatedAt: updatedAt,
             createdAt: createdAt,
+            serverUpdatedAt: serverUpdatedAt,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -1492,11 +1549,11 @@ class $$NotesTableTableTableManager extends RootTableManager<
             Value<String?> title = const Value.absent(),
             Value<String?> content = const Value.absent(),
             Value<bool> deleted = const Value.absent(),
-            Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
             Value<DateTime?> deletedAt = const Value.absent(),
             required DateTime updatedAt,
             required DateTime createdAt,
+            Value<DateTime?> serverUpdatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               NotesTableCompanion.insert(
@@ -1504,11 +1561,11 @@ class $$NotesTableTableTableManager extends RootTableManager<
             title: title,
             content: content,
             deleted: deleted,
-            version: version,
             dirty: dirty,
             deletedAt: deletedAt,
             updatedAt: updatedAt,
             createdAt: createdAt,
+            serverUpdatedAt: serverUpdatedAt,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -1540,11 +1597,11 @@ typedef $$RemindersTableTableCreateCompanionBuilder = RemindersTableCompanion
   required DateTime remindAt,
   Value<bool> isDone,
   Value<bool> deleted,
-  Value<int> version,
   Value<bool> dirty,
   Value<String?> repeatRule,
   required DateTime updatedAt,
   required DateTime createdAt,
+  Value<DateTime?> serverUpdatedAt,
   Value<int> rowid,
 });
 typedef $$RemindersTableTableUpdateCompanionBuilder = RemindersTableCompanion
@@ -1554,11 +1611,11 @@ typedef $$RemindersTableTableUpdateCompanionBuilder = RemindersTableCompanion
   Value<DateTime> remindAt,
   Value<bool> isDone,
   Value<bool> deleted,
-  Value<int> version,
   Value<bool> dirty,
   Value<String?> repeatRule,
   Value<DateTime> updatedAt,
   Value<DateTime> createdAt,
+  Value<DateTime?> serverUpdatedAt,
   Value<int> rowid,
 });
 
@@ -1586,9 +1643,6 @@ class $$RemindersTableTableFilterComposer
   ColumnFilters<bool> get deleted => $composableBuilder(
       column: $table.deleted, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnFilters(column));
 
@@ -1600,6 +1654,10 @@ class $$RemindersTableTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$RemindersTableTableOrderingComposer
@@ -1626,9 +1684,6 @@ class $$RemindersTableTableOrderingComposer
   ColumnOrderings<bool> get deleted => $composableBuilder(
       column: $table.deleted, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 
@@ -1640,6 +1695,10 @@ class $$RemindersTableTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$RemindersTableTableAnnotationComposer
@@ -1666,9 +1725,6 @@ class $$RemindersTableTableAnnotationComposer
   GeneratedColumn<bool> get deleted =>
       $composableBuilder(column: $table.deleted, builder: (column) => column);
 
-  GeneratedColumn<int> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
   GeneratedColumn<bool> get dirty =>
       $composableBuilder(column: $table.dirty, builder: (column) => column);
 
@@ -1680,6 +1736,9 @@ class $$RemindersTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get serverUpdatedAt => $composableBuilder(
+      column: $table.serverUpdatedAt, builder: (column) => column);
 }
 
 class $$RemindersTableTableTableManager extends RootTableManager<
@@ -1714,11 +1773,11 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             Value<DateTime> remindAt = const Value.absent(),
             Value<bool> isDone = const Value.absent(),
             Value<bool> deleted = const Value.absent(),
-            Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
             Value<String?> repeatRule = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime?> serverUpdatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               RemindersTableCompanion(
@@ -1727,11 +1786,11 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             remindAt: remindAt,
             isDone: isDone,
             deleted: deleted,
-            version: version,
             dirty: dirty,
             repeatRule: repeatRule,
             updatedAt: updatedAt,
             createdAt: createdAt,
+            serverUpdatedAt: serverUpdatedAt,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -1740,11 +1799,11 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             required DateTime remindAt,
             Value<bool> isDone = const Value.absent(),
             Value<bool> deleted = const Value.absent(),
-            Value<int> version = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
             Value<String?> repeatRule = const Value.absent(),
             required DateTime updatedAt,
             required DateTime createdAt,
+            Value<DateTime?> serverUpdatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               RemindersTableCompanion.insert(
@@ -1753,11 +1812,11 @@ class $$RemindersTableTableTableManager extends RootTableManager<
             remindAt: remindAt,
             isDone: isDone,
             deleted: deleted,
-            version: version,
             dirty: dirty,
             repeatRule: repeatRule,
             updatedAt: updatedAt,
             createdAt: createdAt,
+            serverUpdatedAt: serverUpdatedAt,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -1788,6 +1847,7 @@ typedef $$NoteLinksTableTableCreateCompanionBuilder = NoteLinksTableCompanion
   required String toId,
   Value<int> weight,
   Value<bool> dirty,
+  Value<DateTime?> updatedAt,
   required DateTime createdAt,
   Value<int> rowid,
 });
@@ -1797,6 +1857,7 @@ typedef $$NoteLinksTableTableUpdateCompanionBuilder = NoteLinksTableCompanion
   Value<String> toId,
   Value<int> weight,
   Value<bool> dirty,
+  Value<DateTime?> updatedAt,
   Value<DateTime> createdAt,
   Value<int> rowid,
 });
@@ -1821,6 +1882,9 @@ class $$NoteLinksTableTableFilterComposer
 
   ColumnFilters<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -1847,6 +1911,9 @@ class $$NoteLinksTableTableOrderingComposer
   ColumnOrderings<bool> get dirty => $composableBuilder(
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 }
@@ -1871,6 +1938,9 @@ class $$NoteLinksTableTableAnnotationComposer
 
   GeneratedColumn<bool> get dirty =>
       $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1907,6 +1977,7 @@ class $$NoteLinksTableTableTableManager extends RootTableManager<
             Value<String> toId = const Value.absent(),
             Value<int> weight = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<DateTime?> updatedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -1915,6 +1986,7 @@ class $$NoteLinksTableTableTableManager extends RootTableManager<
             toId: toId,
             weight: weight,
             dirty: dirty,
+            updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,
           ),
@@ -1923,6 +1995,7 @@ class $$NoteLinksTableTableTableManager extends RootTableManager<
             required String toId,
             Value<int> weight = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<DateTime?> updatedAt = const Value.absent(),
             required DateTime createdAt,
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -1931,6 +2004,7 @@ class $$NoteLinksTableTableTableManager extends RootTableManager<
             toId: toId,
             weight: weight,
             dirty: dirty,
+            updatedAt: updatedAt,
             createdAt: createdAt,
             rowid: rowid,
           ),

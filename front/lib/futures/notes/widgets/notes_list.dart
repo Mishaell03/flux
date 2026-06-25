@@ -9,11 +9,13 @@ import 'package:intl/intl.dart';
 class NotesList extends StatelessWidget {
   final List<NoteListItem> notes;
   final ValueChanged<NoteListItem> onTap;
+  final ValueChanged<NoteListItem> onDelete;
 
   const NotesList({
     super.key,
     required this.notes,
     required this.onTap,
+    required this.onDelete,
   });
 
   @override
@@ -38,6 +40,7 @@ class NotesList extends StatelessWidget {
           child: _NoteTile(
             note: note,
             onTap: () => onTap(note),
+            onDelete: () => onDelete(note),
           ),
         );
       }),
@@ -48,14 +51,18 @@ class NotesList extends StatelessWidget {
 class _NoteTile extends StatelessWidget {
   final NoteListItem note;
   final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   const _NoteTile({
     required this.note,
     required this.onTap,
+    required this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return NotesCard(
       onTap: onTap,
       child: Row(
@@ -99,10 +106,25 @@ class _NoteTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.chevron_right_rounded,
-            color: context.colors.gray,
-            size: 22,
+          Column(
+            children: [
+              const SizedBox(height: 5),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: context.colors.gray,
+                size: 22,
+              ),
+              const SizedBox(height: 20),
+              IconButton(
+                tooltip: t.deleteTooltip,
+                onPressed: onDelete,
+                icon: Icon(
+                  Icons.delete_outline_rounded,
+                  color: context.colors.error,
+                  size: 21,
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -29,7 +29,6 @@ class ProfileSettingsList extends StatelessWidget {
             onTap: () {},
           ),
           _ItemDivider(),
-
           _SettingsItem(
             icon: Icons.notifications_outlined,
             label: t.profileSettingsNotifications,
@@ -37,7 +36,6 @@ class ProfileSettingsList extends StatelessWidget {
             onTap: () {},
           ),
           _ItemDivider(),
-
           _SettingsItem(
             icon: Icons.devices_outlined,
             label: t.profileSettingsDevices,
@@ -45,7 +43,6 @@ class ProfileSettingsList extends StatelessWidget {
             onTap: () {},
           ),
           _ItemDivider(),
-
           FutureBuilder<String>(
             future: AppVersionService.appVersion(),
             builder: (context, snapshot) {

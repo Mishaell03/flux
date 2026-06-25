@@ -45,6 +45,23 @@
   "profileSettingsDevices": "Devices",
   "profileSettingsAbout": "About NexNote",
   "profileSettingsAboutValue": "Version",
+  "profileRetry": "Retry",
+  "profileLoginAgain": "Sign in again",
+  "profileNoData": "No profile data",
+  "profileRefresh": "Refresh",
+  "profileSessionsTitle": "Sessions",
+  "profileSessionsRefreshTooltip": "Refresh",
+  "profileSessionsLoadError": "Could not load sessions",
+  "profileSessionsEmpty": "No active sessions",
+  "profileSessionCurrent": "Current",
+  "profileSessionDeviceFallback": "Device",
+  "profileSessionRevokeTooltip": "End session",
+  "profileSessionRevokeError": "Could not end session",
+
+  "navHome": "Home",
+  "navNotes": "Notes",
+  "navGraph": "Graph",
+  "navProfile": "Profile",
 
   "homeSearch": "Search notes or reminders",
   "homeUpcomingReminders": "Upcoming reminders",
@@ -56,6 +73,38 @@
   "homeMap": "Flux map",
   "homeOpenGraph": "Open graph",
   "homeLinkedNotes": "inked notes",
+  "homeSyncError": "Sync error",
+  "timeNow": "now",
+  "timeInMinutes": "in {minutes}m",
+  "@timeInMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timeInHours": "in {hours}h",
+  "@timeInHours": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "timeInDays": "in {days}d",
+  "@timeInDays": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+
+  "loadingCheckingSession": "Checking session",
+  "graphTitle": "MapGraph",
+  "graphStats": "{notesCount} notes · {edgesCount} links",
+  "@graphStats": {
+    "placeholders": {
+      "notesCount": {},
+      "edgesCount": {}
+    }
+  },
+  "graphEmptyTitle": "No notes yet",
+  "graphEmptySubtitle": "Create notes and connect them with [[links]] or #tags.",
 
   "notesPageTitle": "Notes",
   "notesCreateNew": "Create new",
@@ -65,31 +114,38 @@
   "notesEmptySubtitle": "Create your first note to start building your knowledge base.",
   "remindersEmptyTitle": "No reminders yet",
   "remindersEmptySubtitle": "Create a reminder and it will appear here.",
-  "notesUntitled": "Untitled",
-  "notesNoContent": "No content yet",
-  "notesOpenPlaceholder": "Opening note is not implemented yet",
-  "reminderOpenPlaceholder": "Opening reminder is not implemented yet",
-  "createNotePlaceholder": "Creating note is not implemented yet",
-  "createReminderPlaceholder": "Creating reminder is not implemented yet",
   "createNote": "Create note",
   "createReminder": "Create reminder",
-
   "noteCreateTitle": "New note",
+  "reminderCreateTitle": "New reminder",
   "noteTitleLabel": "Title",
-  "noteContentLabel": "Content",
-  "noteTitleHint": "Write a title",
   "noteContentHint": "Write something...",
-  "noteSave": "Save",
   "noteCancel": "Cancel",
-  "noteCreated": "Note created",
+  "noteHelp": "Here you can write a note in Markdown format.\n\n Supported:\n - **bold text**\n - `inline code'\n - links - [[ link ]] and [[ name | link ]]\n - hashtags #love \n - quotes > text\n\n All changes are saved automatically (if you connect sync).",
+  "noteHint": "Hint",
+  "noteOk": "OK",
+  "deleteTooltip": "Delete",
+  "deleteNoteTitle": "Delete note?",
+  "deleteNoteMessage": "“{title}” will be deleted.",
+  "@deleteNoteMessage": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "deleteReminderTitle": "Delete reminder?",
+  "deleteReminderMessage": "“{title}” will no longer be a reminder.",
+  "@deleteReminderMessage": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "reminderTitleHint": "Note title",
+  "reminderContentHint": "Note text",
 
   "success": "Success",
   "error": "Error",
   "sectionDevelopment": "This section is currently under development",
   "weApologize": "We apologize",
-  "errorCouldNotOpenLink": "Couldn't open the link",
-  "errorServerUnavailable": "Server is unavailable",
-  "errorNetworkUnavailable": "No internet connection",
   "errorAuthFailed": "Couldn't complete sign in",
   "errorProfileFailed": "Account data could not be retrieved",
   "errorInvalidLink": "Invalid link",
@@ -98,10 +154,5 @@
 
   "errorNetwork": "No internet connection",
   "errorTimeout": "Request timed out",
-  "errorNotFound": "Resource not found",
-  "errorValidation": "Invalid input data",
-  "errorUnauthorized": "Authorization required",
-  "errorServer": "Server error. Please try again later.",
-  "errorInvalidResponse": "Invalid server response",
   "errorUnknown": "Unknown error"
 }

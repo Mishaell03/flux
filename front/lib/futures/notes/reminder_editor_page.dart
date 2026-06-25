@@ -7,31 +7,34 @@ import 'package:front/core/db/database_provider.dart';
 import 'package:front/core/widgets/markdown_live_editor.dart';
 import 'package:front/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-class NoteEditorPage extends StatefulWidget {
+class ReminderEditorPage extends StatefulWidget {
   final String? noteId;
 
-  const NoteEditorPage({
+  const ReminderEditorPage({
     super.key,
     this.noteId,
   });
 
   @override
-  State<NoteEditorPage> createState() => _NoteEditorPageState();
+  State<ReminderEditorPage> createState() => _ReminderEditorPageState();
 }
 
-class _NoteEditorPageState extends State<NoteEditorPage> {
-  final db = DatabaseProvider.instance;
+class _ReminderEditorPageState extends State<ReminderEditorPage> {
+  final AppDatabase db = DatabaseProvider.instance;
+
+  final TextEditingController _titleController = TextEditingController();
 
   String _title = '';
   String _content = '';
   List<String> _noteSuggestions = const [];
-
-  final TextEditingController _titleController = TextEditingController();
+  String? _reminderId;
+  DateTime? _remindAt;
+  bool _initialized = false;
 
   bool get isEdit => widget.noteId != null;
-  bool _initialized = false;
 
   @override
   void didChangeDependencies() {
@@ -41,34 +44,46 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     _initialized = true;
 
     if (isEdit) {
-      _loadNote();
+      _loadNoteAndReminder();
     } else {
       final t = AppLocalizations.of(context)!;
 
-      _title = t.noteCreateTitle;
+      _title = t.reminderCreateTitle;
       _content = '> ${t.noteContentHint}';
-
       _titleController.text = _title;
     }
 
     _loadNoteSuggestions();
   }
 
-  Future<void> _loadNote() async {
+  Future<void> _loadNoteAndReminder() async {
     final note = await (db.select(db.notesTable)
-          ..where((t) => t.id.equals(widget.noteId!)))
+          ..where((table) => table.id.equals(widget.noteId!)))
         .getSingle();
+
+    final reminder = await (db.select(db.remindersTable)
+          ..where(
+            (table) =>
+                table.noteId.equals(widget.noteId!) &
+                table.deleted.equals(false),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+
+    if (!mounted) return;
 
     setState(() {
       _title = note.title ?? '';
       _content = note.content ?? '';
+      _reminderId = reminder?.id;
+      _remindAt = reminder?.remindAt.toLocal();
       _titleController.text = _title;
     });
   }
 
   Future<void> _loadNoteSuggestions() async {
     final notes = await (db.select(db.notesTable)
-          ..where((t) => t.deleted.equals(false)))
+          ..where((table) => table.deleted.equals(false)))
         .get();
 
     if (!mounted) return;
@@ -85,13 +100,49 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     });
   }
 
+  Future<void> _pickReminderDateTime() async {
+    final initial = _remindAt ?? DateTime.now();
+
+    final date = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+      initialDate: initial,
+    );
+
+    if (date == null || !mounted) return;
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial),
+    );
+
+    if (time == null) return;
+
+    setState(() {
+      _remindAt = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
+    });
+  }
+
   Future<void> _save() async {
-    final db = DatabaseProvider.instance;
-    final now = DateTime.now();
+    if (_remindAt == null) {
+      await _pickReminderDateTime();
+    }
+
+    if (_remindAt == null) return;
+
+    final now = DateTime.now().toUtc();
+    final noteId = widget.noteId ?? const Uuid().v4();
 
     if (isEdit) {
       await (db.update(db.notesTable)
-            ..where((t) => t.id.equals(widget.noteId!)))
+            ..where((table) => table.id.equals(noteId)))
           .write(
         NotesTableCompanion(
           title: drift.Value(_title),
@@ -103,7 +154,7 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     } else {
       await db.into(db.notesTable).insert(
             NotesTableCompanion.insert(
-              id: Uuid().v4(),
+              id: noteId,
               title: drift.Value(_title),
               content: drift.Value(_content),
               createdAt: now,
@@ -112,29 +163,32 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
             ),
           );
     }
-  }
 
-  void _showHelp() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        final t = AppLocalizations.of(context)!;
-
-        return AlertDialog(
-          title: Text(t.noteHint),
-          content: Text(
-            t.noteHelp,
-            style: AppText.medium_16a,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(t.noteOk),
+    if (_reminderId == null) {
+      await db.into(db.remindersTable).insert(
+            RemindersTableCompanion.insert(
+              id: const Uuid().v4(),
+              noteId: drift.Value(noteId),
+              remindAt: _remindAt!.toUtc(),
+              createdAt: now,
+              updatedAt: now,
+              isDone: const drift.Value(false),
+              deleted: const drift.Value(false),
+              dirty: const drift.Value(true),
             ),
-          ],
-        );
-      },
-    );
+          );
+    } else {
+      await (db.update(db.remindersTable)
+            ..where((table) => table.id.equals(_reminderId!)))
+          .write(
+        RemindersTableCompanion(
+          noteId: drift.Value(noteId),
+          remindAt: drift.Value(_remindAt!.toUtc()),
+          updatedAt: drift.Value(now),
+          dirty: const drift.Value(true),
+        ),
+      );
+    }
   }
 
   @override
@@ -147,6 +201,7 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: colors.bg,
       appBar: AppBar(
@@ -158,13 +213,14 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: _showHelp,
+            icon: const Icon(Icons.schedule_rounded),
+            onPressed: _pickReminderDateTime,
           ),
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () async {
               await _save();
+
               if (context.mounted) {
                 context.goNamed('notes');
               }
@@ -184,11 +240,24 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
                   color: colors.text,
                 ),
                 decoration: InputDecoration(
-                  hintText: t.noteTitleLabel,
+                  hintText: t.reminderTitleHint,
                   border: InputBorder.none,
                 ),
               ),
             ),
+            if (_remindAt != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    DateFormat('MMM d, h:mm a').format(_remindAt!),
+                    style: AppText.medium_14a.copyWith(
+                      color: colors.gray,
+                    ),
+                  ),
+                ),
+              ),
             Divider(color: colors.border),
             Expanded(
               child: Padding(

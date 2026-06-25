@@ -218,7 +218,9 @@ class _CalendarDay extends StatelessWidget {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: selected ? context.colors.primary : Colors.transparent,
+                color: selected
+                    ? context.colors.primary
+                    : context.colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -235,8 +237,9 @@ class _CalendarDay extends StatelessWidget {
               width: 5,
               height: 5,
               decoration: BoxDecoration(
-                color:
-                hasReminder ? context.colors.primary : Colors.transparent,
+                color: hasReminder
+                    ? context.colors.primary
+                    : context.colors.transparent,
                 shape: BoxShape.circle,
               ),
             ),
@@ -313,7 +316,7 @@ class _ReminderRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(
-            _timeLeft(reminder.remindAt),
+            _timeLeft(context, reminder.remindAt),
             style: AppText.medium_12a.copyWith(
               color: context.colors.gray,
             ),
@@ -323,14 +326,15 @@ class _ReminderRow extends StatelessWidget {
     );
   }
 
-  String _timeLeft(DateTime value) {
+  String _timeLeft(BuildContext context, DateTime value) {
+    final t = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final diff = value.toLocal().difference(now);
 
-    if (diff.inMinutes <= 0) return 'now';
-    if (diff.inHours < 1) return 'in ${diff.inMinutes}m';
-    if (diff.inDays < 1) return 'in ${diff.inHours}h';
+    if (diff.inMinutes <= 0) return t.timeNow;
+    if (diff.inHours < 1) return t.timeInMinutes(diff.inMinutes);
+    if (diff.inDays < 1) return t.timeInHours(diff.inHours);
 
-    return 'in ${diff.inDays}d';
+    return t.timeInDays(diff.inDays);
   }
 }

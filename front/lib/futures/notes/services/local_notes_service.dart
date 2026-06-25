@@ -13,10 +13,10 @@ class LocalNotesService {
 
   Future<NoteListItem?> getNoteById(String id) async {
     final note = await (db.select(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
-      )
-      ..limit(1))
+          )
+          ..limit(1))
         .getSingleOrNull();
 
     if (note == null) return null;
@@ -37,17 +37,16 @@ class LocalNotesService {
     final now = DateTime.now().toUtc();
 
     await db.into(db.notesTable).insert(
-      NotesTableCompanion.insert(
-        id: id,
-        title: Value(_nullableText(title)),
-        content: Value(_nullableText(content)),
-        deleted: const Value(false),
-        version: const Value(1),
-        dirty: const Value(true),
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+          NotesTableCompanion.insert(
+            id: id,
+            title: Value(_nullableText(title)),
+            content: Value(_nullableText(content)),
+            deleted: const Value(false),
+            dirty: const Value(true),
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
 
     return id;
   }
@@ -58,10 +57,10 @@ class LocalNotesService {
     required String content,
   }) async {
     final current = await (db.select(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
-      )
-      ..limit(1))
+          )
+          ..limit(1))
         .getSingleOrNull();
 
     if (current == null) {
@@ -71,15 +70,14 @@ class LocalNotesService {
     final now = DateTime.now().toUtc();
 
     await (db.update(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
-      ))
+          ))
         .write(
       NotesTableCompanion(
         title: Value(_nullableText(title)),
         content: Value(_nullableText(content)),
         dirty: const Value(true),
-        version: Value(current.version + 1),
         updatedAt: Value(now),
       ),
     );
@@ -89,10 +87,10 @@ class LocalNotesService {
     required String id,
   }) async {
     final current = await (db.select(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
-      )
-      ..limit(1))
+          )
+          ..limit(1))
         .getSingleOrNull();
 
     if (current == null) {
@@ -102,15 +100,43 @@ class LocalNotesService {
     final now = DateTime.now().toUtc();
 
     await (db.update(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
-      ))
+          ))
         .write(
       NotesTableCompanion(
         deleted: const Value(true),
         deletedAt: Value(now),
         dirty: const Value(true),
-        version: Value(current.version + 1),
+        updatedAt: Value(now),
+      ),
+    );
+  }
+
+  Future<void> destroyReminder({
+    required String id,
+  }) async {
+    final current = await (db.select(db.remindersTable)
+          ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+          )
+          ..limit(1))
+        .getSingleOrNull();
+
+    if (current == null) {
+      throw StateError('Reminder not found: $id');
+    }
+
+    final now = DateTime.now().toUtc();
+
+    await (db.update(db.remindersTable)
+          ..where(
+            (tbl) => tbl.id.equals(id) & tbl.deleted.equals(false),
+          ))
+        .write(
+      RemindersTableCompanion(
+        deleted: const Value(true),
+        dirty: const Value(true),
         updatedAt: Value(now),
       ),
     );

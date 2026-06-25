@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.core.session import get_current_session
-from app.db.models import NoteLink, RegistrationSession
+from app.db.models import Note, NoteLink, RegistrationSession
 from app.api.v1.schemas.note_link import (
     NoteLinksPushRequest,
     NoteLinksGetResponse,
@@ -57,8 +57,10 @@ async def get_note_links(
 ):
     rows = (
         db.query(NoteLink)
+        .join(NoteLink.from_note)
         .filter(
-            NoteLink.from_note_id == note_id
+            NoteLink.from_note_id == note_id,
+            Note.user_id == session.user_id,
         )
         .all()
     )
@@ -82,6 +84,35 @@ async def push_links(
     session: RegistrationSession = Depends(get_current_session),
     db: Session = Depends(get_db),
 ):
+    from_note = (
+        db.query(Note)
+        .filter(
+            Note.note_id == data.from_note_id,
+            Note.user_id == session.user_id,
+            Note.deleted.is_(False),
+        )
+        .first()
+    )
+
+    if from_note is None:
+        raise HTTPException(status_code=404, detail="Source note not found")
+
+    requested_to_note_ids = {link.to_note_id for link in data.links}
+    existing_to_note_ids = set()
+
+    if requested_to_note_ids:
+        rows = (
+            db.query(Note.note_id)
+            .filter(
+                Note.user_id == session.user_id,
+                Note.deleted.is_(False),
+                Note.note_id.in_(requested_to_note_ids),
+            )
+            .all()
+        )
+
+        existing_to_note_ids = {row[0] for row in rows}
+
     # 1. удалить старые связи
     db.query(NoteLink).filter(
         NoteLink.from_note_id == data.from_note_id
@@ -89,6 +120,9 @@ async def push_links(
 
     # 2. вставить новые
     for link in data.links:
+        if link.to_note_id not in existing_to_note_ids:
+            continue
+
         db.add(
             NoteLink(
                 from_note_id=data.from_note_id,
@@ -110,4 +144,3 @@ async def push_links(
     )
 
     return {"success": True}
-

@@ -11,12 +11,14 @@ import 'package:front/core/widgets/markdown_task_line.dart';
 class MarkdownLiveEditor extends StatefulWidget {
   final String initialText;
   final ValueChanged<String> onChanged;
+  final List<String> noteSuggestions;
   final EdgeInsets padding;
 
   const MarkdownLiveEditor({
     super.key,
     required this.initialText,
     required this.onChanged,
+    this.noteSuggestions = const [],
     this.padding = const EdgeInsets.all(20),
   });
 
@@ -181,7 +183,75 @@ class _MarkdownLiveEditorState extends State<MarkdownLiveEditor> {
       return;
     }
 
-    _lines[index] = value;
+    setState(() {
+      _lines[index] = value;
+    });
+
+    _notifyChanged();
+  }
+
+  List<String> _suggestionsForLine(int index) {
+    if (index < 0 || index >= _controllers.length) return [];
+
+    final controller = _controllers[index];
+    final selection = controller.selection;
+
+    if (!selection.isValid || !selection.isCollapsed) return [];
+
+    final cursorOffset = selection.baseOffset.clamp(0, controller.text.length);
+    final beforeCursor = controller.text.substring(0, cursorOffset);
+    final linkStart = beforeCursor.lastIndexOf('[[');
+
+    if (linkStart < 0) return [];
+
+    final afterLinkStart = beforeCursor.substring(linkStart + 2);
+
+    if (afterLinkStart.contains(']]') || afterLinkStart.contains('\n')) {
+      return [];
+    }
+
+    final query = afterLinkStart.trim().toLowerCase();
+
+    return widget.noteSuggestions
+        .where((title) {
+          final normalizedTitle = title.trim();
+
+          if (normalizedTitle.isEmpty) return false;
+          if (query.isEmpty) return true;
+
+          return normalizedTitle.toLowerCase().contains(query);
+        })
+        .take(6)
+        .toList();
+  }
+
+  void _insertSuggestion(int index, String title) {
+    if (index < 0 || index >= _controllers.length) return;
+
+    final controller = _controllers[index];
+    final selection = controller.selection;
+
+    if (!selection.isValid || !selection.isCollapsed) return;
+
+    final cursorOffset = selection.baseOffset.clamp(0, controller.text.length);
+    final beforeCursor = controller.text.substring(0, cursorOffset);
+    final linkStart = beforeCursor.lastIndexOf('[[');
+
+    if (linkStart < 0) return;
+
+    final replacement = '[[$title]]';
+    final nextText =
+        controller.text.replaceRange(linkStart, cursorOffset, replacement);
+    final nextCursorOffset = linkStart + replacement.length;
+
+    setState(() {
+      _lines[index] = nextText;
+      controller.text = nextText;
+      controller.selection = TextSelection.collapsed(
+        offset: nextCursorOffset,
+      );
+    });
+
     _notifyChanged();
   }
 
@@ -463,11 +533,23 @@ class _MarkdownLiveEditorState extends State<MarkdownLiveEditor> {
     final line = _lines[index];
 
     if (isActive) {
-      return _EditableMarkdownLine(
-        controller: _controllers[index],
-        focusNode: _focusNodes[index],
-        onChanged: (value) => _handleLineChanged(index, value),
-        onKeyEvent: (event) => _handleKeyEvent(index, event),
+      final suggestions = _suggestionsForLine(index);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _EditableMarkdownLine(
+            controller: _controllers[index],
+            focusNode: _focusNodes[index],
+            onChanged: (value) => _handleLineChanged(index, value),
+            onKeyEvent: (event) => _handleKeyEvent(index, event),
+          ),
+          if (suggestions.isNotEmpty)
+            _NoteSuggestionsList(
+              suggestions: suggestions,
+              onSelected: (title) => _insertSuggestion(index, title),
+            ),
+        ],
       );
     }
 
@@ -489,6 +571,63 @@ class _MarkdownLiveEditorState extends State<MarkdownLiveEditor> {
       onTap: () => _activateLine(
         index,
         cursorAtEnd: true,
+      ),
+    );
+  }
+}
+
+class _NoteSuggestionsList extends StatelessWidget {
+  final List<String> suggestions;
+  final ValueChanged<String> onSelected;
+
+  const _NoteSuggestionsList({
+    required this.suggestions,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 4, bottom: 8),
+      decoration: BoxDecoration(
+        color: context.colors.border.withValues(alpha: 0.56),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.colors.border),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final title in suggestions)
+            InkWell(
+              onTap: () => onSelected(title),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.note_outlined,
+                      size: 18,
+                      color: context.colors.primary,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: AppText.medium_14a.copyWith(
+                          color: context.colors.text,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

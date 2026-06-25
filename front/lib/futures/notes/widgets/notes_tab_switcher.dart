@@ -71,7 +71,7 @@ class _NotesTabButton extends StatelessWidget {
         curve: Curves.easeOut,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: selected ? context.colors.bg : Colors.transparent,
+          color: selected ? context.colors.bg : context.colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Center(

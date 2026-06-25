@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePage();
 }
 
-
 class _HomePage extends State<HomePage> {
   final HomeRepository _repository = HomeRepository();
 
@@ -88,7 +87,7 @@ class _HomePage extends State<HomePage> {
 
       AppNotice.error(
         context,
-        message: 'Sync error',
+        message: AppLocalizations.of(context)!.homeSyncError,
       );
     }
   }

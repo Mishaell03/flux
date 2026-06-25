@@ -57,7 +57,7 @@ async def get_current_user_profile(
             platform=session.platform,
         )
 
-    notes_count = (
+    raw_notes_count = (
         db.query(func.count(Note.note_id))
         .filter(
             Note.user_id == user.user_id,
@@ -66,6 +66,21 @@ async def get_current_user_profile(
         .scalar()
         or 0
     )
+
+    reminder_note_ids_count = (
+        db.query(func.count(func.distinct(Reminder.note_id)))
+        .join(Note, Reminder.note_id == Note.note_id)
+        .filter(
+            Reminder.user_id == user.user_id,
+            Reminder.deleted.is_(False),
+            Reminder.note_id.isnot(None),
+            Note.deleted.is_(False),
+        )
+        .scalar()
+        or 0
+    )
+
+    notes_count = max(raw_notes_count - reminder_note_ids_count, 0)
 
     reminders_count = (
         db.query(func.count(Reminder.reminder_id))
@@ -98,6 +113,8 @@ async def get_current_user_profile(
         db.query(func.count(RegistrationSession.id))
         .filter(
             RegistrationSession.user_id == user.user_id,
+            RegistrationSession.revoked_at.is_(None),
+            RegistrationSession.expires_at > func.now(),
         )
         .scalar()
         or 0

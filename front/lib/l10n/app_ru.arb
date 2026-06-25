@@ -45,6 +45,23 @@
   "profileSettingsDevices": "Устройства",
   "profileSettingsAbout": "О приложении",
   "profileSettingsAboutValue": "Версия",
+  "profileRetry": "Повторить",
+  "profileLoginAgain": "Войти заново",
+  "profileNoData": "Нет данных профиля",
+  "profileRefresh": "Обновить",
+  "profileSessionsTitle": "Сессии",
+  "profileSessionsRefreshTooltip": "Обновить",
+  "profileSessionsLoadError": "Не удалось загрузить сессии",
+  "profileSessionsEmpty": "Активных сессий нет",
+  "profileSessionCurrent": "Текущая",
+  "profileSessionDeviceFallback": "Устройство",
+  "profileSessionRevokeTooltip": "Завершить",
+  "profileSessionRevokeError": "Не удалось завершить сессию",
+
+  "navHome": "Главная",
+  "navNotes": "Заметки",
+  "navGraph": "Граф",
+  "navProfile": "Профиль",
 
   "homeSearch": "Поиск заметок или напоминаний",
   "homeUpcomingReminders": "Предстоящие напоминания",
@@ -56,6 +73,38 @@
   "homeMap": "Flux map",
   "homeOpenGraph": "Открыть граф",
   "homeLinkedNotes": "связей в заметках",
+  "homeSyncError": "Ошибка синхронизации",
+  "timeNow": "сейчас",
+  "timeInMinutes": "через {minutes} мин",
+  "@timeInMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timeInHours": "через {hours} ч",
+  "@timeInHours": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "timeInDays": "через {days} дн",
+  "@timeInDays": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+
+  "loadingCheckingSession": "Проверяем сессию",
+  "graphTitle": "MapGraph",
+  "graphStats": "{notesCount} заметок · {edgesCount} связей",
+  "@graphStats": {
+    "placeholders": {
+      "notesCount": {},
+      "edgesCount": {}
+    }
+  },
+  "graphEmptyTitle": "Заметок пока нет",
+  "graphEmptySubtitle": "Создай заметки и свяжи их через [[ссылки]] или #теги.",
 
   "notesPageTitle": "Заметки",
   "notesCreateNew": "Создать",
@@ -65,31 +114,38 @@
   "notesEmptySubtitle": "Создай первую заметку, чтобы начать собирать знания.",
   "remindersEmptyTitle": "Напоминаний пока нет",
   "remindersEmptySubtitle": "Создай напоминание, и оно появится здесь.",
-  "notesUntitled": "Без названия",
-  "notesNoContent": "Пока нет текста",
-  "notesOpenPlaceholder": "Открытие заметки пока не реализовано",
-  "reminderOpenPlaceholder": "Открытие напоминания пока не реализовано",
-  "createNotePlaceholder": "Создание заметки пока не реализовано",
-  "createReminderPlaceholder": "Создание напоминания пока не реализовано",
   "createNote": "Создать заметку",
   "createReminder": "Создать напоминание",
-
   "noteCreateTitle": "Новая заметка",
+  "reminderCreateTitle": "Новое напоминание",
   "noteTitleLabel": "Название",
-  "noteContentLabel": "Текст",
-  "noteTitleHint": "Напиши название",
   "noteContentHint": "Напиши что-нибудь...",
-  "noteSave": "Сохранить",
   "noteCancel": "Отмена",
-  "noteCreated": "Заметка создана",
+  "noteHelp": "Здесь можно писать заметку в формате Markdown.\n\n Поддерживается:\n - **жирный текст**\n - `inline code`\n - ссылки - [[ link ]] и [[ name | link ]]\n - хэштеги #love \n - цитаты > текст\n\n Все изменения сохраняются автоматически после закрытия заметки",
+  "noteHint": "Подсказка",
+  "noteOk": "OK",
+  "deleteTooltip": "Удалить",
+  "deleteNoteTitle": "Удалить заметку?",
+  "deleteNoteMessage": "«{title}» будет удалена.",
+  "@deleteNoteMessage": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "deleteReminderTitle": "Удалить напоминание?",
+  "deleteReminderMessage": "«{title}» больше не будет напоминанием.",
+  "@deleteReminderMessage": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "reminderTitleHint": "Название заметки",
+  "reminderContentHint": "Текст заметки",
 
   "error": "Ошибка",
   "success": "Успешно",
   "sectionDevelopment": "Данный раздел находится в разработке",
   "weApologize": "Приносим свои извинения",
-  "errorCouldNotOpenLink": "Не удалось открыть ссылку",
-  "errorServerUnavailable": "Сервер недоступен",
-  "errorNetworkUnavailable": "Нет подключения к интернету",
   "errorAuthFailed": "Не удалось завершить вход",
   "errorProfileFailed": "Не удалось получить данные аккаунта",
   "errorInvalidLink": "Некорректная ссылка",
@@ -98,10 +154,5 @@
 
   "errorNetwork": "Нет подключения к интернету",
   "errorTimeout": "Превышено время ожидания запроса",
-  "errorNotFound": "Ресурс не найден",
-  "errorValidation": "Неверные данные",
-  "errorUnauthorized": "Требуется авторизация",
-  "errorServer": "Ошибка сервера, попробуйте позже",
-  "errorInvalidResponse": "Некорректный ответ сервера",
   "errorUnknown": "Неизвестная ошибка"
 }

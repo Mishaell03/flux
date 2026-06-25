@@ -1,5 +1,6 @@
 import 'package:front/core/components/secure/auth_token_storage.dart';
 import 'package:front/core/errors/app_exception.dart';
+import 'package:front/core/sync/models/note_link_sync.dart';
 import 'package:front/core/sync/services/note_links_api_service.dart';
 import 'package:front/core/sync/services/sync_api_service.dart';
 import 'package:front/core/sync/services/sync_local_service.dart';
@@ -31,6 +32,9 @@ class SyncService {
         throw const AppException(code: AppErrorCode.errorProfileFailed);
       }
 
+      // =========================
+      // 1. STATUS CHECK
+      // =========================
       final noteVersions = await local.getNoteVersions();
       final reminderVersions = await local.getReminderVersions();
 
@@ -40,6 +44,9 @@ class SyncService {
         reminders: reminderVersions,
       );
 
+      // =========================
+      // 2. PUSH DIRTY NOTES
+      // =========================
       final notesToPush = await local.getDirtyNotesPayloadByIds(
         status.noteIdsToPush,
       );
@@ -47,6 +54,19 @@ class SyncService {
       final remindersToPush = await local.getDirtyRemindersPayloadByIds(
         status.reminderIdsToPush,
       );
+
+      final noteLinksToPush = <String, List<NoteLinkSyncItem>>{};
+
+      for (final note in notesToPush) {
+        final noteId = note['id']?.toString();
+
+        if (noteId == null || noteId.isEmpty) continue;
+
+        noteLinksToPush[noteId] = await local.buildLinksFromNote(
+          fromNoteId: noteId,
+          content: note['content']?.toString() ?? '',
+        );
+      }
 
       if (notesToPush.isNotEmpty || remindersToPush.isNotEmpty) {
         final pushResponse = await api.push(
@@ -59,6 +79,9 @@ class SyncService {
         await local.markRemindersSynced(pushResponse.syncedReminderIds);
       }
 
+      // =========================
+      // 3. PULL UPDATES
+      // =========================
       if (status.noteIdsToPull.isNotEmpty ||
           status.reminderIdsToPull.isNotEmpty) {
         final pullResponse = await api.pull(
@@ -71,6 +94,21 @@ class SyncService {
         await local.applyPulledReminders(pullResponse.reminders);
       }
 
+      // =========================
+      // 4. GRAPH SYNC (ВАЖНО)
+      // =========================
+
+      for (final entry in noteLinksToPush.entries) {
+        await noteLinksApi.pushForNote(
+          token: token,
+          fromNoteId: entry.key,
+          links: entry.value,
+        );
+      }
+
+      // =========================
+      // 5. REFRESH GLOBAL LINKS
+      // =========================
       final links = await noteLinksApi.getAll(token: token);
       await local.replaceNoteLinks(links);
     } finally {

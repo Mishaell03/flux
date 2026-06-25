@@ -31,12 +31,14 @@ class NoteListItem {
 
 class ReminderListItem {
   final String id;
+  final String? noteId;
   final String title;
   final DateTime remindAt;
   final bool isDone;
 
   const ReminderListItem({
     required this.id,
+    required this.noteId,
     required this.title,
     required this.remindAt,
     required this.isDone,

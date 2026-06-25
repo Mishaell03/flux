@@ -8,8 +8,10 @@ import 'package:front/futures/profile/models/get_info.dart';
 import 'package:front/futures/profile/services/get_info.dart';
 import 'package:front/futures/profile/widgets/profile_card.dart';
 import 'package:front/futures/profile/widgets/settings_list.dart';
+import 'package:front/futures/profile/widgets/sessions_card.dart';
 import 'package:front/futures/profile/widgets/status_card.dart';
 import 'package:front/futures/profile/widgets/sync_card.dart';
+import 'package:front/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 const double _kMaxContentWidth = 560;
@@ -76,6 +78,8 @@ class _ProfilePage extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return RefreshIndicator(
       onRefresh: _refresh,
       child: AppVerticalScroll(
@@ -123,14 +127,14 @@ class _ProfilePage extends State<ProfilePage> {
                           const SizedBox(height: 16),
                           TextButton(
                             onPressed: _refresh,
-                            child: const Text('Повторить'),
+                            child: Text(t.profileRetry),
                           ),
                           const SizedBox(height: 12),
                           TextButton(
                             onPressed: () {
                               context.go('/login');
                             },
-                            child: const Text('Войти заново'),
+                            child: Text(t.profileLoginAgain),
                           ),
                         ],
                       ),
@@ -142,11 +146,11 @@ class _ProfilePage extends State<ProfilePage> {
                       padding: const EdgeInsets.only(top: 40),
                       child: Column(
                         children: [
-                          const Text('Нет данных профиля'),
+                          Text(t.profileNoData),
                           const SizedBox(height: 16),
                           TextButton(
                             onPressed: _refresh,
-                            child: const Text('Обновить'),
+                            child: Text(t.profileRefresh),
                           ),
                         ],
                       ),
@@ -164,6 +168,8 @@ class _ProfilePage extends State<ProfilePage> {
                       ProfileStatsCard(profile: profile),
                       const SizedBox(height: 16),
                       ProfileSettingsList(profile: profile),
+                      const SizedBox(height: 16),
+                      const ProfileSessionsCard(),
                       const SizedBox(height: 32),
                     ],
                   );

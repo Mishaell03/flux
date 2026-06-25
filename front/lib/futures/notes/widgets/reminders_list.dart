@@ -8,12 +8,14 @@ import 'package:intl/intl.dart';
 
 class RemindersList extends StatelessWidget {
   final List<ReminderListItem> reminders;
-  final VoidCallback onTap;
+  final ValueChanged<ReminderListItem> onTap;
+  final ValueChanged<ReminderListItem> onDelete;
 
   const RemindersList({
     super.key,
     required this.reminders,
     required this.onTap,
+    required this.onDelete,
   });
 
   @override
@@ -37,7 +39,8 @@ class RemindersList extends StatelessWidget {
           padding: EdgeInsets.only(bottom: isLast ? 0 : 12),
           child: _ReminderTile(
             reminder: reminder,
-            onTap: onTap,
+            onTap: () => onTap(reminder),
+            onDelete: () => onDelete(reminder),
           ),
         );
       }),
@@ -48,14 +51,18 @@ class RemindersList extends StatelessWidget {
 class _ReminderTile extends StatelessWidget {
   final ReminderListItem reminder;
   final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   const _ReminderTile({
     required this.reminder,
     required this.onTap,
+    required this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return NotesCard(
       onTap: onTap,
       child: Row(
@@ -63,7 +70,9 @@ class _ReminderTile extends StatelessWidget {
         children: [
           NotesIconBox(
             icon: Icons.notifications_none_rounded,
-            color: reminder.isDone ? context.colors.success : context.colors.primary,
+            color: reminder.isDone
+                ? context.colors.success
+                : context.colors.primary,
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -80,7 +89,8 @@ class _ReminderTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  DateFormat('MMM d, h:mm a').format(reminder.remindAt.toLocal()),
+                  DateFormat('MMM d, h:mm a')
+                      .format(reminder.remindAt.toLocal()),
                   style: AppText.medium_12a.copyWith(
                     color: context.colors.gray,
                   ),
@@ -89,10 +99,23 @@ class _ReminderTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.chevron_right_rounded,
-            color: context.colors.gray,
-            size: 22,
+          Column(
+            children: [
+              IconButton(
+                tooltip: t.deleteTooltip,
+                onPressed: onDelete,
+                icon: Icon(
+                  Icons.delete_outline_rounded,
+                  color: context.colors.error,
+                  size: 21,
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: context.colors.gray,
+                size: 22,
+              ),
+            ],
           ),
         ],
       ),

@@ -35,28 +35,28 @@ class SyncLocalService {
   }
 
   Future<List<Map<String, dynamic>>> getDirtyNotesPayloadByIds(
-      Set<String> ids,
-      ) async {
+    Set<String> ids,
+  ) async {
     if (ids.isEmpty) return [];
 
     final notes = await (db.select(db.notesTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.isIn(ids) & tbl.dirty.equals(true),
-      ))
+          ))
         .get();
 
     return notes.map(_noteToJson).toList();
   }
 
   Future<List<Map<String, dynamic>>> getDirtyRemindersPayloadByIds(
-      Set<String> ids,
-      ) async {
+    Set<String> ids,
+  ) async {
     if (ids.isEmpty) return [];
 
     final reminders = await (db.select(db.remindersTable)
-      ..where(
+          ..where(
             (tbl) => tbl.id.isIn(ids) & tbl.dirty.equals(true),
-      ))
+          ))
         .get();
 
     return reminders.map(_reminderToJson).toList();
@@ -75,8 +75,7 @@ class SyncLocalService {
   Future<void> markRemindersSynced(List<String> ids) async {
     if (ids.isEmpty) return;
 
-    await (db.update(db.remindersTable)
-      ..where((tbl) => tbl.id.isIn(ids)))
+    await (db.update(db.remindersTable)..where((tbl) => tbl.id.isIn(ids)))
         .write(
       const RemindersTableCompanion(
         dirty: Value(false),
@@ -181,5 +180,73 @@ class SyncLocalService {
         companions,
       );
     });
+  }
+
+  Future<List<NoteLinkSyncItem>> buildLinksFromNote({
+    required String fromNoteId,
+    required String content,
+  }) async {
+    final internalLinks = RegExp(r'\[\[([^\]]+)\]\]')
+        .allMatches(content)
+        .map((e) => _linkTarget(e.group(1)!))
+        .where((target) => target.isNotEmpty)
+        .toSet();
+
+    if (internalLinks.isEmpty) return [];
+
+    final notes = await (db.select(db.notesTable)
+          ..where((tbl) => tbl.deleted.equals(false)))
+        .get();
+
+    final titleToId = {
+      for (final note in notes)
+        if (note.title != null && note.title!.trim().isNotEmpty)
+          note.title!.trim(): note.id,
+    };
+
+    final links = <NoteLinkSyncItem>[];
+
+    for (final target in internalLinks) {
+      final toNoteId = _looksLikeUuid(target) ? target : titleToId[target];
+
+      if (toNoteId == null || toNoteId == fromNoteId) continue;
+
+      links.add(NoteLinkSyncItem(
+        fromNoteId: fromNoteId,
+        toNoteId: toNoteId,
+        weight: 1,
+        createdAt: DateTime.now().toUtc(),
+      ));
+    }
+
+    return links;
+  }
+
+  String _linkTarget(String rawLink) {
+    final parts = rawLink
+        .split('|')
+        .map((part) => part.trim())
+        .where((part) => part.isNotEmpty)
+        .toList();
+
+    if (parts.isEmpty) return '';
+
+    for (final part in parts) {
+      if (_isUrl(part)) return part;
+    }
+
+    return parts.first;
+  }
+
+  bool _isUrl(String value) {
+    final text = value.trim().toLowerCase();
+
+    return text.startsWith('http://') || text.startsWith('https://');
+  }
+
+  bool _looksLikeUuid(String value) {
+    return RegExp(
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+    ).hasMatch(value);
   }
 }

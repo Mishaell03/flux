@@ -133,6 +133,54 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSettingsAboutValue => 'Версия';
 
   @override
+  String get profileRetry => 'Повторить';
+
+  @override
+  String get profileLoginAgain => 'Войти заново';
+
+  @override
+  String get profileNoData => 'Нет данных профиля';
+
+  @override
+  String get profileRefresh => 'Обновить';
+
+  @override
+  String get profileSessionsTitle => 'Сессии';
+
+  @override
+  String get profileSessionsRefreshTooltip => 'Обновить';
+
+  @override
+  String get profileSessionsLoadError => 'Не удалось загрузить сессии';
+
+  @override
+  String get profileSessionsEmpty => 'Активных сессий нет';
+
+  @override
+  String get profileSessionCurrent => 'Текущая';
+
+  @override
+  String get profileSessionDeviceFallback => 'Устройство';
+
+  @override
+  String get profileSessionRevokeTooltip => 'Завершить';
+
+  @override
+  String get profileSessionRevokeError => 'Не удалось завершить сессию';
+
+  @override
+  String get navHome => 'Главная';
+
+  @override
+  String get navNotes => 'Заметки';
+
+  @override
+  String get navGraph => 'Граф';
+
+  @override
+  String get navProfile => 'Профиль';
+
+  @override
   String get homeSearch => 'Поиск заметок или напоминаний';
 
   @override
@@ -163,6 +211,45 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeLinkedNotes => 'связей в заметках';
 
   @override
+  String get homeSyncError => 'Ошибка синхронизации';
+
+  @override
+  String get timeNow => 'сейчас';
+
+  @override
+  String timeInMinutes(Object minutes) {
+    return 'через $minutes мин';
+  }
+
+  @override
+  String timeInHours(Object hours) {
+    return 'через $hours ч';
+  }
+
+  @override
+  String timeInDays(Object days) {
+    return 'через $days дн';
+  }
+
+  @override
+  String get loadingCheckingSession => 'Проверяем сессию';
+
+  @override
+  String get graphTitle => 'MapGraph';
+
+  @override
+  String graphStats(Object notesCount, Object edgesCount) {
+    return '$notesCount заметок · $edgesCount связей';
+  }
+
+  @override
+  String get graphEmptyTitle => 'Заметок пока нет';
+
+  @override
+  String get graphEmptySubtitle =>
+      'Создай заметки и свяжи их через [[ссылки]] или #теги.';
+
+  @override
   String get notesPageTitle => 'Заметки';
 
   @override
@@ -189,26 +276,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Создай напоминание, и оно появится здесь.';
 
   @override
-  String get notesUntitled => 'Без названия';
-
-  @override
-  String get notesNoContent => 'Пока нет текста';
-
-  @override
-  String get notesOpenPlaceholder => 'Открытие заметки пока не реализовано';
-
-  @override
-  String get reminderOpenPlaceholder =>
-      'Открытие напоминания пока не реализовано';
-
-  @override
-  String get createNotePlaceholder => 'Создание заметки пока не реализовано';
-
-  @override
-  String get createReminderPlaceholder =>
-      'Создание напоминания пока не реализовано';
-
-  @override
   String get createNote => 'Создать заметку';
 
   @override
@@ -218,25 +285,51 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noteCreateTitle => 'Новая заметка';
 
   @override
+  String get reminderCreateTitle => 'Новое напоминание';
+
+  @override
   String get noteTitleLabel => 'Название';
-
-  @override
-  String get noteContentLabel => 'Текст';
-
-  @override
-  String get noteTitleHint => 'Напиши название';
 
   @override
   String get noteContentHint => 'Напиши что-нибудь...';
 
   @override
-  String get noteSave => 'Сохранить';
-
-  @override
   String get noteCancel => 'Отмена';
 
   @override
-  String get noteCreated => 'Заметка создана';
+  String get noteHelp =>
+      'Здесь можно писать заметку в формате Markdown.\n\n Поддерживается:\n - **жирный текст**\n - `inline code`\n - ссылки - [[ link ]] и [[ name | link ]]\n - хэштеги #love \n - цитаты > текст\n\n Все изменения сохраняются автоматически после закрытия заметки';
+
+  @override
+  String get noteHint => 'Подсказка';
+
+  @override
+  String get noteOk => 'OK';
+
+  @override
+  String get deleteTooltip => 'Удалить';
+
+  @override
+  String get deleteNoteTitle => 'Удалить заметку?';
+
+  @override
+  String deleteNoteMessage(Object title) {
+    return '«$title» будет удалена.';
+  }
+
+  @override
+  String get deleteReminderTitle => 'Удалить напоминание?';
+
+  @override
+  String deleteReminderMessage(Object title) {
+    return '«$title» больше не будет напоминанием.';
+  }
+
+  @override
+  String get reminderTitleHint => 'Название заметки';
+
+  @override
+  String get reminderContentHint => 'Текст заметки';
 
   @override
   String get success => 'Успешно';
@@ -249,15 +342,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get weApologize => 'Приносим свои извинения';
-
-  @override
-  String get errorCouldNotOpenLink => 'Не удалось открыть ссылку';
-
-  @override
-  String get errorServerUnavailable => 'Сервер недоступен';
-
-  @override
-  String get errorNetworkUnavailable => 'Нет подключения к интернету';
 
   @override
   String get errorAuthFailed => 'Не удалось завершить вход';
@@ -279,21 +363,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorTimeout => 'Превышено время ожидания запроса';
-
-  @override
-  String get errorNotFound => 'Ресурс не найден';
-
-  @override
-  String get errorValidation => 'Неверные данные';
-
-  @override
-  String get errorUnauthorized => 'Требуется авторизация';
-
-  @override
-  String get errorServer => 'Ошибка сервера, попробуйте позже';
-
-  @override
-  String get errorInvalidResponse => 'Некорректный ответ сервера';
 
   @override
   String get errorUnknown => 'Неизвестная ошибка';

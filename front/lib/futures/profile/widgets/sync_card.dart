@@ -15,7 +15,8 @@ class ProfileSyncCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.cloud_outlined, color: context.colors.primary, size: 26),
+              Icon(Icons.cloud_outlined,
+                  color: context.colors.primary, size: 26),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -23,13 +24,15 @@ class ProfileSyncCard extends StatelessWidget {
                   children: [
                     Text(
                       t.profileSyncStatus,
-                      style: AppText.medium_15a.copyWith(color: context.colors.text),
+                      style: AppText.medium_15a
+                          .copyWith(color: context.colors.text),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       t.profileSyncUpToDate,
-                      style: AppText.light_14a.copyWith(color: context.colors.gray),
+                      style: AppText.light_14a
+                          .copyWith(color: context.colors.gray),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -41,9 +44,24 @@ class ProfileSyncCard extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: _SyncChip(icon: Icons.check_circle_outline_rounded, label: t.profileSyncLocal, value: t.profileSyncSynced, color: context.colors.success)),
-              Expanded(child: _SyncChip(icon: Icons.check_circle_outline_rounded, label: t.profileSyncCloud, value: t.profileSyncSynced, color: context.colors.success)),
-              Expanded(child: _SyncChip(icon: Icons.access_time_rounded, label: t.profileSyncLastSync, value: t.profileSyncLastSyncValue, color: context.colors.gray)),
+              Expanded(
+                  child: _SyncChip(
+                      icon: Icons.check_circle_outline_rounded,
+                      label: t.profileSyncLocal,
+                      value: t.profileSyncSynced,
+                      color: context.colors.success)),
+              Expanded(
+                  child: _SyncChip(
+                      icon: Icons.check_circle_outline_rounded,
+                      label: t.profileSyncCloud,
+                      value: t.profileSyncSynced,
+                      color: context.colors.success)),
+              Expanded(
+                  child: _SyncChip(
+                      icon: Icons.access_time_rounded,
+                      label: t.profileSyncLastSync,
+                      value: t.profileSyncLastSyncValue,
+                      color: context.colors.gray)),
             ],
           ),
         ],

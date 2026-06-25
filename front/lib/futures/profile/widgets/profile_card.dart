@@ -38,21 +38,21 @@ class ProfileUserCard extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: (profile.image != null && profile.image!.isNotEmpty)
                 ? Image.network(
-              profile.image!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) {
-                return Icon(
-                  Icons.person_rounded,
-                  size: 40,
-                  color: context.colors.gray,
-                );
-              },
-            )
+                    profile.image!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) {
+                      return Icon(
+                        Icons.person_rounded,
+                        size: 40,
+                        color: context.colors.gray,
+                      );
+                    },
+                  )
                 : Icon(
-              Icons.person_rounded,
-              size: 40,
-              color: context.colors.gray,
-            ),
+                    Icons.person_rounded,
+                    size: 40,
+                    color: context.colors.gray,
+                  ),
           ),
           const SizedBox(width: 16),
           Expanded(

@@ -9,31 +9,39 @@ class NotesRepository {
 
   Future<NotesListData> getListData() async {
     final notes = await (db.select(db.notesTable)
-      ..where((tbl) => tbl.deleted.equals(false))
-      ..orderBy([
+          ..where((tbl) => tbl.deleted.equals(false))
+          ..orderBy([
             (tbl) => OrderingTerm(
-          expression: tbl.updatedAt,
-          mode: OrderingMode.desc,
-        ),
-      ]))
+                  expression: tbl.updatedAt,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
         .get();
 
     final reminders = await (db.select(db.remindersTable)
-      ..where((tbl) => tbl.deleted.equals(false))
-      ..orderBy([
+          ..where((tbl) => tbl.deleted.equals(false))
+          ..orderBy([
             (tbl) => OrderingTerm(
-          expression: tbl.remindAt,
-          mode: OrderingMode.asc,
-        ),
-      ]))
+                  expression: tbl.remindAt,
+                  mode: OrderingMode.asc,
+                ),
+          ]))
         .get();
+
+    final reminderNoteIds = reminders
+        .where((reminder) => reminder.noteId != null)
+        .map((reminder) => reminder.noteId!)
+        .toSet();
+
+    final visibleNotes =
+        notes.where((note) => !reminderNoteIds.contains(note.id)).toList();
 
     final notesById = {
       for (final note in notes) note.id: note,
     };
 
     return NotesListData(
-      notes: notes.map((note) {
+      notes: visibleNotes.map((note) {
         return NoteListItem(
           id: note.id,
           title: _safeTitle(note.title),
@@ -43,10 +51,11 @@ class NotesRepository {
       }).toList(),
       reminders: reminders.map((reminder) {
         final linkedNote =
-        reminder.noteId == null ? null : notesById[reminder.noteId];
+            reminder.noteId == null ? null : notesById[reminder.noteId];
 
         return ReminderListItem(
           id: reminder.id,
+          noteId: reminder.noteId,
           title: _safeTitle(linkedNote?.title),
           remindAt: reminder.remindAt,
           isDone: reminder.isDone,

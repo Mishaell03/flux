@@ -9,8 +9,6 @@ class NotesTable extends Table {
 
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
 
-  IntColumn get version => integer().withDefault(const Constant(0))();
-
   BoolColumn get dirty => boolean().withDefault(const Constant(false))();
 
   DateTimeColumn get deletedAt => dateTime().nullable()();
@@ -18,6 +16,8 @@ class NotesTable extends Table {
   DateTimeColumn get updatedAt => dateTime()();
 
   DateTimeColumn get createdAt => dateTime()();
+
+  DateTimeColumn get serverUpdatedAt => dateTime().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

@@ -131,6 +131,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSettingsAboutValue => 'Version';
 
   @override
+  String get profileRetry => 'Retry';
+
+  @override
+  String get profileLoginAgain => 'Sign in again';
+
+  @override
+  String get profileNoData => 'No profile data';
+
+  @override
+  String get profileRefresh => 'Refresh';
+
+  @override
+  String get profileSessionsTitle => 'Sessions';
+
+  @override
+  String get profileSessionsRefreshTooltip => 'Refresh';
+
+  @override
+  String get profileSessionsLoadError => 'Could not load sessions';
+
+  @override
+  String get profileSessionsEmpty => 'No active sessions';
+
+  @override
+  String get profileSessionCurrent => 'Current';
+
+  @override
+  String get profileSessionDeviceFallback => 'Device';
+
+  @override
+  String get profileSessionRevokeTooltip => 'End session';
+
+  @override
+  String get profileSessionRevokeError => 'Could not end session';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navNotes => 'Notes';
+
+  @override
+  String get navGraph => 'Graph';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
   String get homeSearch => 'Search notes or reminders';
 
   @override
@@ -161,6 +209,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeLinkedNotes => 'inked notes';
 
   @override
+  String get homeSyncError => 'Sync error';
+
+  @override
+  String get timeNow => 'now';
+
+  @override
+  String timeInMinutes(Object minutes) {
+    return 'in ${minutes}m';
+  }
+
+  @override
+  String timeInHours(Object hours) {
+    return 'in ${hours}h';
+  }
+
+  @override
+  String timeInDays(Object days) {
+    return 'in ${days}d';
+  }
+
+  @override
+  String get loadingCheckingSession => 'Checking session';
+
+  @override
+  String get graphTitle => 'MapGraph';
+
+  @override
+  String graphStats(Object notesCount, Object edgesCount) {
+    return '$notesCount notes · $edgesCount links';
+  }
+
+  @override
+  String get graphEmptyTitle => 'No notes yet';
+
+  @override
+  String get graphEmptySubtitle =>
+      'Create notes and connect them with [[links]] or #tags.';
+
+  @override
   String get notesPageTitle => 'Notes';
 
   @override
@@ -187,26 +274,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create a reminder and it will appear here.';
 
   @override
-  String get notesUntitled => 'Untitled';
-
-  @override
-  String get notesNoContent => 'No content yet';
-
-  @override
-  String get notesOpenPlaceholder => 'Opening note is not implemented yet';
-
-  @override
-  String get reminderOpenPlaceholder =>
-      'Opening reminder is not implemented yet';
-
-  @override
-  String get createNotePlaceholder => 'Creating note is not implemented yet';
-
-  @override
-  String get createReminderPlaceholder =>
-      'Creating reminder is not implemented yet';
-
-  @override
   String get createNote => 'Create note';
 
   @override
@@ -216,25 +283,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteCreateTitle => 'New note';
 
   @override
+  String get reminderCreateTitle => 'New reminder';
+
+  @override
   String get noteTitleLabel => 'Title';
-
-  @override
-  String get noteContentLabel => 'Content';
-
-  @override
-  String get noteTitleHint => 'Write a title';
 
   @override
   String get noteContentHint => 'Write something...';
 
   @override
-  String get noteSave => 'Save';
-
-  @override
   String get noteCancel => 'Cancel';
 
   @override
-  String get noteCreated => 'Note created';
+  String get noteHelp =>
+      'Here you can write a note in Markdown format.\n\n Supported:\n - **bold text**\n - `inline code\'\n - links - [[ link ]] and [[ name | link ]]\n - hashtags #love \n - quotes > text\n\n All changes are saved automatically (if you connect sync).';
+
+  @override
+  String get noteHint => 'Hint';
+
+  @override
+  String get noteOk => 'OK';
+
+  @override
+  String get deleteTooltip => 'Delete';
+
+  @override
+  String get deleteNoteTitle => 'Delete note?';
+
+  @override
+  String deleteNoteMessage(Object title) {
+    return '“$title” will be deleted.';
+  }
+
+  @override
+  String get deleteReminderTitle => 'Delete reminder?';
+
+  @override
+  String deleteReminderMessage(Object title) {
+    return '“$title” will no longer be a reminder.';
+  }
+
+  @override
+  String get reminderTitleHint => 'Note title';
+
+  @override
+  String get reminderContentHint => 'Note text';
 
   @override
   String get success => 'Success';
@@ -248,15 +341,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weApologize => 'We apologize';
-
-  @override
-  String get errorCouldNotOpenLink => 'Couldn\'t open the link';
-
-  @override
-  String get errorServerUnavailable => 'Server is unavailable';
-
-  @override
-  String get errorNetworkUnavailable => 'No internet connection';
 
   @override
   String get errorAuthFailed => 'Couldn\'t complete sign in';
@@ -278,21 +362,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorTimeout => 'Request timed out';
-
-  @override
-  String get errorNotFound => 'Resource not found';
-
-  @override
-  String get errorValidation => 'Invalid input data';
-
-  @override
-  String get errorUnauthorized => 'Authorization required';
-
-  @override
-  String get errorServer => 'Server error. Please try again later.';
-
-  @override
-  String get errorInvalidResponse => 'Invalid server response';
 
   @override
   String get errorUnknown => 'Unknown error';

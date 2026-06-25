@@ -37,7 +37,7 @@ class MarkdownTaskLine extends StatelessWidget {
                   width: 22,
                   height: 22,
                   decoration: BoxDecoration(
-                    color: task.checked ? colors.primary : Colors.transparent,
+                    color: task.checked ? colors.primary : colors.transparent,
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                       color: task.checked ? colors.primary : colors.border,

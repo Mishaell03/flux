@@ -5,7 +5,6 @@ import 'package:front/futures/home/widgets/card.dart';
 import 'package:front/futures/home/widgets/section_header.dart';
 import 'package:front/l10n/app_localizations.dart';
 
-
 class HomeMap extends StatelessWidget {
   final int linkedNotesCount;
   final VoidCallback onTap;

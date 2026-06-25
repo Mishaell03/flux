@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/core/components/app_theme.dart';
 import 'package:front/core/components/theme.dart';
+import 'package:front/l10n/app_localizations.dart';
 
 class AppFooter extends StatelessWidget {
   final int currentIndex;
@@ -12,31 +13,32 @@ class AppFooter extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _items = [
-    _FooterItemData(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home_rounded,
-      label: 'Home',
-    ),
-    _FooterItemData(
-      icon: Icons.note_alt_outlined,
-      activeIcon: Icons.note_alt_rounded,
-      label: 'Notes',
-    ),
-    _FooterItemData(
-      icon: Icons.hub_outlined,
-      activeIcon: Icons.hub_rounded,
-      label: 'Graph',
-    ),
-    _FooterItemData(
-      icon: Icons.person_outline_rounded,
-      activeIcon: Icons.person_rounded,
-      label: 'Profile',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final items = [
+      _FooterItemData(
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home_rounded,
+        label: t.navHome,
+      ),
+      _FooterItemData(
+        icon: Icons.note_alt_outlined,
+        activeIcon: Icons.note_alt_rounded,
+        label: t.navNotes,
+      ),
+      _FooterItemData(
+        icon: Icons.hub_outlined,
+        activeIcon: Icons.hub_rounded,
+        label: t.navGraph,
+      ),
+      _FooterItemData(
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
+        label: t.navProfile,
+      ),
+    ];
+
     return SafeArea(
       top: false,
       child: Padding(
@@ -63,8 +65,8 @@ class AppFooter extends StatelessWidget {
                 ],
               ),
               child: Row(
-                children: List.generate(_items.length, (index) {
-                  final item = _items[index];
+                children: List.generate(items.length, (index) {
+                  final item = items[index];
                   final isActive = currentIndex == index;
 
                   return Expanded(

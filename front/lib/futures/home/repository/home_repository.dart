@@ -7,7 +7,8 @@ import 'package:front/futures/home/models/home_dashboard.dart';
 class HomeRepository {
   final db = DatabaseProvider.instance;
 
-  Future<HomeDashboardData> getDashboardDataForDate(DateTime selectedDate) async {
+  Future<HomeDashboardData> getDashboardDataForDate(
+      DateTime selectedDate) async {
     final dayStartLocal = DateTime(
       selectedDate.year,
       selectedDate.month,
@@ -20,35 +21,35 @@ class HomeRepository {
     final dayEndUtc = dayEndLocal.toUtc();
 
     final notes = await (db.select(db.notesTable)
-      ..where((tbl) => tbl.deleted.equals(false))
-      ..orderBy([
+          ..where((tbl) => tbl.deleted.equals(false))
+          ..orderBy([
             (tbl) => OrderingTerm(
-          expression: tbl.updatedAt,
-          mode: OrderingMode.desc,
-        ),
-      ]))
+                  expression: tbl.updatedAt,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
         .get();
 
     final selectedDayReminders = await (db.select(db.remindersTable)
-      ..where(
+          ..where(
             (tbl) =>
-        tbl.deleted.equals(false) &
-        tbl.isDone.equals(false) &
-        tbl.remindAt.isBiggerOrEqualValue(dayStartUtc) &
-        tbl.remindAt.isSmallerThanValue(dayEndUtc),
-      )
-      ..orderBy([
+                tbl.deleted.equals(false) &
+                tbl.isDone.equals(false) &
+                tbl.remindAt.isBiggerOrEqualValue(dayStartUtc) &
+                tbl.remindAt.isSmallerThanValue(dayEndUtc),
+          )
+          ..orderBy([
             (tbl) => OrderingTerm(
-          expression: tbl.remindAt,
-          mode: OrderingMode.asc,
-        ),
-      ]))
+                  expression: tbl.remindAt,
+                  mode: OrderingMode.asc,
+                ),
+          ]))
         .get();
 
     final allActiveReminders = await (db.select(db.remindersTable)
-      ..where(
+          ..where(
             (tbl) => tbl.deleted.equals(false) & tbl.isDone.equals(false),
-      ))
+          ))
         .get();
 
     final links = await db.select(db.noteLinksTable).get();
@@ -75,7 +76,8 @@ class HomeRepository {
         );
       }).toList(),
       upcomingReminders: selectedDayReminders.map((reminder) {
-        final note = reminder.noteId == null ? null : notesById[reminder.noteId];
+        final note =
+            reminder.noteId == null ? null : notesById[reminder.noteId];
 
         return HomeReminderPreview(
           id: reminder.id,

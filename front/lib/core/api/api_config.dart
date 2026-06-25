@@ -1,11 +1,18 @@
 class ApiConfig {
-  static const String _baseUrl = 'http://127.0.0.1:8000/api/v1';
-  // static const String _baseUrl = 'http://10.0.0.252:8000/api/v1';
+  // static const String _baseUrl = 'http://127.0.0.1:8000/api/v1';
+  static const String _baseUrl = 'http://10.0.0.253:8000/api/v1';
 
   static const String yandexLogin = '$_baseUrl/auth/yandex/login';
   static const String yandexCallback = '$_baseUrl/auth/yandex/callback';
 
   static const String userProfile = '$_baseUrl/user/me';
+  static const String sessions = '$_baseUrl/session/active';
+  static const String sessionBootstrap = '$_baseUrl/session/bootstrap';
+  static const String sessionRefresh = '$_baseUrl/session/refresh';
+
+  static String revokeSession(int sessionId) {
+    return '$_baseUrl/session/$sessionId/revoke';
+  }
 
   static const String syncPush = '$_baseUrl/sync/push';
   static const String syncStatus = '$_baseUrl/sync/status';

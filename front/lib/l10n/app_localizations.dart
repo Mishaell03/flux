@@ -338,6 +338,102 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get profileSettingsAboutValue;
 
+  /// No description provided for @profileRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get profileRetry;
+
+  /// No description provided for @profileLoginAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again'**
+  String get profileLoginAgain;
+
+  /// No description provided for @profileNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No profile data'**
+  String get profileNoData;
+
+  /// No description provided for @profileRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get profileRefresh;
+
+  /// No description provided for @profileSessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get profileSessionsTitle;
+
+  /// No description provided for @profileSessionsRefreshTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get profileSessionsRefreshTooltip;
+
+  /// No description provided for @profileSessionsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load sessions'**
+  String get profileSessionsLoadError;
+
+  /// No description provided for @profileSessionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No active sessions'**
+  String get profileSessionsEmpty;
+
+  /// No description provided for @profileSessionCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get profileSessionCurrent;
+
+  /// No description provided for @profileSessionDeviceFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get profileSessionDeviceFallback;
+
+  /// No description provided for @profileSessionRevokeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'End session'**
+  String get profileSessionRevokeTooltip;
+
+  /// No description provided for @profileSessionRevokeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not end session'**
+  String get profileSessionRevokeError;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get navNotes;
+
+  /// No description provided for @navGraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Graph'**
+  String get navGraph;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
   /// No description provided for @homeSearch.
   ///
   /// In en, this message translates to:
@@ -398,6 +494,66 @@ abstract class AppLocalizations {
   /// **'inked notes'**
   String get homeLinkedNotes;
 
+  /// No description provided for @homeSyncError.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error'**
+  String get homeSyncError;
+
+  /// No description provided for @timeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get timeNow;
+
+  /// No description provided for @timeInMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'in {minutes}m'**
+  String timeInMinutes(Object minutes);
+
+  /// No description provided for @timeInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'in {hours}h'**
+  String timeInHours(Object hours);
+
+  /// No description provided for @timeInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'in {days}d'**
+  String timeInDays(Object days);
+
+  /// No description provided for @loadingCheckingSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking session'**
+  String get loadingCheckingSession;
+
+  /// No description provided for @graphTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'MapGraph'**
+  String get graphTitle;
+
+  /// No description provided for @graphStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{notesCount} notes · {edgesCount} links'**
+  String graphStats(Object notesCount, Object edgesCount);
+
+  /// No description provided for @graphEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet'**
+  String get graphEmptyTitle;
+
+  /// No description provided for @graphEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create notes and connect them with [[links]] or #tags.'**
+  String get graphEmptySubtitle;
+
   /// No description provided for @notesPageTitle.
   ///
   /// In en, this message translates to:
@@ -446,42 +602,6 @@ abstract class AppLocalizations {
   /// **'Create a reminder and it will appear here.'**
   String get remindersEmptySubtitle;
 
-  /// No description provided for @notesUntitled.
-  ///
-  /// In en, this message translates to:
-  /// **'Untitled'**
-  String get notesUntitled;
-
-  /// No description provided for @notesNoContent.
-  ///
-  /// In en, this message translates to:
-  /// **'No content yet'**
-  String get notesNoContent;
-
-  /// No description provided for @notesOpenPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Opening note is not implemented yet'**
-  String get notesOpenPlaceholder;
-
-  /// No description provided for @reminderOpenPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Opening reminder is not implemented yet'**
-  String get reminderOpenPlaceholder;
-
-  /// No description provided for @createNotePlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Creating note is not implemented yet'**
-  String get createNotePlaceholder;
-
-  /// No description provided for @createReminderPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Creating reminder is not implemented yet'**
-  String get createReminderPlaceholder;
-
   /// No description provided for @createNote.
   ///
   /// In en, this message translates to:
@@ -500,23 +620,17 @@ abstract class AppLocalizations {
   /// **'New note'**
   String get noteCreateTitle;
 
+  /// No description provided for @reminderCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New reminder'**
+  String get reminderCreateTitle;
+
   /// No description provided for @noteTitleLabel.
   ///
   /// In en, this message translates to:
   /// **'Title'**
   String get noteTitleLabel;
-
-  /// No description provided for @noteContentLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Content'**
-  String get noteContentLabel;
-
-  /// No description provided for @noteTitleHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Write a title'**
-  String get noteTitleHint;
 
   /// No description provided for @noteContentHint.
   ///
@@ -524,23 +638,71 @@ abstract class AppLocalizations {
   /// **'Write something...'**
   String get noteContentHint;
 
-  /// No description provided for @noteSave.
-  ///
-  /// In en, this message translates to:
-  /// **'Save'**
-  String get noteSave;
-
   /// No description provided for @noteCancel.
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get noteCancel;
 
-  /// No description provided for @noteCreated.
+  /// No description provided for @noteHelp.
   ///
   /// In en, this message translates to:
-  /// **'Note created'**
-  String get noteCreated;
+  /// **'Here you can write a note in Markdown format.\n\n Supported:\n - **bold text**\n - `inline code\'\n - links - [[ link ]] and [[ name | link ]]\n - hashtags #love \n - quotes > text\n\n All changes are saved automatically (if you connect sync).'**
+  String get noteHelp;
+
+  /// No description provided for @noteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint'**
+  String get noteHint;
+
+  /// No description provided for @noteOk.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get noteOk;
+
+  /// No description provided for @deleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteTooltip;
+
+  /// No description provided for @deleteNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete note?'**
+  String get deleteNoteTitle;
+
+  /// No description provided for @deleteNoteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” will be deleted.'**
+  String deleteNoteMessage(Object title);
+
+  /// No description provided for @deleteReminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete reminder?'**
+  String get deleteReminderTitle;
+
+  /// No description provided for @deleteReminderMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” will no longer be a reminder.'**
+  String deleteReminderMessage(Object title);
+
+  /// No description provided for @reminderTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note title'**
+  String get reminderTitleHint;
+
+  /// No description provided for @reminderContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note text'**
+  String get reminderContentHint;
 
   /// No description provided for @success.
   ///
@@ -565,24 +727,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We apologize'**
   String get weApologize;
-
-  /// No description provided for @errorCouldNotOpenLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t open the link'**
-  String get errorCouldNotOpenLink;
-
-  /// No description provided for @errorServerUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'Server is unavailable'**
-  String get errorServerUnavailable;
-
-  /// No description provided for @errorNetworkUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No internet connection'**
-  String get errorNetworkUnavailable;
 
   /// No description provided for @errorAuthFailed.
   ///
@@ -625,36 +769,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request timed out'**
   String get errorTimeout;
-
-  /// No description provided for @errorNotFound.
-  ///
-  /// In en, this message translates to:
-  /// **'Resource not found'**
-  String get errorNotFound;
-
-  /// No description provided for @errorValidation.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid input data'**
-  String get errorValidation;
-
-  /// No description provided for @errorUnauthorized.
-  ///
-  /// In en, this message translates to:
-  /// **'Authorization required'**
-  String get errorUnauthorized;
-
-  /// No description provided for @errorServer.
-  ///
-  /// In en, this message translates to:
-  /// **'Server error. Please try again later.'**
-  String get errorServer;
-
-  /// No description provided for @errorInvalidResponse.
-  ///
-  /// In en, this message translates to:
-  /// **'Invalid server response'**
-  String get errorInvalidResponse;
 
   /// No description provided for @errorUnknown.
   ///
