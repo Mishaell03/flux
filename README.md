@@ -1,13 +1,13 @@
 # Flux
 
-Flux is a cross-platform notes, reminders and knowledge graph app.
+Flux — это кроссплатформенное приложение для заметок, напоминаний и построения графа.
 
-The repository contains two main parts:
+Репозиторий содержит две основные части:
 
-- `front/` - Flutter client for mobile, desktop and web.
-- `back-flux/` - FastAPI backend, PostgreSQL schema and Docker infrastructure.
+* `front/` — Flutter-клиент для мобильных устройств, десктопа и веба.
+* `back-flux/` — backend на FastAPI, схема PostgreSQL и Docker-инфраструктура.
 
-## Quick Start
+## Быстрый старт
 
 ### Backend
 
@@ -17,7 +17,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-API docs:
+Документация API:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -31,28 +31,28 @@ flutter pub get
 flutter run -d chrome
 ```
 
-For desktop or mobile:
+Для десктопа или мобильных устройств:
 
 ```bash
 flutter devices
 flutter run -d <device-id>
 ```
 
-## Structure
+## Структура проекта
 
 ```text
 .
-├── front/      Flutter client
-└── back-flux/  FastAPI backend and infrastructure
+├── front/      Flutter-клиент
+└── back-flux/  FastAPI backend и инфраструктура
 ```
 
-More details:
+Подробнее:
 
-- [Frontend documentation](front/README.md)
-- [Backend documentation](back-flux/README.md)
+* [Документация frontend](front/README.md)
+* [Документация backend](back-flux/README.md)
 
-## Notes
+## Примечания
 
-- The frontend API URL is configured in `front/lib/core/api/api_config.dart`.
-- The web client uses Drift + SQLite WASM. Required files are `front/web/sqlite3.wasm` and `front/web/drift_worker.js`.
-- The backend Docker Compose stack runs PostgreSQL, Flyway migrations and the API container.
+* URL API во frontend настраивается в `front/lib/core/api/api_config.dart`.
+* Веб-клиент использует Drift + SQLite WASM. Требуются файлы `front/web/sqlite3.wasm` и `front/web/drift_worker.js`.
+* Docker Compose backend поднимает PostgreSQL, миграции Flyway и контейнер API.

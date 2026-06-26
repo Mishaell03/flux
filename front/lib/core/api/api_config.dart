@@ -1,7 +1,5 @@
 class ApiConfig {
-  static const String _baseUrl = 'https://flux.pipipopi.online:8000/api/v1'; // production
-  // static const String _baseUrl = 'http://10.10.0.2:8000/api/v1';  // web
-
+  static const String _baseUrl = 'https://flux.pipipopi.online/api/v1'; // production
   // static const String _baseUrl = 'http://127.0.0.1:8000/api/v1'; // local
 
   static const String yandexLogin = '$_baseUrl/auth/yandex/login';
