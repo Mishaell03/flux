@@ -94,13 +94,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSyncCloud => 'Облако';
 
   @override
-  String get profileSyncLastSync => 'Последняя синх.';
-
-  @override
   String get profileSyncSynced => 'Синхр.';
 
   @override
-  String get profileSyncLastSyncValue => 'Сегодня';
+  String get profileSyncPending => 'Локальные изменения ожидают синхронизации';
+
+  @override
+  String get profileSyncPendingShort => 'Ожидает';
+
+  @override
+  String get profileSyncAction => 'Синхронизировать';
+
+  @override
+  String get profileSyncing => 'Синхронизируем...';
 
   @override
   String get profileStatNotes => 'Заметки';

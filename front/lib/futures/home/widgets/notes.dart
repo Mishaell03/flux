@@ -54,6 +54,10 @@ class _NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final title = note.title.isEmpty ? t.noteCreateTitle : note.title;
+    final content = note.content.isEmpty ? t.noteContentHint : note.content;
+
     return GestureDetector(
       onTap: () => context.goNamed('notes'),
       child: Container(
@@ -67,7 +71,7 @@ class _NoteCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              note.title,
+              title,
               style: AppText.medium_14a.copyWith(
                 color: context.colors.text,
               ),
@@ -84,7 +88,7 @@ class _NoteCard extends StatelessWidget {
             const SizedBox(height: 12),
             Expanded(
               child: Text(
-                note.content,
+                content,
                 style: AppText.light_14a.copyWith(
                   color: context.colors.text,
                   height: 1.25,
@@ -106,7 +110,7 @@ class _NoteCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    'Note',
+                    t.notesTabNotes,
                     style: AppText.medium_12a.copyWith(
                       color: context.colors.primary,
                     ),

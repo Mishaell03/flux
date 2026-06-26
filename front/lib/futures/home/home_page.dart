@@ -159,7 +159,9 @@ class _HomePage extends State<HomePage> {
                     onTap: () => context.goNamed('notes'),
                   ),
                   const SizedBox(height: 10),
-                  HomeNotes(notes: data.recentNotes),
+                  HomeNotes(
+                    notes: _filterNotes(data.recentNotes),
+                  ),
                   const SizedBox(height: 18),
                   HomeMap(
                     linkedNotesCount: data.linkedNotesCount,
@@ -173,5 +175,18 @@ class _HomePage extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  List<HomeNotePreview> _filterNotes(List<HomeNotePreview> notes) {
+    final query = _searchQuery.trim().toLowerCase();
+
+    if (query.isEmpty) {
+      return notes;
+    }
+
+    return notes.where((note) {
+      return note.title.toLowerCase().contains(query) ||
+          note.content.toLowerCase().contains(query);
+    }).toList();
   }
 }

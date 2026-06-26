@@ -260,23 +260,35 @@ abstract class AppLocalizations {
   /// **'Cloud'**
   String get profileSyncCloud;
 
-  /// No description provided for @profileSyncLastSync.
-  ///
-  /// In en, this message translates to:
-  /// **'Last sync'**
-  String get profileSyncLastSync;
-
   /// No description provided for @profileSyncSynced.
   ///
   /// In en, this message translates to:
   /// **'Synced'**
   String get profileSyncSynced;
 
-  /// No description provided for @profileSyncLastSyncValue.
+  /// No description provided for @profileSyncPending.
   ///
   /// In en, this message translates to:
-  /// **'Today'**
-  String get profileSyncLastSyncValue;
+  /// **'Local changes are waiting for sync'**
+  String get profileSyncPending;
+
+  /// No description provided for @profileSyncPendingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get profileSyncPendingShort;
+
+  /// No description provided for @profileSyncAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get profileSyncAction;
+
+  /// No description provided for @profileSyncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get profileSyncing;
 
   /// No description provided for @profileStatNotes.
   ///
@@ -461,7 +473,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeNoNotes.
   ///
   /// In en, this message translates to:
-  /// **'Пока никаких заметок'**
+  /// **'No notes yet'**
   String get homeNoNotes;
 
   /// No description provided for @homeRecentNotes.
@@ -491,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeLinkedNotes.
   ///
   /// In en, this message translates to:
-  /// **'inked notes'**
+  /// **'linked notes'**
   String get homeLinkedNotes;
 
   /// No description provided for @homeSyncError.

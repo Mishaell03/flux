@@ -30,9 +30,11 @@
   "profileSyncUpToDate": "Все изменения актуальны",
   "profileSyncLocal": "Локально",
   "profileSyncCloud": "Облако",
-  "profileSyncLastSync": "Последняя синх.",
   "profileSyncSynced": "Синхр.",
-  "profileSyncLastSyncValue": "Сегодня",
+  "profileSyncPending": "Локальные изменения ожидают синхронизации",
+  "profileSyncPendingShort": "Ожидает",
+  "profileSyncAction": "Синхронизировать",
+  "profileSyncing": "Синхронизируем...",
 
   "profileStatNotes": "Заметки",
   "profileStatReminders": "Напоминания",

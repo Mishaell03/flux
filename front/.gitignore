@@ -27,6 +27,7 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.dart-tool/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
@@ -38,6 +39,8 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+web/drift_worker.js.deps
+web/drift_worker.js.map
 
 # Android Studio will place build artifacts here
 /android/app/debug

@@ -70,8 +70,8 @@ class HomeRepository {
       recentNotes: notes.take(4).map((note) {
         return HomeNotePreview(
           id: note.id,
-          title: _safeTitle(note.title),
-          content: _safeContent(note.content),
+          title: _cleanText(note.title),
+          content: _cleanText(note.content),
           updatedAt: note.updatedAt,
         );
       }).toList(),
@@ -81,7 +81,7 @@ class HomeRepository {
 
         return HomeReminderPreview(
           id: reminder.id,
-          title: _safeTitle(note?.title ?? 'Reminder'),
+          title: _cleanText(note?.title),
           remindAt: reminder.remindAt,
         );
       }).toList(),
@@ -122,25 +122,7 @@ class HomeRepository {
     return controller.stream;
   }
 
-  String _safeTitle(String? value) {
-    final text = value?.trim();
-
-    if (text == null || text.isEmpty) {
-      return 'Untitled';
-    }
-
-    return text;
-  }
-
-  String _safeContent(String? value) {
-    final text = value?.trim();
-
-    if (text == null || text.isEmpty) {
-      return 'No content yet';
-    }
-
-    return text;
-  }
+  String _cleanText(String? value) => value?.trim() ?? '';
 
   String _dateKey(DateTime date) {
     final local = date.toLocal();

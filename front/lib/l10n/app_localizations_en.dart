@@ -92,13 +92,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileSyncCloud => 'Cloud';
 
   @override
-  String get profileSyncLastSync => 'Last sync';
-
-  @override
   String get profileSyncSynced => 'Synced';
 
   @override
-  String get profileSyncLastSyncValue => 'Today';
+  String get profileSyncPending => 'Local changes are waiting for sync';
+
+  @override
+  String get profileSyncPendingShort => 'Pending';
+
+  @override
+  String get profileSyncAction => 'Sync';
+
+  @override
+  String get profileSyncing => 'Syncing...';
 
   @override
   String get profileStatNotes => 'Notes';
@@ -191,7 +197,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeToday => 'Today';
 
   @override
-  String get homeNoNotes => 'Пока никаких заметок';
+  String get homeNoNotes => 'No notes yet';
 
   @override
   String get homeRecentNotes => 'Recent notes';
@@ -206,7 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeOpenGraph => 'Open graph';
 
   @override
-  String get homeLinkedNotes => 'inked notes';
+  String get homeLinkedNotes => 'linked notes';
 
   @override
   String get homeSyncError => 'Sync error';

@@ -17,10 +17,14 @@ part "database.g.dart";
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super(
-    driftDatabase(
-      name: 'flux_db',
-    ),
-  );
+          driftDatabase(
+            name: 'flux_db',
+            web: DriftWebOptions(
+              sqlite3Wasm: Uri.parse('sqlite3.wasm'),
+              driftWorker: Uri.parse('drift_worker.js'),
+            ),
+          ),
+        );
 
   @override
   int get schemaVersion => 1;

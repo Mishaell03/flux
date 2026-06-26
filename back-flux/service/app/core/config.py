@@ -10,21 +10,21 @@ load_dotenv()
 
 
 class Settings:
-    secret: str = os.getenv("SECRET")
+    secret: str = os.getenv("SECRET", "dev-secret")
 
     # DATABASE
-    db_host: str = os.getenv("DB_HOST")
+    db_host: str = os.getenv("DB_HOST", "127.0.0.1")
     db_port: int = int(os.getenv("DB_PORT", "5432"))
-    db_name: str = os.getenv("DB_NAME")
-    db_user: str = os.getenv("DB_USER")
-    db_password: str = os.getenv("DB_PASSWORD")
+    db_name: str = os.getenv("DB_NAME", "flux_db")
+    db_user: str = os.getenv("DB_USER", "root")
+    db_password: str = os.getenv("DB_PASSWORD", "root")
 
     # API
-    api_host: str = os.getenv("API_HOST")
+    api_host: str = os.getenv("API_HOST", "127.0.0.1")
 
     api_port: int = int(os.getenv("API_PORT", "8000"))
 
-    image_base_endpoint: str = os.getenv("IMAGE_BASE_ENDPOINT")
+    image_base_endpoint: str = os.getenv("IMAGE_BASE_ENDPOINT", "")
 
     api_reload: bool = (
         os.getenv("API_RELOAD", "false")

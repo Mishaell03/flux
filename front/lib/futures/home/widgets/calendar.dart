@@ -259,6 +259,9 @@ class _ReminderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final title = reminder.title.isEmpty ? t.notesTabReminders : reminder.title;
+
     return Row(
       children: [
         Container(
@@ -289,7 +292,7 @@ class _ReminderRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                reminder.title,
+                title,
                 style: AppText.medium_14a.copyWith(
                   color: context.colors.text,
                 ),
