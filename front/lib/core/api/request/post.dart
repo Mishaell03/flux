@@ -20,21 +20,6 @@ class PostJsonService {
 
     final encodedBody = jsonEncode(data);
 
-    // 1. ЛОГ ЗАПРОСА (ключевой)
-    if (kDebugMode) {
-      print('\n========== POST REQUEST ==========');
-      print('URL: $uri');
-      print('HEADERS:');
-      print({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      });
-      print('BODY RAW MAP: $data');
-      print('BODY ENCODED JSON: $encodedBody');
-      print('=================================\n');
-    }
-
     try {
       final response = await http
           .post(
@@ -47,20 +32,6 @@ class PostJsonService {
         body: encodedBody,
       )
           .timeout(ApiConfig.timeout);
-
-      // 2. ЛОГ ОТВЕТА
-      if (kDebugMode) {
-        print('\n========== RESPONSE ==========');
-        print('STATUS: ${response.statusCode}');
-        print('BODY: ${response.body}');
-        print('==============================\n');
-      }
-
-      // 3. ВАЖНО: если 422 — сразу печатаем detail
-      if (response.statusCode == 422) {
-        print('\n❌ VALIDATION ERROR (422)');
-        print(response.body);
-      }
 
       return ResponseHandler.request(
         response.statusCode,

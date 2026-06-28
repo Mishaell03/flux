@@ -32,9 +32,7 @@ class SyncService {
         throw const AppException(code: AppErrorCode.errorProfileFailed);
       }
 
-      // =========================
       // 1. STATUS CHECK
-      // =========================
       final noteVersions = await local.getNoteVersions();
       final reminderVersions = await local.getReminderVersions();
 
@@ -44,9 +42,7 @@ class SyncService {
         reminders: reminderVersions,
       );
 
-      // =========================
       // 2. PUSH DIRTY NOTES
-      // =========================
       final notesToPush = await local.getDirtyNotesPayloadByIds(
         status.noteIdsToPush,
       );
@@ -79,9 +75,7 @@ class SyncService {
         await local.markRemindersSynced(pushResponse.syncedReminderIds);
       }
 
-      // =========================
       // 3. PULL UPDATES
-      // =========================
       if (status.noteIdsToPull.isNotEmpty ||
           status.reminderIdsToPull.isNotEmpty) {
         final pullResponse = await api.pull(
@@ -94,10 +88,7 @@ class SyncService {
         await local.applyPulledReminders(pullResponse.reminders);
       }
 
-      // =========================
-      // 4. GRAPH SYNC (ВАЖНО)
-      // =========================
-
+      // 4. GRAPH SYNC
       for (final entry in noteLinksToPush.entries) {
         await noteLinksApi.pushForNote(
           token: token,
@@ -106,9 +97,7 @@ class SyncService {
         );
       }
 
-      // =========================
       // 5. REFRESH GLOBAL LINKS
-      // =========================
       final links = await noteLinksApi.getAll(token: token);
       await local.replaceNoteLinks(links);
     } finally {

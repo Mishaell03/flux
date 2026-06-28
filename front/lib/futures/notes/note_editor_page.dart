@@ -24,14 +24,20 @@ class NoteEditorPage extends StatefulWidget {
 class _NoteEditorPageState extends State<NoteEditorPage> {
   final db = DatabaseProvider.instance;
 
-  String _title = '';
-  String _content = '';
-  List<String> _noteSuggestions = const [];
+  late final TextEditingController _titleController;
+  late final TextEditingController _contentController;
 
-  final TextEditingController _titleController = TextEditingController();
+  List<String> _noteSuggestions = const [];
 
   bool get isEdit => widget.noteId != null;
   bool _initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _contentController = TextEditingController();
+  }
 
   @override
   void didChangeDependencies() {
@@ -40,15 +46,13 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     if (_initialized) return;
     _initialized = true;
 
-    if (isEdit) {
-      _loadNote();
+    final t = AppLocalizations.of(context)!;
+
+    if (!isEdit) {
+      _titleController.text = t.noteCreateTitle;
+      _contentController.text = '> ${t.noteContentHint}';
     } else {
-      final t = AppLocalizations.of(context)!;
-
-      _title = t.noteCreateTitle;
-      _content = '> ${t.noteContentHint}';
-
-      _titleController.text = _title;
+      _loadNote();
     }
 
     _loadNoteSuggestions();
@@ -59,11 +63,10 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
           ..where((t) => t.id.equals(widget.noteId!)))
         .getSingle();
 
-    setState(() {
-      _title = note.title ?? '';
-      _content = note.content ?? '';
-      _titleController.text = _title;
-    });
+    if (!mounted) return;
+
+    _titleController.text = note.title ?? '';
+    _contentController.text = note.content ?? '';
   }
 
   Future<void> _loadNoteSuggestions() async {
@@ -86,7 +89,6 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   }
 
   Future<void> _save() async {
-    final db = DatabaseProvider.instance;
     final now = DateTime.now();
 
     if (isEdit) {
@@ -94,8 +96,8 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
             ..where((t) => t.id.equals(widget.noteId!)))
           .write(
         NotesTableCompanion(
-          title: drift.Value(_title),
-          content: drift.Value(_content),
+          title: drift.Value(_titleController.text),
+          content: drift.Value(_contentController.text),
           updatedAt: drift.Value(now),
           dirty: const drift.Value(true),
         ),
@@ -103,9 +105,9 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     } else {
       await db.into(db.notesTable).insert(
             NotesTableCompanion.insert(
-              id: Uuid().v4(),
-              title: drift.Value(_title),
-              content: drift.Value(_content),
+              id: const Uuid().v4(),
+              title: drift.Value(_titleController.text),
+              content: drift.Value(_contentController.text),
               createdAt: now,
               updatedAt: now,
               dirty: const drift.Value(true),
@@ -140,6 +142,7 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   @override
   void dispose() {
     _titleController.dispose();
+    _contentController.dispose();
     super.dispose();
   }
 
@@ -147,6 +150,7 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: colors.bg,
       appBar: AppBar(
@@ -179,7 +183,6 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: TextField(
                 controller: _titleController,
-                onChanged: (value) => _title = value,
                 style: AppText.medium_22a.copyWith(
                   color: colors.text,
                 ),
@@ -194,9 +197,14 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: MarkdownLiveEditor(
-                  initialText: _content,
+                  initialText: _contentController.text,
                   noteSuggestions: _noteSuggestions,
-                  onChanged: (value) => _content = value,
+                  onChanged: (value) {
+                    _contentController.value = TextEditingValue(
+                      text: value,
+                      selection: TextSelection.collapsed(offset: value.length),
+                    );
+                  },
                 ),
               ),
             ),
