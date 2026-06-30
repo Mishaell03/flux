@@ -1,0 +1,123 @@
+{
+  "name": "Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "flux-reminder",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -96,
+        32
+      ],
+      "id": "a855b3b5-f4cd-49ed-a09e-ee70e72a3058",
+      "name": "Webhook",
+      "webhookId": "888ca27c-d411-4733-9a08-c7292681a2ee",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "={{$json.body.remind_at}}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        32
+      ],
+      "id": "99f267cf-531e-4a17-81a2-9012ca4ac318",
+      "name": "Wait",
+      "webhookId": "4ec7beec-abee-4279-9272-0b9cf7c144d7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/v1/internal/reminders/fire",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Internal-Token",
+              "value": "mrkuQq6SvefzpvXOwb5oPERnM4_234wWEAj564oA3DE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "reminder_id",
+              "value": "={{ $json.body.reminder_id }}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{ $json.body.user_id }}"
+            },
+            {
+              "name": "note_id",
+              "value": "={{ $json.body.note_id }}"
+            },
+            {
+              "name": "remind_at",
+              "value": "={{ $json.body.remind_at }}"
+            },
+            {
+              "name": "updated_at",
+              "value": "={{ $json.body.updated_at }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        384,
+        32
+      ],
+      "id": "566fd622-ba1b-4c32-a20f-0b7502887c03",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8e82f5b5-c30c-4a74-9156-c48214b2f4e1",
+  "meta": {
+    "instanceId": "e8bee67ff90e4dd0a7e7d2b5a6e4a57569a3bd4a38ff6e9d1523e66cf85186a7"
+  },
+  "id": "3HR88t5WzPJGz11ocwmZM",
+  "tags": []
+}

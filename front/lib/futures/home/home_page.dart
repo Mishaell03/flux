@@ -8,13 +8,14 @@ import 'package:front/core/sync/sync_service_provider.dart';
 import 'package:front/futures/home/models/home_dashboard.dart';
 import 'package:front/futures/home/repository/home_repository.dart';
 import 'package:front/futures/home/widgets/calendar.dart';
-import 'package:front/futures/home/widgets/home_header.dart';
 import 'package:front/futures/home/widgets/map.dart';
 import 'package:front/futures/home/widgets/notes.dart';
 import 'package:front/futures/home/widgets/search.dart';
+import 'package:front/futures/home/widgets/search_result.dart';
 import 'package:front/futures/home/widgets/section_header.dart';
 import 'package:front/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:front/futures/home/models/search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,15 +28,16 @@ class _HomePage extends State<HomePage> {
   final HomeRepository _repository = HomeRepository();
 
   late DateTime _selectedDate;
-  late DateTime _weekStart;
   late Stream<HomeDashboardData> _stream;
+
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
 
     _selectedDate = _dateOnly(DateTime.now());
-    _weekStart = _startOfWeek(_selectedDate);
     _stream = _repository.watchDashboardDataForDate(_selectedDate);
 
     unawaited(_sync());
@@ -46,29 +48,12 @@ class _HomePage extends State<HomePage> {
 
     setState(() {
       _selectedDate = nextDate;
-      _weekStart = _startOfWeek(nextDate);
-      _stream = _repository.watchDashboardDataForDate(_selectedDate);
-    });
-  }
-
-  void _moveWeek(int offset) {
-    final nextDate = _selectedDate.add(Duration(days: offset * 7));
-
-    setState(() {
-      _selectedDate = _dateOnly(nextDate);
-      _weekStart = _startOfWeek(_selectedDate);
       _stream = _repository.watchDashboardDataForDate(_selectedDate);
     });
   }
 
   DateTime _dateOnly(DateTime value) {
     return DateTime(value.year, value.month, value.day);
-  }
-
-  DateTime _startOfWeek(DateTime value) {
-    final date = _dateOnly(value);
-
-    return date.subtract(Duration(days: date.weekday - 1));
   }
 
   Future<void> _sync() async {
@@ -96,10 +81,6 @@ class _HomePage extends State<HomePage> {
     await _sync();
   }
 
-  final TextEditingController _searchController = TextEditingController();
-
-  String _searchQuery = '';
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -112,10 +93,32 @@ class _HomePage extends State<HomePage> {
     });
   }
 
+  void _openSearchItem(SearchNoteItem item) {
+    if (item.type == SearchItemType.reminder) {
+      final noteId = item.noteId;
+
+      if (noteId == null || noteId.isEmpty) return;
+
+      context.goNamed(
+        'reminder_edit',
+        pathParameters: {'id': noteId},
+      );
+
+      return;
+    }
+
+    context.goNamed(
+      'note_edit',
+      pathParameters: {'id': item.id},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     const double _kMaxContentWidth = 560;
+
+    final isSearching = _searchQuery.trim().isNotEmpty;
 
     return RefreshIndicator(
       onRefresh: _refresh,
@@ -124,69 +127,57 @@ class _HomePage extends State<HomePage> {
         paddingV: 0,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: _kMaxContentWidth),
-          child: StreamBuilder<HomeDashboardData>(
-            stream: _stream,
-            builder: (context, snapshot) {
-              final data = snapshot.data ?? HomeDashboardData.empty();
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              HomeSearch(
+                controller: _searchController,
+                onChanged: _onSearchChanged,
+              ),
+              const SizedBox(height: 16),
+              StreamBuilder<HomeDashboardData>(
+                stream: _stream,
+                builder: (context, snapshot) {
+                  final data = snapshot.data ?? HomeDashboardData.empty();
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  HomeHeader(),
-                  const SizedBox(height: 18),
-                  HomeSearch(
-                    controller: _searchController,
-                    onChanged: _onSearchChanged,
-                    onFilterTap: () {
-                      // TODO: фильтр поиска
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  HomeCalendar(
-                    selectedDate: _selectedDate,
-                    weekStart: _weekStart,
-                    reminderDayKeys: data.reminderDayKeys,
-                    reminders: data.upcomingReminders,
-                    onDateSelected: _selectDate,
-                    onPreviousWeek: () => _moveWeek(-1),
-                    onNextWeek: () => _moveWeek(1),
-                  ),
-                  const SizedBox(height: 18),
-                  HomeSectionHeader(
-                    title: t.homeRecentNotes,
-                    action: t.homeSeeAll,
-                    onTap: () => context.goNamed('notes'),
-                  ),
-                  const SizedBox(height: 10),
-                  HomeNotes(
-                    notes: _filterNotes(data.recentNotes),
-                  ),
-                  const SizedBox(height: 18),
-                  HomeMap(
-                    linkedNotesCount: data.linkedNotesCount,
-                    onTap: () => context.goNamed('graph'),
-                  ),
-                  const SizedBox(height: 32),
-                ],
-              );
-            },
+                  if (isSearching) {
+                    return HomeSearchResults(
+                      query: _searchQuery,
+                      onNoteTap: _openSearchItem,
+                    );
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HomeCalendar(
+                        selectedDate: _selectedDate,
+                        allReminders: data.allReminders,
+                        onDateSelected: _selectDate,
+                      ),
+                      const SizedBox(height: 18),
+                      HomeSectionHeader(
+                        title: t.homeRecentNotes,
+                        action: t.homeSeeAll,
+                        onTap: () => context.goNamed('notes'),
+                      ),
+                      const SizedBox(height: 10),
+                      HomeNotes(notes: data.recentNotes),
+                      const SizedBox(height: 18),
+                      HomeMap(
+                        linkedNotesCount: data.linkedNotesCount,
+                        onTap: () => context.goNamed('graph'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 32),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  List<HomeNotePreview> _filterNotes(List<HomeNotePreview> notes) {
-    final query = _searchQuery.trim().toLowerCase();
-
-    if (query.isEmpty) {
-      return notes;
-    }
-
-    return notes.where((note) {
-      return note.title.toLowerCase().contains(query) ||
-          note.content.toLowerCase().contains(query);
-    }).toList();
   }
 }

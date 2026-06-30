@@ -614,6 +614,18 @@ abstract class AppLocalizations {
   /// **'Create a reminder and it will appear here.'**
   String get remindersEmptySubtitle;
 
+  /// No description provided for @reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get reminder;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
   /// No description provided for @createNote.
   ///
   /// In en, this message translates to:
@@ -787,6 +799,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown error'**
   String get errorUnknown;
+
+  /// No description provided for @searchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed'**
+  String get searchError;
+
+  /// No description provided for @searchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found for “{query}”'**
+  String searchEmpty(String query);
+
+  /// No description provided for @noteUntitled.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get noteUntitled;
 }
 
 class _AppLocalizationsDelegate

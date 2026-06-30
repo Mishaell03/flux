@@ -282,6 +282,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Создай напоминание, и оно появится здесь.';
 
   @override
+  String get reminder => 'Напоминание';
+
+  @override
+  String get note => 'Заметка';
+
+  @override
   String get createNote => 'Создать заметку';
 
   @override
@@ -372,4 +378,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Неизвестная ошибка';
+
+  @override
+  String get searchError => 'Не удалось выполнить поиск';
+
+  @override
+  String searchEmpty(String query) {
+    return 'Ничего не найдено по запросу «$query»';
+  }
+
+  @override
+  String get noteUntitled => 'Без названия';
 }

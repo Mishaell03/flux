@@ -6,12 +6,10 @@ import 'package:front/l10n/app_localizations.dart';
 class HomeSearch extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
-  final VoidCallback? onFilterTap;
 
   const HomeSearch({
     required this.controller,
     this.onChanged,
-    this.onFilterTap,
   });
 
   @override
@@ -51,14 +49,18 @@ class HomeSearch extends StatelessWidget {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: onFilterTap,
-            child: Icon(
-              Icons.tune_rounded,
-              size: 20,
-              color: context.colors.gray,
+          if (controller.text.isNotEmpty)
+            GestureDetector(
+              onTap: () {
+                controller.clear();
+                onChanged?.call('');
+              },
+              child: Icon(
+                Icons.close_rounded,
+                size: 18,
+                color: context.colors.gray,
+              ),
             ),
-          ),
         ],
       ),
     );

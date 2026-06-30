@@ -21,7 +21,7 @@ from app.core.session import get_current_session
 from app.core.user_event_logs import user_event_logs
 from app.db import get_db
 from app.db.models import RegistrationSession, Note, Reminder
-
+from app.core.n8n_reminder_service import send_reminder_to_n8n
 
 router = APIRouter(prefix="/sync", tags=["Sync"])
 
@@ -179,6 +179,7 @@ async def push_sync_data(
 ):
     notes_result: list[SyncPushResultItem] = []
     reminders_result: list[SyncPushResultItem] = []
+    reminders_for_n8n: list[Reminder] = []
 
     now = datetime.now(timezone.utc)
 
@@ -313,6 +314,14 @@ async def push_sync_data(
         }
 
     for item in request_data.reminders:
+        print(
+            "REMINDER_FROM_CLIENT:",
+            "id=", item.id,
+            "note_id=", item.note_id,
+            "remind_at=", item.remind_at,
+            "updated_at=", item.updated_at,
+        )
+
         reminder = existing_reminders.get(item.id)
 
         # Нельзя привязать напоминание к чужой или несуществующей заметке
@@ -354,6 +363,7 @@ async def push_sync_data(
             )
 
             db.add(reminder)
+            reminders_for_n8n.append(reminder)
 
             reminders_result.append(
                 SyncPushResultItem(
@@ -388,6 +398,8 @@ async def push_sync_data(
         reminder.deleted = item.deleted
         reminder.updated_at = item.updated_at
 
+        reminders_for_n8n.append(reminder)
+
         reminders_result.append(
             SyncPushResultItem(
                 id=item.id,
@@ -397,6 +409,9 @@ async def push_sync_data(
         )
 
     db.commit()
+
+    for reminder in reminders_for_n8n:
+        send_reminder_to_n8n(reminder)
 
     user_event_logs(
         db=db,

@@ -4,6 +4,7 @@ class GetLinkRequest {
   final String language;
   final String appVersion;
   final String deviceName;
+  final String pushToken;
 
   const GetLinkRequest({
     required this.deviceId,
@@ -11,6 +12,7 @@ class GetLinkRequest {
     required this.language,
     required this.appVersion,
     required this.deviceName,
+    required this.pushToken,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class GetLinkRequest {
       'language': language,
       'app_version': appVersion,
       'device_name': deviceName,
+      'push_token': pushToken,
     };
   }
 }

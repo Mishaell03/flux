@@ -2,11 +2,9 @@ from datetime import datetime, timedelta, timezone
 import uuid
 import secrets
 
+import httpx
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import Session, load_only
-from sqlalchemy import insert
-from jwt.exceptions import ExpiredSignatureError
+from sqlalchemy.orm import Session
 
 from app.api.v1.schemas.auth import YandexLoginResponse, YandexLoginRequest, YandexCallbackRequest, \
     YandexCallbackResponse
@@ -15,7 +13,7 @@ from app.db.models import User, RegistrationSession, YandexLoginSession
 from app.core.config import settings
 from app.core.user_event_logs import user_event_logs
 from app.core.jwt import create_state, decode_state
-from app.utilits.yandex_oauth import get_token, get_profile
+from app.utilits.yandex_oauth import get_token, get_profile, YandexOAuthBadResponse
 from app.core.errors import raise_backend_error
 from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 
@@ -50,6 +48,7 @@ async def login(
     if session:
         session.app_version = request_data.app_version
         session.device_name = request_data.device_name
+        session.push_token = request_data.push_token
         session.expires_at = now + timedelta(minutes=20)
 
         db.commit()
@@ -88,6 +87,7 @@ async def login(
         language=request_data.language,
         app_version=request_data.app_version,
         device_name=request_data.device_name,
+        push_token=request_data.push_token,
         expires_at=now + timedelta(minutes=20),
         used_at=None,
     )
@@ -305,6 +305,7 @@ async def callback(
         device_name=yandex_session.device_name,
         provider="ya",
         session_token=session_token,
+        push_token=yandex_session.push_token,
         is_verified=True,
         expires_at=now + timedelta(days=180),
     )

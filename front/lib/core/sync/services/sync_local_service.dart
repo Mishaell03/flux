@@ -41,7 +41,7 @@ class SyncLocalService {
 
     final notes = await (db.select(db.notesTable)
           ..where(
-            (tbl) => tbl.id.isIn(ids) & tbl.dirty.equals(true),
+            (tbl) => tbl.id.isIn(ids),
           ))
         .get();
 
@@ -55,7 +55,7 @@ class SyncLocalService {
 
     final reminders = await (db.select(db.remindersTable)
           ..where(
-            (tbl) => tbl.id.isIn(ids) & tbl.dirty.equals(true),
+            (tbl) => tbl.id.isIn(ids),
           ))
         .get();
 

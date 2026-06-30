@@ -1,6 +1,5 @@
 {
   "appTitle": "Flux",
-
   "loginWelcome": "Welcome back! Please sign in to continue",
   "loginCreateAccount": "Create or log in to an account",
   "loginChooseService": "Choose your preferred login service",
@@ -10,7 +9,6 @@
   "loginPrivacyPolicy": "privacy policy",
   "loginWithYandex": "Continue with Yandex",
   "loginWithVk": "Continue with VK",
-
   "authCallbackWaitingTitle": "Waiting for confirmation",
   "authCallbackSendingTitle": "Completing sign in",
   "authCallbackSuccessTitle": "Done",
@@ -20,12 +18,10 @@
   "authCallbackSuccessDescription": "Signed in successfully.",
   "authCallbackBack": "Go back",
   "authCallbackRetry": "Open authorization again",
-
   "profileNamePlaceholder": "Username",
   "profileEmailPlaceholder": "email@example.com",
   "profileYandexConnected": "Yandex account connected",
   "profileVkConnected": "VK account connected",
-
   "profileSyncStatus": "Sync status",
   "profileSyncUpToDate": "All changes are up to date",
   "profileSyncLocal": "Local",
@@ -35,11 +31,9 @@
   "profileSyncPendingShort": "Pending",
   "profileSyncAction": "Sync",
   "profileSyncing": "Syncing...",
-
   "profileStatNotes": "Notes",
   "profileStatReminders": "Reminders",
   "profileStatLinked": "Linked notes",
-
   "profileSettingsTheme": "Theme",
   "profileSettingsThemeValue": "Light",
   "profileSettingsNotifications": "Notifications",
@@ -59,12 +53,10 @@
   "profileSessionDeviceFallback": "Device",
   "profileSessionRevokeTooltip": "End session",
   "profileSessionRevokeError": "Could not end session",
-
   "navHome": "Home",
   "navNotes": "Notes",
   "navGraph": "Graph",
   "navProfile": "Profile",
-
   "homeSearch": "Search notes or reminders",
   "homeUpcomingReminders": "Upcoming reminders",
   "homeNoReminders": "No reminders for this day",
@@ -95,7 +87,6 @@
       "days": {}
     }
   },
-
   "loadingCheckingSession": "Checking session",
   "graphTitle": "MapGraph",
   "graphStats": "{notesCount} notes · {edgesCount} links",
@@ -107,7 +98,6 @@
   },
   "graphEmptyTitle": "No notes yet",
   "graphEmptySubtitle": "Create notes and connect them with [[links]] or #tags.",
-
   "notesPageTitle": "Notes",
   "notesCreateNew": "Create new",
   "notesTabNotes": "Notes",
@@ -116,6 +106,8 @@
   "notesEmptySubtitle": "Create your first note to start building your knowledge base.",
   "remindersEmptyTitle": "No reminders yet",
   "remindersEmptySubtitle": "Create a reminder and it will appear here.",
+  "reminder": "Reminder",
+  "note": "Note",
   "createNote": "Create note",
   "createReminder": "Create reminder",
   "noteCreateTitle": "New note",
@@ -143,7 +135,6 @@
   },
   "reminderTitleHint": "Note title",
   "reminderContentHint": "Note text",
-
   "success": "Success",
   "error": "Error",
   "sectionDevelopment": "This section is currently under development",
@@ -153,8 +144,17 @@
   "errorInvalidLink": "Invalid link",
   "errorOpenLink": "Link could not be opened",
   "errorNavigation": "Navigation error",
-
   "errorNetwork": "No internet connection",
   "errorTimeout": "Request timed out",
-  "errorUnknown": "Unknown error"
+  "errorUnknown": "Unknown error",
+  "searchError": "Search failed",
+  "searchEmpty": "Nothing found for “{query}”",
+  "@searchEmpty": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "noteUntitled": "Untitled"
 }

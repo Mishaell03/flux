@@ -9,6 +9,7 @@ CREATE TABLE registration_sessions (
     device_name VARCHAR(32),
     platform VARCHAR(10),
     is_verified BOOLEAN DEFAULT FALSE,
+    push_token TEXT,
     expires_at TIMESTAMPTZ NOT NULL,
     revoked_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -19,3 +20,4 @@ CREATE INDEX ix_sessions_device_id ON registration_sessions(device_id);
 CREATE INDEX ix_sessions_token ON registration_sessions(session_token);
 CREATE INDEX ix_sessions_expires_at ON registration_sessions(expires_at);
 CREATE INDEX ix_sessions_provider ON registration_sessions(provider);
+CREATE INDEX ix_registration_sessions_push_token ON registration_sessions(push_token);

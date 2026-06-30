@@ -12,7 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql
       - ./infra/postgres/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres" ]
       interval: 5s
       timeout: 20s
       retries: 5
@@ -36,28 +36,55 @@ services:
     build:
       context: ./service
     restart: unless-stopped
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: flux_db
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      API_HOST: 0.0.0.0
-      API_PORT: 8000
-      API_RELOAD: "false"
-      IMAGE_BASE_ENDPOINT: ${IMAGE_BASE_ENDPOINT:-}
-      SECRET: ${SECRET:-change-me}
-      YANDEX_CLIENT_ID: ${YANDEX_CLIENT_ID:-}
-      YANDEX_CLIENT_SECRET: ${YANDEX_CLIENT_SECRET:-}
-      YANDEX_REDIRECT_URI: ${YANDEX_REDIRECT_URI:-}
-      YANDEX_REDIRECT_WEB: ${YANDEX_REDIRECT_WEB:-}
-      YANDEX_REDIRECT_MOBILE: ${YANDEX_REDIRECT_MOBILE:-}
+    env_file:
+      - ./service/.env
     ports:
       - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
       migrate:
+        condition: service_completed_successfully
+
+  n8n-import:
+    image: n8nio/n8n:latest
+    restart: "no"
+    environment:
+      N8N_HOST: n8n
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://n8n:5678/
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./infra/n8n/workflows:/workflows:ro
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        set -e
+        n8n import:workflow --input=/workflows/flux-reminder.json
+        n8n publish:workflow --id=3HR88t5WzPJGz11ocwmZM
+        n8n list:workflow
+    depends_on:
+      - api
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: unless-stopped
+    environment:
+      N8N_HOST: n8n
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://n8n:5678/
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      n8n-import:
         condition: service_completed_successfully
 
   pgadmin:
@@ -71,7 +98,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    profiles: ["admin"]
+    profiles: [ "dev" ]
 
 volumes:
   postgres_data:
+  n8n_data:

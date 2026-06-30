@@ -1,6 +1,5 @@
 {
   "appTitle": "Flux",
-
   "loginWelcome": "Добро пожаловать обратно! Пожалуйста, войдите в систему, чтобы продолжить",
   "loginCreateAccount": "Создать или войти в аккаунт",
   "loginChooseService": "Выберите предпочитаемый вами сервис для входа",
@@ -10,7 +9,6 @@
   "loginPrivacyPolicy": "политика конфиденциальности",
   "loginWithYandex": "Продолжить с Яндекс",
   "loginWithVk": "Продолжить с ВКонтакте",
-
   "authCallbackWaitingTitle": "Ожидаем подтверждение",
   "authCallbackSendingTitle": "Завершаем вход",
   "authCallbackSuccessTitle": "Готово",
@@ -20,12 +18,10 @@
   "authCallbackSuccessDescription": "Вход успешно выполнен.",
   "authCallbackBack": "Вернуться назад",
   "authCallbackRetry": "Открыть авторизацию снова",
-
   "profileNamePlaceholder": "Имя пользователя",
   "profileEmailPlaceholder": "email@example.com",
   "profileYandexConnected": "Яндекс аккаунт подключён",
   "profileVkConnected": "Вконтакте аккаунт подключён",
-
   "profileSyncStatus": "Статус синхронизации",
   "profileSyncUpToDate": "Все изменения актуальны",
   "profileSyncLocal": "Локально",
@@ -35,11 +31,9 @@
   "profileSyncPendingShort": "Ожидает",
   "profileSyncAction": "Синхронизировать",
   "profileSyncing": "Синхронизируем...",
-
   "profileStatNotes": "Заметки",
   "profileStatReminders": "Напоминания",
   "profileStatLinked": "Связанные",
-
   "profileSettingsTheme": "Тема",
   "profileSettingsThemeValue": "Светлая",
   "profileSettingsNotifications": "Уведомления",
@@ -59,12 +53,10 @@
   "profileSessionDeviceFallback": "Устройство",
   "profileSessionRevokeTooltip": "Завершить",
   "profileSessionRevokeError": "Не удалось завершить сессию",
-
   "navHome": "Главная",
   "navNotes": "Заметки",
   "navGraph": "Граф",
   "navProfile": "Профиль",
-
   "homeSearch": "Поиск заметок или напоминаний",
   "homeUpcomingReminders": "Предстоящие напоминания",
   "homeNoReminders": "Никаких напоминаний об этом дне",
@@ -95,7 +87,6 @@
       "days": {}
     }
   },
-
   "loadingCheckingSession": "Проверяем сессию",
   "graphTitle": "MapGraph",
   "graphStats": "{notesCount} заметок · {edgesCount} связей",
@@ -107,7 +98,6 @@
   },
   "graphEmptyTitle": "Заметок пока нет",
   "graphEmptySubtitle": "Создай заметки и свяжи их через [[ссылки]] или #теги.",
-
   "notesPageTitle": "Заметки",
   "notesCreateNew": "Создать",
   "notesTabNotes": "Заметки",
@@ -116,6 +106,8 @@
   "notesEmptySubtitle": "Создай первую заметку, чтобы начать собирать знания.",
   "remindersEmptyTitle": "Напоминаний пока нет",
   "remindersEmptySubtitle": "Создай напоминание, и оно появится здесь.",
+  "reminder": "Напоминание",
+  "note": "Заметка",
   "createNote": "Создать заметку",
   "createReminder": "Создать напоминание",
   "noteCreateTitle": "Новая заметка",
@@ -143,7 +135,6 @@
   },
   "reminderTitleHint": "Название заметки",
   "reminderContentHint": "Текст заметки",
-
   "error": "Ошибка",
   "success": "Успешно",
   "sectionDevelopment": "Данный раздел находится в разработке",
@@ -153,8 +144,17 @@
   "errorInvalidLink": "Некорректная ссылка",
   "errorOpenLink": "Не удалось открыть ссылку",
   "errorNavigation": "Ошибка перехода",
-
   "errorNetwork": "Нет подключения к интернету",
   "errorTimeout": "Превышено время ожидания запроса",
-  "errorUnknown": "Неизвестная ошибка"
+  "errorUnknown": "Неизвестная ошибка",
+  "searchError": "Не удалось выполнить поиск",
+  "searchEmpty": "Ничего не найдено по запросу «{query}»",
+  "@searchEmpty": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "noteUntitled": "Без названия"
 }

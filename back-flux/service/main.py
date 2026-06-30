@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.router import router_v1
 from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.firebase import init_firebase
 
 app = FastAPI(
     title="Flux",
@@ -18,6 +19,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def startup():
+    init_firebase()
 
 app.include_router(router_v1)
 

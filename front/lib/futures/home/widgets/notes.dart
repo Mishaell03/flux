@@ -116,12 +116,6 @@ class _NoteCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Spacer(),
-                Icon(
-                  Icons.star_border_rounded,
-                  color: context.colors.gray,
-                  size: 20,
-                ),
               ],
             ),
           ],

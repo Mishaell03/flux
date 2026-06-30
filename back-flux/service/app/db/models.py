@@ -75,6 +75,7 @@ class RegistrationSession(Base):
     device_name: Mapped[str | None] = mapped_column(String(32))
     platform: Mapped[str | None] = mapped_column(String(10))
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    push_token: Mapped[str | None] = mapped_column(Text)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -188,6 +189,7 @@ class YandexLoginSession(Base):
     language: Mapped[str] = mapped_column(String(3))
     app_version: Mapped[str | None] = mapped_column(String(32))
     device_name: Mapped[str | None] = mapped_column(String(32))
+    push_token: Mapped[str] = mapped_column(Text)
 
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

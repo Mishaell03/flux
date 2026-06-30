@@ -280,6 +280,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create a reminder and it will appear here.';
 
   @override
+  String get reminder => 'Reminder';
+
+  @override
+  String get note => 'Note';
+
+  @override
   String get createNote => 'Create note';
 
   @override
@@ -371,4 +377,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Unknown error';
+
+  @override
+  String get searchError => 'Search failed';
+
+  @override
+  String searchEmpty(String query) {
+    return 'Nothing found for “$query”';
+  }
+
+  @override
+  String get noteUntitled => 'Untitled';
 }

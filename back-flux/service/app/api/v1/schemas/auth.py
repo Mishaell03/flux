@@ -29,6 +29,12 @@ class YandexLoginRequest(BaseModel):
         max_length=32,
         examples=['CANDY']
     )
+    push_token: str = Field(
+        ...,
+        min_length=10,
+        max_length=4096,
+        examples=["fcm_token_example"],
+    )
 
 class YandexLoginResponse(BaseModel):
     url: str = Field(

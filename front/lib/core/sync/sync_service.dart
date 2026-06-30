@@ -42,7 +42,20 @@ class SyncService {
         reminders: reminderVersions,
       );
 
-      // 2. PUSH DIRTY NOTES
+      // 2. PULL UPDATES FROM SERVER
+      if (status.noteIdsToPull.isNotEmpty ||
+          status.reminderIdsToPull.isNotEmpty) {
+        final pullResponse = await api.pull(
+          token: token,
+          noteIds: status.noteIdsToPull,
+          reminderIds: status.reminderIdsToPull,
+        );
+
+        await local.applyPulledNotes(pullResponse.notes);
+        await local.applyPulledReminders(pullResponse.reminders);
+      }
+
+      // 3. PUSH CLIENT UPDATES TO SERVER
       final notesToPush = await local.getDirtyNotesPayloadByIds(
         status.noteIdsToPush,
       );
@@ -73,19 +86,6 @@ class SyncService {
 
         await local.markNotesSynced(pushResponse.syncedNoteIds);
         await local.markRemindersSynced(pushResponse.syncedReminderIds);
-      }
-
-      // 3. PULL UPDATES
-      if (status.noteIdsToPull.isNotEmpty ||
-          status.reminderIdsToPull.isNotEmpty) {
-        final pullResponse = await api.pull(
-          token: token,
-          noteIds: status.noteIdsToPull,
-          reminderIds: status.reminderIdsToPull,
-        );
-
-        await local.applyPulledNotes(pullResponse.notes);
-        await local.applyPulledReminders(pullResponse.reminders);
       }
 
       // 4. GRAPH SYNC

@@ -4,3 +4,5 @@
 venv
 .venv
 __pycache__
+flux-firebase-adminsdk.json
+*service-account*.json

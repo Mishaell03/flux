@@ -52,13 +52,23 @@ class HomeRepository {
           ))
         .get();
 
+    final allReminders = await (db.select(db.remindersTable)
+          ..where((tbl) => tbl.deleted.equals(false))
+          ..orderBy([
+            (tbl) => OrderingTerm(
+                  expression: tbl.remindAt,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
+
     final links = await db.select(db.noteLinksTable).get();
 
     final notesById = {
       for (final note in notes) note.id: note,
     };
 
-    final reminderDayKeys = allActiveReminders.map((reminder) {
+    final reminderDayKeys = allReminders.map((reminder) {
       return _dateKey(reminder.remindAt.toLocal());
     }).toSet();
 
@@ -76,6 +86,16 @@ class HomeRepository {
         );
       }).toList(),
       upcomingReminders: selectedDayReminders.map((reminder) {
+        final note =
+            reminder.noteId == null ? null : notesById[reminder.noteId];
+
+        return HomeReminderPreview(
+          id: reminder.id,
+          title: _cleanText(note?.title),
+          remindAt: reminder.remindAt,
+        );
+      }).toList(),
+      allReminders: allReminders.map((reminder) {
         final note =
             reminder.noteId == null ? null : notesById[reminder.noteId];
 

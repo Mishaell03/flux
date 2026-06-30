@@ -1,6 +1,7 @@
 class ApiConfig {
-  static const String _baseUrl = 'https://flux.pipipopi.online/api/v1'; // production
+  // static const String _baseUrl = 'https://flux.pipipopi.online/api/v1'; // production
   // static const String _baseUrl = 'http://127.0.0.1:8000/api/v1'; // local
+  static const String _baseUrl = 'http://10.0.0.251:8000/api/v1'; // local
 
   static const String yandexLogin = '$_baseUrl/auth/yandex/login';
   static const String yandexCallback = '$_baseUrl/auth/yandex/callback';
@@ -13,6 +14,8 @@ class ApiConfig {
   static String revokeSession(int sessionId) {
     return '$_baseUrl/session/$sessionId/revoke';
   }
+
+  static const String search = '$_baseUrl/search';
 
   static const String syncPush = '$_baseUrl/sync/push';
   static const String syncStatus = '$_baseUrl/sync/status';

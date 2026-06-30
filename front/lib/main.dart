@@ -1,6 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:front/core/components/secure/notification_primission_service.dart';
+import 'package:front/core/components/secure/permission_handler.dart';
 import 'package:front/core/router/app_router.dart';
 import 'package:front/futures/login/services/auth_deeplink.dart';
 import 'package:front/futures/login/services/auth_callback.dart';
@@ -19,6 +22,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final settings = await FirebaseMessaging.instance.getNotificationSettings();
+  if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+    await NotificationPermissionService.requestPermission();
+  }
 
   if (!kIsWeb &&
       (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
@@ -53,6 +61,13 @@ void main() async {
   await deepLinkListener.init();
 
   runApp(const MyApp());
+
+  if (!kIsWeb) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await requestNotificationPermission(); // permission_handler, Android/iOS
+      await NotificationPermissionService.requestPermission(); // Firebase
+    });
+  }
 }
 
 class MyApp extends StatelessWidget {

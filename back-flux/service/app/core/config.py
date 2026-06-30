@@ -12,6 +12,9 @@ load_dotenv()
 class Settings:
     secret: str = os.getenv("SECRET", "dev-secret")
 
+    internal_api_token: str = os.getenv("INTERNAL_API_TOKEN")
+    n8n_reminder_webhook: str = os.getenv("N8N_REMINDER_WEBHOOK")
+
     # DATABASE
     db_host: str = os.getenv("DB_HOST", "127.0.0.1")
     db_port: int = int(os.getenv("DB_PORT", "5432"))
@@ -43,6 +46,8 @@ class Settings:
     yandex_redirect_url: str = os.getenv("YANDEX_REDIRECT_URI")
     yandex_redirect_web: str = os.getenv("YANDEX_REDIRECT_WEB")
     yandex_redirect_mobile: str = os.getenv("YANDEX_REDIRECT_MOBILE")
+
+    firebase_credentials: str = os.getenv('FIREBASE_CREDENTIALS')
 
     # DATABASE URL
     @property

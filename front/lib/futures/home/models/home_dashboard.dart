@@ -4,8 +4,7 @@ class HomeDashboardData {
   final int linkedNotesCount;
   final List<HomeNotePreview> recentNotes;
   final List<HomeReminderPreview> upcomingReminders;
-
-  // Дни с событиями фрмат: yyyy-mm-dd
+  final List<HomeReminderPreview> allReminders;
   final Set<String> reminderDayKeys;
 
   const HomeDashboardData({
@@ -14,6 +13,7 @@ class HomeDashboardData {
     required this.linkedNotesCount,
     required this.recentNotes,
     required this.upcomingReminders,
+    required this.allReminders,
     required this.reminderDayKeys,
   });
 
@@ -24,6 +24,7 @@ class HomeDashboardData {
       linkedNotesCount: 0,
       recentNotes: [],
       upcomingReminders: [],
+      allReminders: [],
       reminderDayKeys: {},
     );
   }
