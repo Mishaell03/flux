@@ -7,12 +7,18 @@ import 'package:front/futures/login/services/auth_callback.dart';
 import 'package:front/l10n/app_localizations.dart';
 import 'package:universal_io/io.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 // conditional import — на вебе реальный, на остальных заглушка
 import 'package:front/futures/login/services/web_auth_stub.dart' if (dart.library.js_interop) 'package:front/futures/login/services/web_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   if (!kIsWeb &&
       (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {

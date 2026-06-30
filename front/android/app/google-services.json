@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162280543292",
+    "project_id": "flux-6e697",
+    "storage_bucket": "flux-6e697.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162280543292:android:32666429896306369a1f39",
+        "android_client_info": {
+          "package_name": "online.pipipopi.flux"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0CX74WpByaooyuBbmlTSFPKaL5k0fkWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
