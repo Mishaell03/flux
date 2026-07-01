@@ -11,16 +11,37 @@ class LocalSyncStatusService {
     final reminders = await db.select(db.remindersTable).get();
     final links = await db.select(db.noteLinksTable).get();
 
-    final activeNotes = notes.where((note) => !note.deleted).length;
-    final activeReminders =
-        reminders.where((reminder) => !reminder.deleted).length;
-    final dirtyNotes = notes.where((note) => note.dirty).length;
-    final dirtyReminders = reminders.where((reminder) => reminder.dirty).length;
+
+    final activeNoteIds = notes
+        .where((note) => !note.deleted)
+        .map((note) => note.id)
+        .toSet();
+
+    final localItemsCount = activeNoteIds.length + links.length;
+
+    final dirtyNoteIds = <String>{};
+
+    for (final note in notes) {
+      if (note.dirty) {
+        dirtyNoteIds.add(note.id);
+      }
+    }
+
+    for (final reminder in reminders) {
+      if (!reminder.dirty) continue;
+
+      final noteId = reminder.noteId;
+
+      if (noteId == null || noteId.trim().isEmpty) continue;
+
+      dirtyNoteIds.add(noteId);
+    }
+
     final dirtyLinks = links.where((link) => link.dirty).length;
 
     return LocalSyncStatus(
-      localItemsCount: activeNotes + activeReminders + links.length,
-      pendingItemsCount: dirtyNotes + dirtyReminders + dirtyLinks,
+      localItemsCount: localItemsCount,
+      pendingItemsCount: dirtyNoteIds.length + dirtyLinks,
     );
   }
 
