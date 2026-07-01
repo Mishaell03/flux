@@ -1,0 +1,16 @@
+assets/
+assets/**
+uploads/
+uploads/**
+*.db
+*.sqlite
+*.sqlite3
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+.env
+.venv/
+venv/
