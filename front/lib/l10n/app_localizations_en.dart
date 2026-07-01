@@ -317,6 +317,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteOk => 'OK';
 
   @override
+  String get noteAttachmentTooltip => 'Add attachment';
+
+  @override
+  String get noteAttachmentAddImage => 'Add photo';
+
+  @override
+  String get noteAttachmentAddImageDescription =>
+      'Choose an image or take a photo';
+
+  @override
+  String get noteAttachmentRecordAudio => 'Record voice message';
+
+  @override
+  String get noteAttachmentRecordAudioDescription =>
+      'Add audio as a voice message';
+
+  @override
+  String get viewImg => 'View the image';
+
+  @override
+  String get listenVoice => 'Listen to a voice message';
+
+  @override
+  String get chooseGallery => 'Choose from the gallery';
+
+  @override
+  String get takePhoto => 'Take a photo';
+
+  @override
+  String get close => 'Close';
+
+  @override
   String get deleteTooltip => 'Delete';
 
   @override

@@ -686,6 +686,66 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get noteOk;
 
+  /// No description provided for @noteAttachmentTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add attachment'**
+  String get noteAttachmentTooltip;
+
+  /// No description provided for @noteAttachmentAddImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get noteAttachmentAddImage;
+
+  /// No description provided for @noteAttachmentAddImageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an image or take a photo'**
+  String get noteAttachmentAddImageDescription;
+
+  /// No description provided for @noteAttachmentRecordAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Record voice message'**
+  String get noteAttachmentRecordAudio;
+
+  /// No description provided for @noteAttachmentRecordAudioDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add audio as a voice message'**
+  String get noteAttachmentRecordAudioDescription;
+
+  /// No description provided for @viewImg.
+  ///
+  /// In en, this message translates to:
+  /// **'View the image'**
+  String get viewImg;
+
+  /// No description provided for @listenVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to a voice message'**
+  String get listenVoice;
+
+  /// No description provided for @chooseGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from the gallery'**
+  String get chooseGallery;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get takePhoto;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
   /// No description provided for @deleteTooltip.
   ///
   /// In en, this message translates to:

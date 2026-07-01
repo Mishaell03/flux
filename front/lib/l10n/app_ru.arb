@@ -118,6 +118,18 @@
   "noteHelp": "Здесь можно писать заметку в формате Markdown.\n\n Поддерживается:\n - **жирный текст**\n - `inline code`\n - ссылки - [[ link ]] и [[ name | link ]]\n - хэштеги #love \n - цитаты > текст\n\n Все изменения сохраняются автоматически после закрытия заметки",
   "noteHint": "Подсказка",
   "noteOk": "OK",
+
+  "noteAttachmentTooltip": "Добавить вложение",
+  "noteAttachmentAddImage": "Добавить фото",
+  "noteAttachmentAddImageDescription": "Выбрать изображение или сделать снимок",
+  "noteAttachmentRecordAudio": "Записать голосовое",
+  "noteAttachmentRecordAudioDescription": "Добавить аудио как голосовое сообщение",
+  "viewImg": "Просмотреть изображение",
+  "listenVoice": "Прослушать голосовое",
+  "chooseGallery": "Выбрать из галереи",
+  "takePhoto": "Сделать фото",
+  "close": "Закрыть",
+
   "deleteTooltip": "Удалить",
   "deleteNoteTitle": "Удалить заметку?",
   "deleteNoteMessage": "«{title}» будет удалена.",

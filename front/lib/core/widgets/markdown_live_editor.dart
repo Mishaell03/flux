@@ -13,6 +13,7 @@ class MarkdownLiveEditor extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final List<String> noteSuggestions;
   final EdgeInsets padding;
+  final void Function(MarkdownAttachmentData attachment)? onTapAttachment;
 
   const MarkdownLiveEditor({
     super.key,
@@ -20,6 +21,7 @@ class MarkdownLiveEditor extends StatefulWidget {
     required this.onChanged,
     this.noteSuggestions = const [],
     this.padding = const EdgeInsets.all(20),
+    this.onTapAttachment,
   });
 
   @override
@@ -528,6 +530,30 @@ class _MarkdownLiveEditorState extends State<MarkdownLiveEditor> {
     );
   }
 
+  MarkdownAttachmentData? _attachmentFromLine(String line) {
+    final text = line.trim();
+
+    final match = RegExp(
+      r'^\{\{attachment:(image|audio)\|([a-zA-Z0-9_\-]+)\}\}$',
+    ).firstMatch(text);
+
+    if (match == null) return null;
+
+    final type = match.group(1);
+    final hash = match.group(2);
+
+    if (type == null || hash == null || hash.trim().isEmpty) {
+      return null;
+    }
+
+    return MarkdownAttachmentData(
+      type: type == 'audio'
+          ? MarkdownAttachmentType.audio
+          : MarkdownAttachmentType.image,
+      hash: hash.trim(),
+    );
+  }
+
   Widget _buildLine(int index) {
     final isActive = _activeLineIndex == index;
     final line = _lines[index];
@@ -566,12 +592,28 @@ class _MarkdownLiveEditorState extends State<MarkdownLiveEditor> {
       );
     }
 
+    final attachment = _attachmentFromLine(line);
+
+    if (attachment != null) {
+      return _AttachmentPreviewLine(
+        attachment: attachment,
+        onOpen: widget.onTapAttachment == null
+            ? null
+            : () => widget.onTapAttachment!(attachment),
+        onEdit: () => _activateLine(
+          index,
+          cursorAtEnd: true,
+        ),
+      );
+    }
+
     return _MarkdownPreviewLine(
       data: line,
       onTap: () => _activateLine(
         index,
         cursorAtEnd: true,
       ),
+      onTapAttachment: widget.onTapAttachment,
     );
   }
 }
@@ -684,10 +726,12 @@ class _EditableMarkdownLine extends StatelessWidget {
 class _MarkdownPreviewLine extends StatelessWidget {
   final String data;
   final VoidCallback onTap;
+  final void Function(MarkdownAttachmentData attachment)? onTapAttachment;
 
   const _MarkdownPreviewLine({
     required this.data,
     required this.onTap,
+    this.onTapAttachment,
   });
 
   @override
@@ -713,6 +757,111 @@ class _MarkdownPreviewLine extends StatelessWidget {
 
             LinkHandler.open(context, href);
           },
+          onTapAttachment: onTapAttachment,
+        ),
+      ),
+    );
+  }
+}
+
+class _AttachmentPreviewLine extends StatelessWidget {
+  final MarkdownAttachmentData attachment;
+  final VoidCallback? onOpen;
+  final VoidCallback onEdit;
+
+  const _AttachmentPreviewLine({
+    required this.attachment,
+    required this.onOpen,
+    required this.onEdit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    final isImage = attachment.isImage;
+
+    final icon = isImage
+        ? Icons.image_rounded
+        : Icons.play_circle_fill_rounded;
+
+    final title = isImage
+        ? 'Просмотреть изображение'
+        : 'Прослушать голосовое';
+
+    final subtitle = isImage
+        ? 'Нажмите, чтобы открыть фото'
+        : 'Нажмите, чтобы воспроизвести аудио';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onOpen,
+          onLongPress: onEdit,
+          child: Container(
+            constraints: const BoxConstraints(
+              minHeight: 54,
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: colors.primary.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: colors.primary.withValues(alpha: 0.22),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: 0.14),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 22,
+                    color: colors.primary,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppText.medium_16a.copyWith(
+                          color: colors.text,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: AppText.medium_14a.copyWith(
+                          color: colors.gray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: colors.gray,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

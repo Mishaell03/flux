@@ -20,6 +20,8 @@ class ApiConfig {
   static const String syncPush = '$_baseUrl/sync/push';
   static const String syncStatus = '$_baseUrl/sync/status';
   static const String syncPull = '$_baseUrl/sync/pull';
+  static const String noteAttachments = '$_baseUrl/note-attachments';
+  static const String noteAttachmentsUpload = '$_baseUrl/note-attachments/upload';
 
   static const String noteLinks = '$_baseUrl/note-links';
   static const String noteLinksPush = '$_baseUrl/note-links/push';

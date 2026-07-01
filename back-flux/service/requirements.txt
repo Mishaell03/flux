@@ -7,3 +7,4 @@ asyncpg
 httpx
 PyJWT
 firebase-admin
+python-multipart

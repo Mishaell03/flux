@@ -11,6 +11,7 @@ from sqlalchemy import (
     BigInteger,
     func,
     UniqueConstraint,
+    CheckConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -53,6 +54,9 @@ class User(Base):
         back_populates="user", cascade="all, delete-orphan"
     )
     event_logs: Mapped[list["UserEventLog"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+    note_attachments: Mapped[list["NoteAttachment"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
 
@@ -109,6 +113,9 @@ class Note(Base):
     )
     to_links: Mapped[list["NoteLink"]] = relationship(
         foreign_keys="NoteLink.to_note_id", back_populates="to_note", cascade="all, delete-orphan"
+    )
+    attachments: Mapped[list["NoteAttachment"]] = relationship(
+        back_populates="note", cascade="all, delete-orphan"
     )
 
 
@@ -249,4 +256,62 @@ class BackendErrorLocalization(Base):
 
     __table_args__ = (
         UniqueConstraint("code", "language", name="uq_error_code_language"),
+    )
+
+
+# v15 NOTE ATTACHMENTS
+class NoteAttachment(Base):
+    __tablename__ = "note_attachments"
+
+    attachment_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+
+    note_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("notes.note_id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.user_id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    type: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    storage_path: Mapped[str] = mapped_column(Text, nullable=False)
+    public_url: Mapped[str | None] = mapped_column(Text)
+
+    file_name: Mapped[str | None] = mapped_column(Text)
+    mime_type: Mapped[str | None] = mapped_column(Text)
+    size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+
+    duration_ms: Mapped[int | None] = mapped_column(Integer)
+    width: Mapped[int | None] = mapped_column(Integer)
+    height: Mapped[int | None] = mapped_column(Integer)
+
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), index=True
+    )
+    server_updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    user: Mapped["User"] = relationship(back_populates="note_attachments")
+    note: Mapped["Note"] = relationship(back_populates="attachments")
+
+    __table_args__ = (
+        CheckConstraint(
+            "type IN ('image', 'audio')",
+            name="note_attachments_type_check",
+        ),
     )

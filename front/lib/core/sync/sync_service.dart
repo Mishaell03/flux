@@ -4,11 +4,13 @@ import 'package:front/core/sync/models/note_link_sync.dart';
 import 'package:front/core/sync/services/note_links_api_service.dart';
 import 'package:front/core/sync/services/sync_api_service.dart';
 import 'package:front/core/sync/services/sync_local_service.dart';
+import 'package:front/core/attachments/services/note_attachments_sync_service.dart';
 
 class SyncService {
   final SyncApiService api;
   final NoteLinksApiService noteLinksApi;
   final SyncLocalService local;
+  final NoteAttachmentsSyncService attachmentsSync;
 
   bool _isSyncing = false;
 
@@ -16,9 +18,11 @@ class SyncService {
     SyncApiService? api,
     NoteLinksApiService? noteLinksApi,
     SyncLocalService? local,
+    NoteAttachmentsSyncService? attachmentsSync,
   })  : api = api ?? const SyncApiService(),
         noteLinksApi = noteLinksApi ?? const NoteLinksApiService(),
-        local = local ?? SyncLocalService();
+        local = local ?? SyncLocalService(),
+        attachmentsSync = attachmentsSync ?? NoteAttachmentsSyncService();
 
   Future<void> sync() async {
     if (_isSyncing) return;
@@ -88,7 +92,10 @@ class SyncService {
         await local.markRemindersSynced(pushResponse.syncedReminderIds);
       }
 
-      // 4. GRAPH SYNC
+      // 4. ATTACHMENTS SYNC
+      await attachmentsSync.sync(token: token);
+
+      // 5. GRAPH SYNC
       for (final entry in noteLinksToPush.entries) {
         await noteLinksApi.pushForNote(
           token: token,
@@ -97,7 +104,7 @@ class SyncService {
         );
       }
 
-      // 5. REFRESH GLOBAL LINKS
+      // 6. REFRESH GLOBAL LINKS
       final links = await noteLinksApi.getAll(token: token);
       await local.replaceNoteLinks(links);
     } finally {

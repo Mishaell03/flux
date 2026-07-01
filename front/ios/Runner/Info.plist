@@ -75,5 +75,7 @@
             </array>
         </dict>
     </array>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Приложению нужен доступ к микрофону, чтобы записывать голосовые заметки.</string>
 </dict>
 </plist>

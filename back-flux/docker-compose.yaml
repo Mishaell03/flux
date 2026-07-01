@@ -40,6 +40,8 @@ services:
       - ./service/.env
     ports:
       - "8000:8000"
+    volumes:
+      - ./service/assets:/app/assets
     depends_on:
       postgres:
         condition: service_healthy

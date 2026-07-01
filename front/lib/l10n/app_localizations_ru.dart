@@ -319,6 +319,38 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noteOk => 'OK';
 
   @override
+  String get noteAttachmentTooltip => 'Добавить вложение';
+
+  @override
+  String get noteAttachmentAddImage => 'Добавить фото';
+
+  @override
+  String get noteAttachmentAddImageDescription =>
+      'Выбрать изображение или сделать снимок';
+
+  @override
+  String get noteAttachmentRecordAudio => 'Записать голосовое';
+
+  @override
+  String get noteAttachmentRecordAudioDescription =>
+      'Добавить аудио как голосовое сообщение';
+
+  @override
+  String get viewImg => 'Просмотреть изображение';
+
+  @override
+  String get listenVoice => 'Прослушать голосовое';
+
+  @override
+  String get chooseGallery => 'Выбрать из галереи';
+
+  @override
+  String get takePhoto => 'Сделать фото';
+
+  @override
+  String get close => 'Закрыть';
+
+  @override
   String get deleteTooltip => 'Удалить';
 
   @override

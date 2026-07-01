@@ -59,6 +59,14 @@ dependencies:
   firebase_messaging: ^16.4.1
   permission_handler: ^11.3.0
 
+  # файлы
+  path_provider: ^2.1.5
+  path: ^1.9.0
+  image_picker: ^1.2.3
+  mime: ^2.0.0
+  record: ^7.1.1
+  just_audio: ^0.10.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

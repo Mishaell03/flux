@@ -34,11 +34,7 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   Future<ProfileResponse> _loadProfile() async {
-    final token = await AuthTokenStorage.read();
-
-    if (token == null || token.trim().isEmpty) {
-      throw const AppException(code: AppErrorCode.errorProfileFailed);
-    }
+  final token = await AuthTokenWaiter.wait();
 
     return ProfileService.getProfile(
       url: ApiConfig.userProfile,

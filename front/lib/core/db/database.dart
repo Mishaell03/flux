@@ -4,6 +4,8 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:front/core/db/tables/notes_table.dart';
 import 'package:front/core/db/tables/reminders_table.dart';
 import 'package:front/core/db/tables/note_links_table.dart';
+import 'package:front/core/db/tables/attachment_blobs_table.dart';
+import 'package:front/core/db/tables/note_attachments_table.dart';
 
 part "database.g.dart";
 
@@ -12,6 +14,8 @@ part "database.g.dart";
     NotesTable,
     RemindersTable,
     NoteLinksTable,
+    NoteAttachmentsTable,
+    AttachmentBlobsTable,
   ],
 )
 class AppDatabase extends _$AppDatabase {

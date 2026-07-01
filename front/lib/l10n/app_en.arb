@@ -118,6 +118,18 @@
   "noteHelp": "Here you can write a note in Markdown format.\n\n Supported:\n - **bold text**\n - `inline code'\n - links - [[ link ]] and [[ name | link ]]\n - hashtags #love \n - quotes > text\n\n All changes are saved automatically (if you connect sync).",
   "noteHint": "Hint",
   "noteOk": "OK",
+
+  "noteAttachmentTooltip": "Add attachment",
+  "noteAttachmentAddImage": "Add photo",
+  "noteAttachmentAddImageDescription": "Choose an image or take a photo",
+  "noteAttachmentRecordAudio": "Record voice message",
+  "noteAttachmentRecordAudioDescription": "Add audio as a voice message",
+  "viewImg": "View the image",
+  "listenVoice": "Listen to a voice message",
+  "chooseGallery": "Choose from the gallery",
+  "takePhoto": "Take a photo",
+  "close": "Close",
+
   "deleteTooltip": "Delete",
   "deleteNoteTitle": "Delete note?",
   "deleteNoteMessage": "“{title}” will be deleted.",

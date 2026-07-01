@@ -314,13 +314,6 @@ async def push_sync_data(
         }
 
     for item in request_data.reminders:
-        print(
-            "REMINDER_FROM_CLIENT:",
-            "id=", item.id,
-            "note_id=", item.note_id,
-            "remind_at=", item.remind_at,
-            "updated_at=", item.updated_at,
-        )
 
         reminder = existing_reminders.get(item.id)
 
