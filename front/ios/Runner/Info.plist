@@ -75,7 +75,11 @@
             </array>
         </dict>
     </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Нужен доступ к фото для добавления вложений</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Нужен доступ к камере</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Приложению нужен доступ к микрофону, чтобы записывать голосовые заметки.</string>
+    <string>Нужен доступ к микрофону для записи аудио</string>
 </dict>
 </plist>

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:universal_io/io.dart';
 import 'dart:typed_data';
 import 'package:front/core/attachments/storage/attachment_storage.dart';
 import 'package:path/path.dart' as p;

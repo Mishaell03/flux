@@ -1,16 +1,12 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:front/core/attachments/services/note_attachment_create_service.dart';
 import 'package:front/core/components/app_theme.dart';
-import 'package:front/core/components/markdown/app_markdown_settings.dart';
 import 'package:front/core/components/theme.dart';
 import 'package:front/core/db/database.dart';
 import 'package:front/core/db/database_provider.dart';
 import 'package:front/core/widgets/markdown_live_editor.dart';
-import 'package:front/futures/notes/services/note_attachment_opener.dart';
-import 'package:front/futures/notes/services/note_image_picker_service.dart';
+import 'package:front/futures/notes/services/note_attachment_flow.dart';
 import 'package:front/futures/notes/widgets/note_attachment_button.dart';
-import 'package:front/futures/notes/widgets/note_voice_record_sheet.dart';
 import 'package:front/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -31,8 +27,7 @@ class ReminderEditorPage extends StatefulWidget {
 class _ReminderEditorPageState extends State<ReminderEditorPage> {
   final AppDatabase db = DatabaseProvider.instance;
 
-  final NoteImagePickerService _imagePickerService = NoteImagePickerService();
-  final NoteAttachmentOpener _attachmentOpener = NoteAttachmentOpener();
+  late final NoteAttachmentFlow _attachmentFlow;
 
   late final String _noteId;
   late final TextEditingController _titleController;
@@ -59,6 +54,21 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
 
     _titleController = TextEditingController();
     _contentController = TextEditingController();
+
+    _attachmentFlow = NoteAttachmentFlow(
+      noteId: _noteId,
+      contentController: _contentController,
+      // Перед каждой операцией с вложением — сохраняем заметку,
+      // чтобы был валидный noteId в БД для привязки вложения.
+      beforeAttachment: _ensureNoteSaved,
+      // После вставки маркера — синхронизируем контент в БД.
+      afterAttachment: _ensureNoteSaved,
+      onContentChanged: () {
+        setState(() {
+          _editorRevision++;
+        });
+      },
+    );
   }
 
   @override
@@ -82,16 +92,15 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
 
   Future<void> _loadNoteAndReminder() async {
     final note = await (db.select(db.notesTable)
-          ..where((table) => table.id.equals(_noteId)))
+      ..where((table) => table.id.equals(_noteId)))
         .getSingleOrNull();
 
     final reminder = await (db.select(db.remindersTable)
-          ..where(
+      ..where(
             (table) =>
-                table.noteId.equals(_noteId) &
-                table.deleted.equals(false),
-          )
-          ..limit(1))
+        table.noteId.equals(_noteId) & table.deleted.equals(false),
+      )
+      ..limit(1))
         .getSingleOrNull();
 
     if (!mounted) return;
@@ -118,7 +127,7 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
 
   Future<void> _loadNoteSuggestions() async {
     final notes = await (db.select(db.notesTable)
-          ..where((table) => table.deleted.equals(false)))
+      ..where((table) => table.deleted.equals(false)))
         .get();
 
     if (!mounted) return;
@@ -165,11 +174,13 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
     });
   }
 
+  /// Гарантирует, что заметка существует в БД перед привязкой вложений.
   Future<void> _ensureNoteSaved() async {
     final now = DateTime.now().toUtc();
 
     if (_noteCreatedLocally) {
-      await (db.update(db.notesTable)..where((table) => table.id.equals(_noteId)))
+      await (db.update(db.notesTable)
+        ..where((table) => table.id.equals(_noteId)))
           .write(
         NotesTableCompanion(
           title: drift.Value(_titleController.text),
@@ -178,20 +189,19 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
           dirty: const drift.Value(true),
         ),
       );
-
       return;
     }
 
     await db.into(db.notesTable).insert(
-          NotesTableCompanion.insert(
-            id: _noteId,
-            title: drift.Value(_titleController.text),
-            content: drift.Value(_contentController.text),
-            createdAt: now,
-            updatedAt: now,
-            dirty: const drift.Value(true),
-          ),
-        );
+      NotesTableCompanion.insert(
+        id: _noteId,
+        title: drift.Value(_titleController.text),
+        content: drift.Value(_contentController.text),
+        createdAt: now,
+        updatedAt: now,
+        dirty: const drift.Value(true),
+      ),
+    );
 
     _noteCreatedLocally = true;
   }
@@ -211,22 +221,22 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
       final reminderId = const Uuid().v4();
 
       await db.into(db.remindersTable).insert(
-            RemindersTableCompanion.insert(
-              id: reminderId,
-              noteId: drift.Value(_noteId),
-              remindAt: _remindAt!.toUtc(),
-              createdAt: now,
-              updatedAt: now,
-              isDone: const drift.Value(false),
-              deleted: const drift.Value(false),
-              dirty: const drift.Value(true),
-            ),
-          );
+        RemindersTableCompanion.insert(
+          id: reminderId,
+          noteId: drift.Value(_noteId),
+          remindAt: _remindAt!.toUtc(),
+          createdAt: now,
+          updatedAt: now,
+          isDone: const drift.Value(false),
+          deleted: const drift.Value(false),
+          dirty: const drift.Value(true),
+        ),
+      );
 
       _reminderId = reminderId;
     } else {
       await (db.update(db.remindersTable)
-            ..where((table) => table.id.equals(_reminderId!)))
+        ..where((table) => table.id.equals(_reminderId!)))
           .write(
         RemindersTableCompanion(
           noteId: drift.Value(_noteId),
@@ -236,143 +246,6 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
         ),
       );
     }
-  }
-
-  void _showImageSourceSheet() {
-    final colors = context.colors;
-    final t = AppLocalizations.of(context)!;
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: colors.bg,
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                  color: colors.border,
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 8),
-                  Container(
-                    width: 38,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: colors.gray.withValues(alpha: 0.35),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ListTile(
-                    leading: const Icon(Icons.photo_library_rounded),
-                    title: Text(t.chooseGallery),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _addImageFromGallery();
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                    color: colors.border,
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.photo_camera_rounded),
-                    title: Text(t.takePhoto),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _addImageFromCamera();
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _addImageFromGallery() async {
-    await _ensureNoteSaved();
-
-    final result = await _imagePickerService.pickFromGallery(
-      noteId: _noteId,
-    );
-
-    if (result == null) return;
-
-    _insertAttachmentMarker(result.marker);
-
-    await _ensureNoteSaved();
-  }
-
-  Future<void> _addImageFromCamera() async {
-    await _ensureNoteSaved();
-
-    final result = await _imagePickerService.takePhoto(
-      noteId: _noteId,
-    );
-
-    if (result == null) return;
-
-    _insertAttachmentMarker(result.marker);
-
-    await _ensureNoteSaved();
-  }
-
-  Future<void> _recordVoiceMessage() async {
-    await _ensureNoteSaved();
-
-    final result = await showModalBottomSheet<NoteAttachmentCreateResult?>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (context) {
-        return NoteVoiceRecordSheet(
-          noteId: _noteId,
-        );
-      },
-    );
-
-    if (result == null) return;
-
-    _insertAttachmentMarker(result.marker);
-
-    await _ensureNoteSaved();
-  }
-
-  Future<void> _openAttachment(
-    MarkdownAttachmentData attachment,
-  ) async {
-    await _attachmentOpener.open(
-      context,
-      attachment,
-    );
-  }
-
-  void _insertAttachmentMarker(String marker) {
-    final current = _contentController.text.trimRight();
-
-    final next = current.isEmpty ? marker : '$current\n\n$marker';
-
-    _contentController.value = TextEditingValue(
-      text: next,
-      selection: TextSelection.collapsed(offset: next.length),
-    );
-
-    setState(() {
-      _editorRevision++;
-    });
   }
 
   @override
@@ -402,8 +275,8 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
             onPressed: _pickReminderDateTime,
           ),
           NoteAttachmentButton(
-            onAddImage: _showImageSourceSheet,
-            onRecordAudio: _recordVoiceMessage,
+            onAddImage: () => _attachmentFlow.showImageSourceSheet(context),
+            onRecordAudio: () => _attachmentFlow.recordVoiceMessage(context),
           ),
           IconButton(
             icon: const Icon(Icons.check),
@@ -454,7 +327,8 @@ class _ReminderEditorPageState extends State<ReminderEditorPage> {
                   key: ValueKey(_editorRevision),
                   initialText: _contentController.text,
                   noteSuggestions: _noteSuggestions,
-                  onTapAttachment: _openAttachment,
+                  onTapAttachment: (attachment) =>
+                      _attachmentFlow.openAttachment(context, attachment),
                   onChanged: (value) {
                     _contentController.value = TextEditingValue(
                       text: value,

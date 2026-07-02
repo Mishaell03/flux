@@ -125,6 +125,8 @@ icons_launcher:
 flutter:
   generate: true
   uses-material-design: true
+  config:
+    enable-swift-package-manager: false
 
   assets:
     - assets/img/
