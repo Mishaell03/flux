@@ -6,7 +6,7 @@ CREATE TABLE yandex_login_sessions (
     language VARCHAR(3) NOT NULL,
     app_version VARCHAR(32),
     device_name VARCHAR(32),
-    push_token TEXT NOT NULL,
+    push_token TEXT,
     expires_at TIMESTAMPTZ NOT NULL,
     used_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

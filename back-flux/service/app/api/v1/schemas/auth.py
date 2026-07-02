@@ -2,15 +2,24 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from pydantic import BaseModel, Field
+
+
 class YandexLoginRequest(BaseModel):
     device_id: str = Field(
         ...,
-        pattern=r'^[a-zA-Z0-9_-]+$',
+        pattern=r"^[a-zA-Z0-9_-]+$",
         min_length=8,
         max_length=64,
         examples=["device_abc123"],
     )
-    platform: Literal["android", "ios", "web", "windows", "linux", "macos"]
+    platform: str = Field(
+        ...,
+        min_length=2,
+        max_length=32,
+        examples=["web"],
+    )
+
     language: str = Field(
         ...,
         pattern=r"^[a-z]{2,3}$",
@@ -27,10 +36,10 @@ class YandexLoginRequest(BaseModel):
     device_name: str = Field(
         ...,
         max_length=32,
-        examples=['CANDY']
+        examples=["CANDY"],
     )
-    push_token: str = Field(
-        ...,
+    push_token: str | None = Field(
+        default=None,
         min_length=10,
         max_length=4096,
         examples=["fcm_token_example"],

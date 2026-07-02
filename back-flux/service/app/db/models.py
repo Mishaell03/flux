@@ -196,7 +196,7 @@ class YandexLoginSession(Base):
     language: Mapped[str] = mapped_column(String(3))
     app_version: Mapped[str | None] = mapped_column(String(32))
     device_name: Mapped[str | None] = mapped_column(String(32))
-    push_token: Mapped[str] = mapped_column(Text)
+    push_token: Mapped[str | None] = mapped_column(Text)
 
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
