@@ -3,14 +3,22 @@ import 'package:flutter/foundation.dart';
 import 'package:front/core/components/secure/device_id.dart';
 
 class PushTokenService {
+  static const Duration _timeout = Duration(seconds: 6);
+  static const String? _webVapidKey = null; // TODO: вставить ваш ключ
+
   static Future<String> pushToken({
     required String platform,
   }) async {
     if (_isFcmSupportedPlatform(platform)) {
-      final token = await FirebaseMessaging.instance.getToken();
+      try {
+        final token = await FirebaseMessaging.instance
+            .getToken(vapidKey: kIsWeb ? _webVapidKey : null)
+            .timeout(_timeout);
 
-      if (token != null && token.isNotEmpty) {
-        return token;
+        if (token != null && token.isNotEmpty) {
+          return token;
+        }
+      } catch (_) {
       }
     }
 
